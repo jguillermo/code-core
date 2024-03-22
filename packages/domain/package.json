@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jguillermo/node-base-ddd"
+    "url": "https://github.com/jguillermo/code-core"
   },
   "engines": {
     "node": ">=16"
