@@ -1,0 +1,60 @@
+{
+  "name": "@code-core/domain",
+  "version": "0.0.0",
+  "keywords": [
+    "DDD",
+    "node",
+    "value object"
+  ],
+  "author": "Jose Guillermo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jguillermo/node-base-ddd"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "moduleNameMapper": {
+      "^@code-core/(.*)": "<rootDir>/../../$1/src/index.ts"
+    },
+    "coverageDirectory": "./../coverage",
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  }
+}
