@@ -1,4 +1,4 @@
-import {AggregateRoot, EventBase} from '@code-core/domain';
+import {AggregateRoot, EventBase} from '@jguillermo/domain';
 
 class TestEventBase extends EventBase {
     eventName(): string {

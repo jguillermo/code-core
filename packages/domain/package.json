@@ -1,5 +1,5 @@
 {
-  "name": "@code-core/domain",
+  "name": "@jguillermo/domain",
   "version": "0.0.2",
   "keywords": [
     "DDD",
@@ -43,7 +43,7 @@
       "src/**/*.{js,jsx,ts,tsx}"
     ],
     "moduleNameMapper": {
-      "^@code-core/(.*)": "<rootDir>/../../$1/src/index.ts"
+      "^@jguillermo/(.*)": "<rootDir>/../../$1/src/index.ts"
     },
     "coverageDirectory": "./../coverage",
     "testEnvironment": "node",
@@ -57,5 +57,5 @@
       }
     }
   },
-  "gitHead": "5f8caa3e71dcc35829b755fb6664223fc33d8fc9"
+  "gitHead": "2e35b974f30b9e97e4943649f8d3e7fbc2ce6086"
 }
