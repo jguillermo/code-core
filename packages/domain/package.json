@@ -40,7 +40,7 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}"
+      "**/*.(t|j)s"
     ],
     "moduleNameMapper": {
       "^@code-core/(.*)": "<rootDir>/../../$1/src/index.ts"
