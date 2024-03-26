@@ -58,5 +58,10 @@
       }
     }
   },
-  "gitHead": "be6fd777c043365c7134ce950db5e2f5d70ef4bc"
+  "gitHead": "be6fd777c043365c7134ce950db5e2f5d70ef4bc",
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0"
+  }
 }
