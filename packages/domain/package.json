@@ -24,6 +24,7 @@
     "dist/"
   ],
   "scripts": {
+    "prebuild": "rm -rf dis && rm tsconfig.build.tsbuildinfo",
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "coverage": "jest --coverage"
