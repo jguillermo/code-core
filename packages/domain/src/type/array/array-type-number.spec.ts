@@ -1,5 +1,5 @@
 import { ValueGenerator } from '../abstract-type.spec';
-import { ArrayTypeNumber } from './array-type-number';
+import { ArrayTypeNumber } from '@code-core/domain';
 
 describe('Array Type Number', () => {
   let type: ArrayTypeNumber;

@@ -1,5 +1,5 @@
 import { ValueGenerator } from '../abstract-type.spec';
-import { ArrayTypeString } from './array-type-string';
+import { ArrayTypeString } from '@code-core/domain';
 
 describe('Array Type String', () => {
   let type: ArrayTypeString;
