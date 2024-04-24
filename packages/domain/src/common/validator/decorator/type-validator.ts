@@ -217,11 +217,17 @@ const validatorsMap = {
     allow: Allow
 };
 
-type ValidatorKey = keyof typeof validatorsMap;
+type ValidatorMapType = {
+    [P in keyof typeof validatorsMap]?: any;
+}
 
-export function AddValidate(propertyKey: string, validatorConfigs: Array<{[p in ValidatorKey]:any}>) {
+interface ValidatorMapI extends ValidatorMapType {
+    description?: string
+}
 
-    return function(constructor: Function) {
+export function AddValidate(propertyKey: string, validatorConfigs: ValidatorMapI[]) {
+
+    return function (constructor: Function) {
         validatorConfigs.forEach(config => {
             Object.keys(config).forEach(key => {
                 const validator = validatorsMap[key];

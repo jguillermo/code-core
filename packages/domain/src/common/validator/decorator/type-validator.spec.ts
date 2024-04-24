@@ -4,7 +4,9 @@ import {validate } from 'class-validator';
 describe('Validator Number', () => {
     it('number', async () => {
 
-        @AddValidate('name', [{min: 15}, {max: 50}])
+        @AddValidate('name', [
+            {min: 15}, {max: 20},{isNumber:true}
+        ])
         class User {
             public name: string;
 
