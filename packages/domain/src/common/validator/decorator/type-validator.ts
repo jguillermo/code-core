@@ -105,7 +105,8 @@ import {
     MinDate,
     MinLength,
     NotContains,
-    NotEquals
+    NotEquals,
+    ValidationOptions
 } from 'class-validator';
 
 const validatorsMap = {
@@ -217,31 +218,25 @@ const validatorsMap = {
     allow: Allow
 };
 
-type ValidatorMapType = {
-    [P in keyof typeof validatorsMap]?: any;
+interface ValidatorMapI {
+    validator: keyof typeof validatorsMap,
+    value?: any,
+    options?: ValidationOptions
 }
 
-interface ValidatorMapI extends ValidatorMapType {
-    description?: string
-}
-
-export function AddValidate(propertyKey: string, validatorConfigs: ValidatorMapI[]) {
+export function AddValidate(validatorConfigs: ValidatorMapI[], propertyKey: string='_value') {
 
     return function (constructor: Function) {
         validatorConfigs.forEach(config => {
-            Object.keys(config).forEach(key => {
-                const validator = validatorsMap[key];
-                if (validator) {
-                    const value = config[key];
-                    if (typeof value === 'object' && value !== null) {
-                        validator(value)(constructor.prototype, propertyKey);
-                    } else {
-                        validator(value)(constructor.prototype, propertyKey);
-                    }
-                } else {
-                    console.warn(`Validator ${key} is not supported.`);
-                }
-            });
+            const validator: any = validatorsMap[config.validator];
+            if (!validator) {
+                console.warn(`Validator ${config.validator} is not supported.`);
+            }
+            if (config.value) {
+                validator(config.value, config.options)(constructor.prototype, propertyKey);
+            } else {
+                validator(config.options)(constructor.prototype, propertyKey);
+            }
         });
     }
 }
