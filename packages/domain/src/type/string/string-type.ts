@@ -1,7 +1,5 @@
 import validator from 'validator';
 import { AbstractType, ValueTypeNullable } from '../abstract-type';
-import isEmptyValidator = validator.isEmpty;
-import isLengthValidator = validator.isLength;
 
 export interface StringIsLengthValidator {
   min?: number;
@@ -14,7 +12,7 @@ export abstract class StringType extends AbstractType<ValueTypeNullable<string>>
     if (this.isNull) {
       return true;
     }
-    return isEmptyValidator(<string>this.value);
+    return validator.isEmpty(<string>this.value);
   }
 
   get length(): number {
@@ -29,7 +27,7 @@ export abstract class StringType extends AbstractType<ValueTypeNullable<string>>
       param.min = param.exactly;
       param.max = param.exactly;
     }
-    return isLengthValidator(this.toString, param);
+    return validator.isLength(this.toString, param);
   }
 
   get toString(): string {
