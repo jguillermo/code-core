@@ -1,83 +1,77 @@
 import {StringTypeImp} from './';
-import {expectToEqual} from "../../common/test/expect-to-equal";
+import {utilTest} from "../../common/test/util-test";
 
 describe('String Type', () => {
     let type: StringTypeImp;
     it('expectValue', () => {
-        expectToEqual(StringTypeImp, 'value', [
-            //valid string value
-            ['abc123', 'abc123'],
-            ['áéíóú', 'áéíóú'],
-            ['', ''],
-            //Empty
-            [null, null],
-            [undefined, null],
-            null,
-            //boolean
-            [true, 'true'],
-            [false, 'false'],
-            //number
-            [1, '1'],
-            [0, '0'],
-            [-1, '-1'],
-            [1.1, '1.1'],
-            [0.1, '0.1'],
-            [-0.1, '-0.1'],
-            [-1.1, '-1.1'],
-        ]);
+        utilTest(StringTypeImp, {
+            'value': [
+                //valid string value
+                ['abc123', 'abc123'],
+                ['áéíóú', 'áéíóú'],
+                ['', ''],
+                //Empty
+                [null, null],
+                [undefined, null],
+                null,
+                //boolean
+                [true, 'true'],
+                [false, 'false'],
+                //number
+                [1, '1'],
+                [0, '0'],
+                [-1, '-1'],
+                [1.1, '1.1'],
+                [0.1, '0.1'],
+                [-0.1, '-0.1'],
+                [-1.1, '-1.1'],
+            ],
+            'isNull': [
+                true,
+                [undefined, true],
+                [null, true],
+                [0, false],
+                [0.1, false],
+                [1, false],
+                [1.1, false],
+                [false, false],
+                [true, false],
+                ['abc', false],
+                ['0', false],
+                ['', false],
+                ['1', false],
+            ],
+            'isEmpty': [
+                ['', true],
+                true,
+                [null, true],
+                [undefined, true],
+                ['0', false],
+                ['false', false],
+                ['abc123', false],
+                ['áéíóú', false],
+                [0, false],
+                [0.1, false],
+                [1, false],
+                [1.1, false],
+                [false, false],
+                [true, false],
+            ],
+            'toString': [
+                ['', ''],
+                '',
+                [null, ''],
+                ['abc123', 'abc123'],
+                ['áéíóú', 'áéíóú'],
+                [0, '0'],
+                [0.1, '0.1'],
+                [1, '1'],
+                [1.1, '1.1'],
+                [false, 'false'],
+                [true, 'true'],
+            ]
+        });
     });
-    it('isNull', () => {
-        expectToEqual(StringTypeImp, 'isNull', [
-            true,
-            [undefined, true],
-            [null, true],
-            [0, false],
-            [0.1, false],
-            [1, false],
-            [1.1, false],
-            [false, false],
-            [true, false],
-            ['abc', false],
-            ['0', false],
-            ['', false],
-            ['1', false],
-        ]);
-    });
-    it('isEmpty', () => {
-        expectToEqual(StringTypeImp, 'isEmpty', [
-            ['', true],
-            true,
-            [null, true],
-            [undefined, true],
-            ['0', false],
-            ['false', false],
-            ['abc123', false],
-            ['áéíóú', false],
-            [0, false],
-            [0.1, false],
-            [1, false],
-            [1.1, false],
-            [false, false],
-            [true, false],
-        ]);
-    });
-
-    it('toString', () => {
-        expectToEqual(StringTypeImp, 'toString', [
-            ['', ''],
-            '',
-            [null, ''],
-            ['abc123', 'abc123'],
-            ['áéíóú', 'áéíóú'],
-            [0, '0'],
-            [0.1, '0.1'],
-            [1, '1'],
-            [1.1, '1.1'],
-            [false, 'false'],
-            [true, 'true'],
-        ]);
-    });
-
 
     describe('length', () => {
         it('Empty string', () => {
