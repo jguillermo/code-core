@@ -39,8 +39,11 @@ export function utilTestSpec(vo: any, objectList: any[] | { [P: string]: any[] }
       let input = hastTwoValues ? value[0] : '';
       let expectValue = hastTwoValues ? value[1] : value;
       const txtExpectValue = isString(expectValue)? `'${expectValue}'`:universalToString(expectValue);
-      const txtInput = isString(input)? `'${input}'`:universalToString(input);
-      it(`validates ${vo.name}(${txtInput}) toEqual ${txtExpectValue}`, () => {
+      let txtInput = isString(input)? `'${input}'`:universalToString(input);
+      if(!Array.isArray(value)){
+        txtInput='';
+      }
+      it(`validate ${vo.name}(${txtInput}) toEqual ${txtExpectValue}`, () => {
         try {
           if (hastTwoValues) {
             result = vo(input);
@@ -59,11 +62,14 @@ export function utilTestSpec(vo: any, objectList: any[] | { [P: string]: any[] }
       objectList[property].forEach((value) => {
         let type;
         let result;
-        let input = Array.isArray(value) && value.length === 2 ? value[0] : '';
+        let input = Array.isArray(value) && value.length === 2 ? value[0] : null;
         let expectValue = Array.isArray(value) && value.length === 2 ? value[1] : value;
         const txtExpectValue = isString(expectValue)? `'${expectValue}'`:universalToString(expectValue);
-        const txtInput = isString(input)? `'${input}'`:universalToString(input);
-        it(`validates (new ${vo.name}(${txtInput})).${property}() toEqual ${txtExpectValue}`, () => {
+        let txtInput = isString(input)? `'${input}'`:universalToString(input);
+        if(!Array.isArray(value)){
+          txtInput='';
+        }
+        it(`validate (new ${vo.name}(${txtInput})).${property}() toEqual ${txtExpectValue}`, () => {
           try {
             if (Array.isArray(value) && value.length === 2) {
               type = new vo(input);

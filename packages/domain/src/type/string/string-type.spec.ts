@@ -3,7 +3,7 @@ import {utilTestSpec} from "../../common/test/util-test.spec";
 
 describe('String Type', () => {
     let type: StringTypeImp;
-    it('expectValue', () => {
+    describe('expectValue', () => {
         utilTestSpec(StringTypeImp, {
             'value': [
                 //valid string value
