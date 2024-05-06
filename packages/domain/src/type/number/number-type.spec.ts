@@ -1,5 +1,5 @@
 import {NumberType, NumberTypeImp} from './';
-import {testValidation, utilTestSpec} from "../../common/test/util-test.spec";
+import {testValidation, utilTestSpec} from "../../common/test/util-test";
 
 describe('Number Type', () => {
     describe('NumberTypeImp expect value', () => {

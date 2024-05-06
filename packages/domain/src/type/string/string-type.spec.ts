@@ -1,5 +1,5 @@
 import {StringTypeImp} from './';
-import {utilTestSpec} from "../../common/test/util-test.spec";
+import {utilTestSpec} from "../../common/test/util-test";
 
 describe('String Type', () => {
     let type: StringTypeImp;
