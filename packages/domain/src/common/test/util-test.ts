@@ -59,7 +59,15 @@ export function universalToString(value) {
   return String(value);
 }
 
-export function titleGenerate(objectName: string, objectItem: any, result: any, property: string | null = null): string {
+export function splitString(input): { name: string | null, property: string | null } {
+  const [name, property] = input.split(':');
+  return {
+    name: name || null,
+    property: property || null
+  };
+}
+
+export function titleGenerate(objectName: string, objectItem: any, result: any = null): string {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
   const input = hastTwoValues ? objectItem[0] : '';
   const expectValue = hastTwoValues ? objectItem[1] : objectItem;
@@ -68,7 +76,8 @@ export function titleGenerate(objectName: string, objectItem: any, result: any, 
   if (!Array.isArray(objectItem)) {
     txtInput = '';
   }
-  const titleObject = property ? `(new ${objectName}(${txtInput})).${property}()` : `${objectName}(${txtInput})`;
+  const objectNameProperty = splitString(objectName);
+  const titleObject = objectNameProperty.property ? `(new ${objectNameProperty.name}(${txtInput})).${objectNameProperty.property}()` : `${objectName}(${txtInput})`;
   if (result) {
     return `${titleObject} Expected: ${txtExpectValue}, but return: ${universalToString(result)}`;
   } else {
@@ -81,7 +90,7 @@ function validateFunction(vo: any, objectItem: any, property = null) {
   let result;
   let input = hastTwoValues ? objectItem[0] : '';
   let expectValue = hastTwoValues ? objectItem[1] : objectItem;
-  it(titleGenerate(vo.name, objectItem, property), () => {
+  it(titleGenerate(`${vo.name}:${property}`, objectItem), () => {
     try {
       if (property) {
         const type = hastTwoValues ? new vo(input) : new vo();
@@ -91,7 +100,7 @@ function validateFunction(vo: any, objectItem: any, property = null) {
       }
       expect(result).toEqual(expectValue);
     } catch (error) {
-      throw new Error(titleGenerate(vo.name, objectItem, result, property));
+      throw new Error(titleGenerate(`${vo.name}:${property}`, objectItem, result));
     }
   });
 }
@@ -108,5 +117,11 @@ export function utilTestSpec(vo: any, objectList: any[] | { [P: string]: any[] }
       });
     }
   }
+}
 
+
+export function toEqualArray(data: any[]) {
+  data.forEach((value) => {
+    expect(value[0]).toEqual(value[1]);
+  });
 }
