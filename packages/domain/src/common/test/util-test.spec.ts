@@ -67,7 +67,7 @@ describe('Util Test', () => {
   });
   describe('testValidation', () => {
     testValidation({
-      validator: (value) => value === true,
+      validator: (value: any) => value === true,
       valid: [true],
       invalid: [false, 1, 0],
     });

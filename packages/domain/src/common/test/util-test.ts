@@ -3,29 +3,11 @@ import {isString} from "class-validator";
 export function testValidation({validator, valid, invalid}) {
 
   valid.forEach(input => {
-    it(`validate expected: true ${validator.name}(${universalToString(input)})`, () => {
-      let result;
-      try {
-        result = validator(input);
-        expect(result).toBeTruthy();
-      } catch (error) {
-        throw new Error(`${validator.name}(${universalToString(input)}). Expected: true, but return: ${result}.`);
-      }
-    });
+    validateFunction(validator, [input, true]);
   });
 
   invalid.forEach(input => {
-    it(`validate expected: false ${validator.name}(${universalToString(input)})`, () => {
-      let result;
-      try {
-        result = validator(input);
-        expect(result).toBeFalsy();
-      } catch (error) {
-        // Si falla la aserción, lanza un nuevo error con más información
-        throw new Error(`Error in ${validator.name}(${universalToString(input)}). Expected: false, but return: ${result}.`);
-
-      }
-    });
+    validateFunction(validator, [input, false]);
   });
 }
 
@@ -90,7 +72,8 @@ function validateFunction(vo: any, objectItem: any, property = null) {
   let result;
   let input = hastTwoValues ? objectItem[0] : '';
   let expectValue = hastTwoValues ? objectItem[1] : objectItem;
-  it(titleGenerate(`${vo.name}:${property}`, objectItem), () => {
+  const voProperties = property ? `${vo.name}:${property}` : `${vo.name}`;
+  it(titleGenerate(voProperties, objectItem), () => {
     try {
       if (property) {
         const type = hastTwoValues ? new vo(input) : new vo();
@@ -100,7 +83,7 @@ function validateFunction(vo: any, objectItem: any, property = null) {
       }
       expect(result).toEqual(expectValue);
     } catch (error) {
-      throw new Error(titleGenerate(`${vo.name}:${property}`, objectItem, result));
+      throw new Error(titleGenerate(voProperties, objectItem, result));
     }
   });
 }
