@@ -74,17 +74,13 @@ export function validateFunction(vo: any, objectItem: any, property = null) {
   let expectValue = hastTwoValues ? objectItem[1] : objectItem;
   const voProperties = property ? `${vo.name}:${property}` : `${vo.name}`;
   it(titleGenerate(voProperties, objectItem), () => {
-    try {
-      if (property) {
-        const type = hastTwoValues ? new vo(input) : new vo();
-        result = type[property];
-      } else {
-        result = hastTwoValues ? vo(input) : vo();
-      }
-      expect(result).toEqual(expectValue);
-    } catch (error) {
-      throw new Error(titleGenerate(voProperties, objectItem, result));
+    if (property) {
+      const type = hastTwoValues ? new vo(input) : new vo();
+      result = type[property];
+    } else {
+      result = hastTwoValues ? vo(input) : vo();
     }
+    expect(result).toEqual(expectValue);
   });
 }
 
