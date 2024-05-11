@@ -67,7 +67,7 @@ export function titleGenerate(objectName: string, objectItem: any, result: any =
   }
 }
 
-function validateFunction(vo: any, objectItem: any, property = null) {
+export function validateFunction(vo: any, objectItem: any, property = null) {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
   let result;
   let input = hastTwoValues ? objectItem[0] : '';

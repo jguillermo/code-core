@@ -2,6 +2,12 @@ import {splitString, testValidation, titleGenerate, toEqualArray, universalToStr
 
 describe('Util Test', () => {
   describe('universalToString', () => {
+    interface CircularObject {
+      self?: CircularObject;
+    }
+
+    const circularObj: CircularObject = {};
+    circularObj.self = circularObj;
     utilTestSpec(universalToString, [
         [null, 'null'],
         [undefined, 'undefined'],
@@ -21,6 +27,7 @@ describe('Util Test', () => {
         [function example() {
         }, 'Function(example)'],
         [Symbol('sym'), 'Symbol(sym)'],
+        [circularObj, '[Circular or too complex to stringify]'],
       ]
     );
   });
