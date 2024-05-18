@@ -1,7 +1,8 @@
-import {AbstractException, StatusCode} from "../index";
+import {AbstractException} from "../abstract.exception";
+import {ExceptionCode} from "../exception-code";
 
 export class InfrastructureException extends AbstractException {
-  constructor(message: string, statusCode: StatusCode = StatusCode.INFRASTRUCTURE_ERROR) {
-    super(message, statusCode);
+  constructor(message: string, exceptionCodess: ExceptionCode[] = []) {
+    super(message, [ExceptionCode.InfrastructureException, ...exceptionCodess]);
   }
 }

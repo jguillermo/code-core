@@ -1,37 +1,39 @@
-import {StatusCode} from "./status-code";
+import {ExceptionCode} from "./exception-code";
 
 export abstract class AbstractException extends Error {
-  public readonly code: string;
-  public readonly statusCode: StatusCode;
+  public readonly exceptionCodes: ExceptionCode[];
   public readonly timestamp: Date;
 
-  // Construcción dinámica de StatusCodeStrings
-  private static readonly StatusCodeStrings: Record<StatusCode, string> = Object.keys(StatusCode)
-    .filter((key) => isNaN(Number(key))) // Filtrar las claves no numéricas
-    .reduce((acc, key) => {
-      const value = StatusCode[key as keyof typeof StatusCode];
-      acc[value as StatusCode] = key;
-      return acc;
-    }, {} as Record<StatusCode, string>);
-
-  constructor(message: string, statusCode: StatusCode) {
+  constructor(message: string, exceptionCodess: ExceptionCode[]) {
     super(message);
     this.name = this.constructor.name;
-    this.code = AbstractException.StatusCodeStrings[statusCode];
-    this.statusCode = statusCode;
+    this.exceptionCodes = exceptionCodess;
     this.timestamp = new Date();
     Error.captureStackTrace(this, this.constructor);
   }
 
-  logDetails(): void {
-    console.error(`[${this.name}] ${this.message} - Code: ${this.code}, Status: ${this.statusCode}, Timestamp: ${this.timestamp}`);
+  static readonly ExceptionCodeStrings: Record<ExceptionCode, string> = Object.keys(ExceptionCode)
+    .filter((key) => isNaN(Number(key))) // Filtrar las claves no numéricas
+    .reduce((acc, key) => {
+      const value = ExceptionCode[key as keyof typeof ExceptionCode];
+      acc[value as ExceptionCode] = key.replace(/([A-Z])/g, ' $1').trim(); // Convertir a mensaje de error legible
+      return acc;
+    }, {} as Record<ExceptionCode, string>);
+
+  public get exceptionMessage(): string {
+    return this.exceptionCodes.map(code => `${AbstractException.ExceptionCodeStrings[code]} (${code})`).join(', ');
   }
 
-  toJSON(): { code: string; message: string; statusCode: number; timestamp: string } {
+  logDetails(): void {
+    console.error(`[${this.exceptionMessage}]: ${this.message}, ${this.timestamp}`);
+  }
+
+  toJSON(): { name: string; message: string; exceptionCodess: string[]; exceptionMessages: string; timestamp: string } {
     return {
-      code: this.code,
+      name: this.name,
       message: this.message,
-      statusCode: this.statusCode,
+      exceptionCodess: this.exceptionCodes,
+      exceptionMessages: this.exceptionMessage,
       timestamp: this.timestamp.toISOString(),
     };
   }

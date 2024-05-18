@@ -1,9 +1,9 @@
 import {AbstractException} from "../abstract.exception";
-import {StatusCode} from "../status-code";
+import {ExceptionCode} from "../exception-code";
 
 
 export class DomainException extends AbstractException {
-  constructor(message: string, statusCode: StatusCode = StatusCode.DOMAIN_ERROR) {
-    super(message, statusCode);
+  constructor(message: string, exceptionCodess: ExceptionCode[] = []) {
+    super(message, [ExceptionCode.DomainException, ...exceptionCodess]);
   }
 }

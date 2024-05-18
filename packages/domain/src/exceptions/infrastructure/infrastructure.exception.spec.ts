@@ -1,46 +1,33 @@
-import {InfrastructureException, InternalServerErrorException, StatusCode, UnauthorizedException} from "../index";
+import {InfrastructureException} from "./infrastructure.exception";
+import {ExceptionCode} from "../exception-code";
+import {InternalErrorException} from "./internal-error.exception";
+
 
 describe('Exceptions', () => {
   describe('InfrastructureException', () => {
     describe('InfrastructureException', () => {
       it('should create an instance with correct properties', () => {
         const message = 'Infrastructure error';
-        const statusCode = StatusCode.INFRASTRUCTURE_ERROR;
+        const exceptionCodes = ExceptionCode.InfrastructureException;
         const exception = new InfrastructureException(message);
 
         expect(exception).toBeInstanceOf(InfrastructureException);
         expect(exception.message).toBe(message);
-        expect(exception.statusCode).toBe(statusCode);
-        expect(exception.code).toBe('INFRASTRUCTURE_ERROR');
+        expect(exception.exceptionCodes).toEqual([ExceptionCode.InfrastructureException]);
+        expect(exception.exceptionMessage).toEqual('Infrastructure Exception (INF000)');
         expect(exception.timestamp).toBeInstanceOf(Date);
       });
     });
 
-
-    describe('UnauthorizedException', () => {
+    describe('InternalErrorException', () => {
       it('should create an instance with correct properties', () => {
-        const message = 'Unauthorized access';
-        const statusCode = StatusCode.UNAUTHORIZED;
-        const exception = new UnauthorizedException(message);
+        const message = 'Internal error';
+        const exception = new InternalErrorException(message);
 
-        expect(exception).toBeInstanceOf(UnauthorizedException);
-        expect(exception.message).toBe(message);
-        expect(exception.statusCode).toBe(statusCode);
-        expect(exception.code).toBe('UNAUTHORIZED');
-        expect(exception.timestamp).toBeInstanceOf(Date);
-      });
-    });
-
-    describe('InternalServerErrorException', () => {
-      it('should create an instance with correct properties', () => {
-        const message = 'Internal server error';
-        const statusCode = StatusCode.INTERNAL_SERVER_ERROR;
-        const exception = new InternalServerErrorException(message);
-
-        expect(exception).toBeInstanceOf(InternalServerErrorException);
-        expect(exception.message).toBe(message);
-        expect(exception.statusCode).toBe(statusCode);
-        expect(exception.code).toBe('INTERNAL_SERVER_ERROR');
+        expect(exception).toBeInstanceOf(InternalErrorException);
+        expect(exception.message).toBe(`Failed, internal error: ${message}`);
+        expect(exception.exceptionCodes).toEqual([ExceptionCode.InfrastructureException, ExceptionCode.InternalError]);
+        expect(exception.exceptionMessage).toEqual('Infrastructure Exception (INF000), Internal Error (INF001)');
         expect(exception.timestamp).toBeInstanceOf(Date);
       });
     });

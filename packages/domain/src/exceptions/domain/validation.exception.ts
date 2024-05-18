@@ -1,9 +1,9 @@
 import {DomainException} from "./domain.exception";
-import {StatusCode} from "../status-code";
+import {ExceptionCode} from "../exception-code";
+
 
 export class ValidationException extends DomainException {
   constructor(errors: string[]) {
-    const message = `Validation failed: ${errors.join(', ')}`;
-    super(message, StatusCode.VALIDATION_ERROR);
+    super(`Input validation failed: ${errors.join(', ')}`, [ExceptionCode.ValidationFailed]);
   }
 }
