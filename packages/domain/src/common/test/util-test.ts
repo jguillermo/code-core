@@ -1,14 +1,15 @@
 import {isString} from "class-validator";
 
+interface ITestValidation {
+  hastTwoValues: boolean,
+  title: string,
+  input: any,
+  expectValue: any
+}
+
 export function testValidation({validator, valid, invalid}) {
-
-  valid.forEach(input => {
-    validateFunction(validator, [input, true]);
-  });
-
-  invalid.forEach(input => {
-    validateFunction(validator, [input, false]);
-  });
+  functionTestSpec(validator, valid.map(value => [value, true]));
+  functionTestSpec(validator, invalid.map(value => [value, false]));
 }
 
 export function universalToString(value) {
@@ -67,40 +68,41 @@ export function titleGenerate(objectName: string, objectItem: any, result: any =
   }
 }
 
-export function validateFunction(fn: any, objectItem: any) {
+
+export function processValidator(name: string, objectItem: any, property: string | null = null): ITestValidation {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
-  const voProperties = `${fn.name}`;
-  it(titleGenerate(voProperties, objectItem), () => {
-    const input = hastTwoValues ? objectItem[0] : '';
-    const expectValue = hastTwoValues ? objectItem[1] : objectItem;
-    const result = hastTwoValues ? fn(input) : fn();
-    expect(result).toEqual(expectValue);
-  });
+  const voProperties = property ? `${name}:${property}` : `${name}`;
+  const title = titleGenerate(voProperties, objectItem);
+  const input = hastTwoValues ? objectItem[0] : '';
+  const expectValue = hastTwoValues ? objectItem[1] : objectItem;
+  return {
+    hastTwoValues,
+    title,
+    input,
+    expectValue
+  }
 }
 
-export function validateClass(cls: any, objectItem: any, property: string) {
-  const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
-  const voProperties = `${cls.name}:${property}`;
-  it(titleGenerate(voProperties, objectItem), () => {
-    const input = hastTwoValues ? objectItem[0] : '';
-    const type = hastTwoValues ? new cls(input) : new cls();
-    const result = type[property];
-    const expectValue = hastTwoValues ? objectItem[1] : objectItem;
-    expect(result).toEqual(expectValue);
-  });
-}
 
 export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
   for (const property in objectList) {
     objectList[property].forEach((value) => {
-      validateClass(cls, value, property);
+      const dataInput = processValidator(cls.name, value, property);
+      it(dataInput.title, () => {
+        const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
+        expect(type[property]).toEqual(dataInput.expectValue);
+      });
     });
   }
 }
 
-export function functionTestSpec(vo: any, objectList: any[]) {
+export function functionTestSpec(fn: any, objectList: any[]) {
   objectList.forEach((value) => {
-    validateFunction(vo, value);
+    const dataInput = processValidator(fn.name, value);
+    it(dataInput.title, () => {
+      const result = dataInput.hastTwoValues ? fn(dataInput.input) : fn();
+      expect(result).toEqual(dataInput.expectValue);
+    });
   });
 }
 
