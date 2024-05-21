@@ -50,13 +50,11 @@ export function splitString(input): { name: string | null, property: string | nu
   };
 }
 
-export function titleGenerate(objectName: string, objectItem: any, result: any = null): string {
-  const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
-  const input = hastTwoValues ? objectItem[0] : '';
-  const expectValue = hastTwoValues ? objectItem[1] : objectItem;
+export function titleGenerate(objectName: string, input: any, expectValue: any, hastTwoValues: boolean, result: any = null): string {
+
   const txtExpectValue = isString(expectValue) ? `'${expectValue}'` : universalToString(expectValue);
   let txtInput = isString(input) ? `'${input}'` : universalToString(input);
-  if (!Array.isArray(objectItem)) {
+  if (!hastTwoValues) {
     txtInput = '';
   }
   const objectNameProperty = splitString(objectName);
@@ -72,9 +70,9 @@ export function titleGenerate(objectName: string, objectItem: any, result: any =
 export function processValidator(name: string, objectItem: any, property: string | null = null): ITestValidation {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
   const voProperties = property ? `${name}:${property}` : `${name}`;
-  const title = titleGenerate(voProperties, objectItem);
   const input = hastTwoValues ? objectItem[0] : '';
   const expectValue = hastTwoValues ? objectItem[1] : objectItem;
+  const title = titleGenerate(voProperties, input, expectValue, hastTwoValues);
   return {
     hastTwoValues,
     title,
