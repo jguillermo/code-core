@@ -53,10 +53,7 @@ export function splitString(input): { name: string | null, property: string | nu
 export function titleGenerate(objectName: string, input: any, expectValue: any, hastTwoValues: boolean, result: any = null): string {
 
   const txtExpectValue = isString(expectValue) ? `'${expectValue}'` : universalToString(expectValue);
-  let txtInput = isString(input) ? `'${input}'` : universalToString(input);
-  if (!hastTwoValues) {
-    txtInput = '';
-  }
+  const txtInput = !hastTwoValues ? '' : isString(input) ? `'${input}'` : universalToString(input);
   const objectNameProperty = splitString(objectName);
   const titleObject = objectNameProperty.property ? `(new ${objectNameProperty.name}(${txtInput})).${objectNameProperty.property}()` : `${objectName}(${txtInput})`;
   if (result) {
