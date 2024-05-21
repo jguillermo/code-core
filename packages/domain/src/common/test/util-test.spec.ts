@@ -1,4 +1,11 @@
-import {splitString, testValidation, titleGenerate, toEqualArray, universalToString, utilTestSpec} from "./util-test";
+import {
+  functionTestSpec,
+  splitString,
+  testValidation,
+  titleGenerate,
+  toEqualArray,
+  universalToString
+} from "./util-test";
 
 describe('Util Test', () => {
   describe('universalToString', () => {
@@ -8,7 +15,7 @@ describe('Util Test', () => {
 
     const circularObj: CircularObject = {};
     circularObj.self = circularObj;
-    utilTestSpec(universalToString, [
+    functionTestSpec(universalToString, [
         [null, 'null'],
         [undefined, 'undefined'],
         [123, '123'],

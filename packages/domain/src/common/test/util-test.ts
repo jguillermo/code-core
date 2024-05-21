@@ -67,35 +67,41 @@ export function titleGenerate(objectName: string, objectItem: any, result: any =
   }
 }
 
-export function validateFunction(vo: any, objectItem: any, property = null) {
+export function validateFunction(fn: any, objectItem: any) {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
-  let result;
-  let input = hastTwoValues ? objectItem[0] : '';
-  let expectValue = hastTwoValues ? objectItem[1] : objectItem;
-  const voProperties = property ? `${vo.name}:${property}` : `${vo.name}`;
+  const voProperties = `${fn.name}`;
   it(titleGenerate(voProperties, objectItem), () => {
-    if (property) {
-      const type = hastTwoValues ? new vo(input) : new vo();
-      result = type[property];
-    } else {
-      result = hastTwoValues ? vo(input) : vo();
-    }
+    const input = hastTwoValues ? objectItem[0] : '';
+    const expectValue = hastTwoValues ? objectItem[1] : objectItem;
+    const result = hastTwoValues ? fn(input) : fn();
     expect(result).toEqual(expectValue);
   });
 }
 
-export function utilTestSpec(vo: any, objectList: any[] | { [P: string]: any[] }) {
-  if (Array.isArray(objectList)) {
-    objectList.forEach((value) => {
-      validateFunction(vo, value);
+export function validateClass(cls: any, objectItem: any, property: string) {
+  const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
+  const voProperties = `${cls.name}:${property}`;
+  it(titleGenerate(voProperties, objectItem), () => {
+    const input = hastTwoValues ? objectItem[0] : '';
+    const type = hastTwoValues ? new cls(input) : new cls();
+    const result = type[property];
+    const expectValue = hastTwoValues ? objectItem[1] : objectItem;
+    expect(result).toEqual(expectValue);
+  });
+}
+
+export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
+  for (const property in objectList) {
+    objectList[property].forEach((value) => {
+      validateClass(cls, value, property);
     });
-  } else {
-    for (const property in objectList) {
-      objectList[property].forEach((value) => {
-        validateFunction(vo, value, property);
-      });
-    }
   }
+}
+
+export function functionTestSpec(vo: any, objectList: any[]) {
+  objectList.forEach((value) => {
+    validateFunction(vo, value);
+  });
 }
 
 

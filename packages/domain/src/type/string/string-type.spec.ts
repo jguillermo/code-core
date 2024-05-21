@@ -1,10 +1,10 @@
 import {StringTypeImp} from './';
-import {utilTestSpec} from "../../common/test/util-test";
+import {classTestSpec} from "../../common/test/util-test";
 
 describe('String Type', () => {
     let type: StringTypeImp;
     describe('expectValue', () => {
-        utilTestSpec(StringTypeImp, {
+        classTestSpec(StringTypeImp, {
             'value': [
                 //valid string value
                 ['abc123', 'abc123'],
