@@ -1,5 +1,5 @@
 import {NumberType, NumberTypeImp} from './';
-import {classTestSpec, testValidation} from "../../common/test/util-test";
+import {classExceptionSpec, classTestSpec, testValidation} from "../../common/test/util-test";
 
 describe('Number Type', () => {
   describe('NumberTypeImp expect value', () => {
@@ -15,18 +15,12 @@ describe('Number Type', () => {
           null,
           [null, null],
           [undefined, null],
-          //boolean
-          [true, 1],
-          [false, 0],
           //string
-          ['', 0],
           ['1', 1],
           ['1.1', 1.1],
           ['-1', -1],
           ['-1.1', -1.1],
           ['0', 0],
-          ['random', 0],
-          ['string', 0],
         ],
         'isNull': [
           true,
@@ -36,11 +30,7 @@ describe('Number Type', () => {
           [0.1, false],
           [1, false],
           [1.1, false],
-          [false, false],
-          [true, false],
-          ['abc', false],
           ['0', false],
-          ['', false],
           ['1', false],
         ],
         'toString': [
@@ -54,21 +44,35 @@ describe('Number Type', () => {
           '',
           [null, ''],
           [undefined, ''],
-          //boolean
-          [true, '1'],
-          [false, '0'],
           //string
-          ['', '0'],
           ['1', '1'],
           ['1.1', '1.1'],
           ['-1', '-1'],
           ['-1.1', '-1.1'],
           ['0', '0'],
-          ['random', '0'],
-          ['string', '0'],
         ]
       }
     );
+    classExceptionSpec(NumberTypeImp, {
+      'ValidationException': {
+        'message': 'Validation failed, invalid number value:',
+        'values': [
+          'random',
+          true,
+          false,
+          '',
+          '   ',
+          [],
+          {},
+          [1, 2, 3],
+          new Date(),
+          {value: 123},
+          () => 123,
+          Symbol('123'),
+          new Function('return 123')
+        ],
+      }
+    });
   });
   describe('validation isNumeric', () => {
     testValidation({

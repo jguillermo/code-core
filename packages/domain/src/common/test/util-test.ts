@@ -1,4 +1,5 @@
 import {isString} from "class-validator";
+import {universalToString} from "../utils/string/universal-to-string";
 
 interface ITestValidation {
   hastTwoValues: boolean,
@@ -12,35 +13,6 @@ export function testValidation({validator, valid, invalid}) {
   functionTestSpec(validator, invalid.map(value => [value, false]));
 }
 
-export function universalToString(value) {
-  if (value === null) {
-    return 'null';
-  } else if (value === undefined) {
-    return 'undefined';
-  } else if (typeof value === 'number' && isNaN(value)) {
-    return 'NaN';
-  } else if (value instanceof Date) {
-    return `Date(${value.toISOString()})`;
-  } else if (value instanceof Map) {
-    const entries = Array.from(value, ([key, val]) => `${universalToString(key)}: ${universalToString(val)}`);
-    return `Map({${entries.join(', ')}})`;
-  } else if (value instanceof Set) {
-    const entries = Array.from(value, universalToString);
-    return `Set(${entries.join(', ')})`;
-  } else if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value) || value.toString();
-    } catch (error) {
-      return '[Circular or too complex to stringify]';
-    }
-  } else if (typeof value === 'function') {
-    return `Function(${value.name || 'anonymous'})`;
-  } else if (typeof value === 'symbol') {
-    return value.toString();
-  }
-
-  return String(value);
-}
 
 export function splitString(input): { name: string | null, property: string | null } {
   const [name, property] = input.split(':');
@@ -86,6 +58,19 @@ export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
       it(dataInput.title, () => {
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
+      });
+    });
+  }
+}
+
+export function classExceptionSpec(cls: any, exceptionList: { [P: string]: { message: string, values: any[] } }) {
+  for (const exceptionItem in exceptionList) {
+    exceptionList[exceptionItem]['values'].forEach((value) => {
+      const valueText = isString(value) ? `'${value}'` : universalToString(value);
+      it(`validate ${exceptionItem} exception with ${valueText}`, () => {
+        expect(() => {
+          new cls(value);
+        }).toThrow(exceptionList[exceptionItem]['message']);
       });
     });
   }

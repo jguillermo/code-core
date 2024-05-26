@@ -3,7 +3,7 @@ import {validate} from 'class-validator';
 
 @AddValidate([
     {validator: "minLength", value: 3, options: {message: "Name is too short"}},
-    {validator: "maxLength", value: 20}
+    {validator: "maxLength", value: 20},
 ])
 class User {
     public _value: string;
