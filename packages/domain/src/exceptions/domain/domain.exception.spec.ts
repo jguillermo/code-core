@@ -23,7 +23,7 @@ describe('DomainException', () => {
   describe('ValidationException', () => {
     it('should create an instance with correct properties', () => {
       const errors = ['Field1 is required', 'Field2 must be a number'];
-      const message = `Input validation failed: Field1 is required, Field2 must be a number`;
+      const message = `Validation failed, Field1 is required, Field2 must be a number`;
       const exception = new ValidationException(errors);
 
       expect(exception).toBeInstanceOf(ValidationException);
