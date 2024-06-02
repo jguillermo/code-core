@@ -1,33 +1,26 @@
 import {NumberValidator} from "@code-core/domain";
+import {testValidation} from "../test/util-test";
 
 
-describe('Validator Number', () => {
-  it('number', async () => {
-    expect(NumberValidator.isValid(1)).toEqual(true);
-    expect(NumberValidator.isValid(1.5)).toEqual(true);
-    expect(NumberValidator.isValid(-1.5)).toEqual(true);
-    expect(NumberValidator.isValid(0)).toEqual(true);
-  });
-  it('object String', async () => {
-    expect(NumberValidator.isValid(Number(1))).toEqual(true);
-    expect(NumberValidator.isValid(Number(1.5))).toEqual(true);
-    expect(NumberValidator.isValid(Number(-1.5))).toEqual(true);
-    expect(NumberValidator.isValid(Number(0))).toEqual(true);
-  });
-  it('boolean', async () => {
-    expect(NumberValidator.isValid(true)).toEqual(false);
-    expect(NumberValidator.isValid(false)).toEqual(false);
-  });
-  it('string', async () => {
-    expect(NumberValidator.isValid('a')).toEqual(false);
-  });
-  it('array', async () => {
-    expect(NumberValidator.isValid(['a'])).toEqual(false);
-    expect(NumberValidator.isValid([1, 2.3])).toEqual(false);
-    expect(NumberValidator.isValid([])).toEqual(false);
-  });
-  it('null', async () => {
-    expect(NumberValidator.isValid(null)).toEqual(false);
-    expect(NumberValidator.isValid(undefined)).toEqual(false);
+describe('NumberValidator', () => {
+  describe('isNumeric', () => {
+    testValidation({
+      validator: NumberValidator.isNumeric,
+      valid: [
+        123, -123, 0, 0.456, 4e2, -1.2345e-2,
+        0xFF, 0b111110111, 0o543,  // Hexadecimal, Binary, Octal numbers
+        '123', '-123', '   123   ', '0.456', '4e2', '0034', '+123', // Valid string representations
+        Number.MAX_VALUE, Number.MIN_VALUE, Number.EPSILON // Numeric limits
+      ],
+      invalid: [
+        NaN, Infinity, -Infinity, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY,
+        '', '   ', 'abc', '123abc', 'NaN', 'Infinity', 'undefined', 'null',
+        '123.456.789', '123,456', // Invalid string formats
+        true, false,  // Boolean values
+        null, undefined,  // Null and Undefined
+        {}, [], [123], new Date(), {value: 123}, [1, 2, 3],  // Objects and Arrays
+        () => 123, Symbol('123'), new Function('return 123')  // Other types
+      ]
+    });
   });
 });
