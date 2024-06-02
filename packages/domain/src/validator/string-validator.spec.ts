@@ -1,29 +1,27 @@
-import { StringValidator } from '@code-core/domain';
+import {StringValidator} from '@code-core/domain';
+import {testValidation} from "../common/test/util-test";
 
-describe('Validator Values', () => {
-  it('string', async () => {
-    expect(StringValidator.isValid('a')).toEqual(true);
-  });
-  it('object String', async () => {
-    expect(StringValidator.isValid(new String('a'))).toEqual(true);
-  });
-  it('boolean', async () => {
-    expect(StringValidator.isValid(true)).toEqual(false);
-    expect(StringValidator.isValid(false)).toEqual(false);
-  });
-  it('number', async () => {
-    expect(StringValidator.isValid(11)).toEqual(false);
-    expect(StringValidator.isValid(0)).toEqual(false);
-    expect(StringValidator.isValid(-11)).toEqual(false);
-    expect(StringValidator.isValid(1.5)).toEqual(false);
-    expect(StringValidator.isValid(-1.5)).toEqual(false);
-  });
-  it('array', async () => {
-    expect(StringValidator.isValid(['a'])).toEqual(false);
-    expect(StringValidator.isValid([])).toEqual(false);
-  });
-  it('null', async () => {
-    expect(StringValidator.isValid(null)).toEqual(false);
-    expect(StringValidator.isValid(undefined)).toEqual(false);
+
+describe('StringValidator', () => {
+  describe('isString', () => {
+    testValidation({
+      validator: StringValidator.isString,
+      valid: [
+        '123', '-123', '   123   ', '0.456', '4e2', '0034', '+123',
+        '', '   ', 'abc', '123abc', 'NaN', 'Infinity', 'undefined', 'null',
+        '123.456.789', '123,456'
+      ],
+      invalid: [
+        123, -123, 0, 0.456, 4e2, -1.2345e-2,
+        0xFF, 0b111110111, 0o543,
+        Number.MAX_VALUE, Number.MIN_VALUE, Number.EPSILON,
+        NaN, Infinity, -Infinity, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY,
+        true, false,
+        null, undefined,
+        {}, [], [123], new Date(), {value: 123}, [1, 2, 3],
+        () => 123, Symbol('123'), new Function('return 123')
+      ]
+    });
   });
 });
+

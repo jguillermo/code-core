@@ -1,5 +1,8 @@
 export class StringValidator {
-  static isValid(item: any): boolean {
-    return typeof item === 'string' || item instanceof String;
+  static isString(value: any): boolean {
+    if (typeof value === 'string') {
+      return true;
+    }
+    return false;
   }
 }
