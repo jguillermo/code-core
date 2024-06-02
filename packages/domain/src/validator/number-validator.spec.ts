@@ -1,5 +1,5 @@
 import {NumberValidator} from "@code-core/domain";
-import {testValidation} from "../test/util-test";
+import {testValidation} from "../common/test/util-test";
 
 
 describe('NumberValidator', () => {

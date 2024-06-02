@@ -1,7 +1,7 @@
 import {AbstractType, ValueTypeNullable} from '../abstract-type';
 import {ValidationException} from "../../exceptions";
 import {universalToString} from "../../common/utils/string/universal-to-string";
-import {NumberValidator} from "../../common";
+import {NumberValidator} from "../../validator";
 
 export abstract class NumberType extends AbstractType<ValueTypeNullable<number>> {
   get toString(): string {
