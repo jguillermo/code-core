@@ -15,7 +15,7 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
     if (value === null) {
       return null;
     }
-    if (!NumberValidator.isNumeric(value)) {
+    if (!NumberValidator.canBeNumber(value)) {
       throw new ValidationException([`invalid number value: ${universalToString(value)}`]);
     }
     const number = Number(value);

@@ -5,7 +5,7 @@ import {testValidation} from "../common/test/util-test";
 describe('NumberValidator', () => {
   describe('isNumeric', () => {
     testValidation({
-      validator: NumberValidator.isNumeric,
+      validator: NumberValidator.canBeNumber,
       valid: [
         123, -123, 0, 0.456, 4e2, -1.2345e-2,
         0xFF, 0b111110111, 0o543,  // Hexadecimal, Binary, Octal numbers

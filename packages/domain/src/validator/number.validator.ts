@@ -1,5 +1,5 @@
 export class NumberValidator {
-  static isNumeric(value: any): boolean {
+  static canBeNumber(value: any): boolean {
     // Verifica que el valor no sea null ni undefined
     if (value === null || value === undefined) {
       return false;
