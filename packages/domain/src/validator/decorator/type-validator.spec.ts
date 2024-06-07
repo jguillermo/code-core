@@ -2,8 +2,8 @@ import {AddValidate} from "./type-validator";
 import {validate} from 'class-validator';
 
 @AddValidate([
-    {validator: "minLength", value: 3, options: {message: "Name is too short"}},
-    {validator: "maxLength", value: 20},
+    {validator: "MinLength", value: 3, options: {message: "Name is too short"}},
+    {validator: "MaxLength", value: 20},
 ])
 class User {
     public _value: string;

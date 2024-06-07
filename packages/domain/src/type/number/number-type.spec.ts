@@ -1,5 +1,7 @@
 import {NumberType, NumberTypeImp} from './';
 import {classExceptionSpec, classTestSpec, testValidation} from "../../common/test/util-test";
+import {AddValidate} from "../../validator/decorator/type-validator";
+import {validate} from "class-validator";
 
 describe('Number Type', () => {
   describe('NumberTypeImp expect value', () => {
@@ -72,6 +74,24 @@ describe('Number Type', () => {
           new Function('return 123')
         ],
       }
+    });
+  });
+
+  describe('Validation', () => {
+    @AddValidate([
+      {validator: "Min", value: 3},
+      {validator: "Max", value: 20},
+    ])
+    class ValueObjectNumber extends NumberType {
+    }
+
+    it('should validate', async() => {
+      const valueObjectNumber = new ValueObjectNumber(21);
+      const errors = await validate(valueObjectNumber);
+      expect(errors.length).toEqual(1);
+      expect(errors[0].property).toEqual('_value');
+      expect(errors[0].constraints.max).toEqual('_value must not be greater than 20')
+
     });
   });
 });
