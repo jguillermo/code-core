@@ -1,8 +1,12 @@
 import {AbstractType, ValueTypeNullable} from '../abstract-type';
+import {NumberValidator} from "../../validator";
+import {AddValidate} from "../../validator/decorator/type-validator";
 import {ValidationException} from "../../exceptions";
 import {universalToString} from "../../common/utils/string/universal-to-string";
-import {NumberValidator} from "../../validator";
 
+@AddValidate([
+  {validator: "IsNumber"},
+])
 export abstract class NumberType extends AbstractType<ValueTypeNullable<number>> {
   get toString(): string {
     if (this.isNull) {
@@ -12,6 +16,7 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
   }
 
   protected filter(value: any): number | null {
+    return value;
     if (value === null) {
       return null;
     }
@@ -19,6 +24,6 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
       throw new ValidationException([`invalid number value: ${universalToString(value)}`]);
     }
     const number = Number(value);
-    return isNaN(number) ? 0 : number.valueOf();
+    return isNaN(number) ? NaN : number.valueOf();
   }
 }

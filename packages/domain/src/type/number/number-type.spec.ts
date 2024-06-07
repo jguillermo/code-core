@@ -79,6 +79,7 @@ describe('Number Type', () => {
 
   describe('Validation', () => {
     @AddValidate([
+      {validator: "IsInt"},
       {validator: "Min", value: 3},
       {validator: "Max", value: 20},
     ])
@@ -86,11 +87,15 @@ describe('Number Type', () => {
     }
 
     it('should validate', async() => {
-      const valueObjectNumber = new ValueObjectNumber(21);
+      const valueObjectNumber = new ValueObjectNumber('21.1.1');
       const errors = await validate(valueObjectNumber);
       expect(errors.length).toEqual(1);
       expect(errors[0].property).toEqual('_value');
-      expect(errors[0].constraints.max).toEqual('_value must not be greater than 20')
+      expect(errors[0].constraints.isNumber).toBeDefined();
+      expect(errors[0].constraints.isNumber).toEqual('_value must be a number conforming to the specified constraints');
+      expect(errors[0].constraints.isInt).toEqual('_value must be an integer number');
+      expect(errors[0].constraints.min).toEqual('_value must not be less than 3');
+      expect(errors[0].constraints.max).toEqual('_value must not be greater than 20');
 
     });
   });
