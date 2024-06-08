@@ -77,7 +77,7 @@ describe('Number Type', () => {
     });
   });
 
-  describe('Validation', () => {
+  describe('AddValidate', () => {
     @AddValidate([
       {validator: "IsInt"},
       {validator: "Min", value: 3},

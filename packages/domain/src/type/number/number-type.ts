@@ -16,6 +16,8 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
   }
 
   protected filter(value: any): number | null {
+    // todo, create a custom validate numbre and separate validator and trasform
+    return value;
     if (value === null) {
       return null;
     }
