@@ -1,242 +1,36 @@
 import 'reflect-metadata';
-import {
-  Allow,
-  ArrayContains,
-  ArrayMaxSize,
-  ArrayMinSize,
-  ArrayNotContains,
-  ArrayNotEmpty,
-  ArrayUnique,
-  Contains,
-  Equals,
-  IsAlpha,
-  IsAlphanumeric,
-  IsArray,
-  IsAscii,
-  IsBase32,
-  IsBase58,
-  IsBase64,
-  IsBIC,
-  IsBoolean,
-  IsBooleanString,
-  IsBtcAddress,
-  IsByteLength,
-  IsCreditCard,
-  IsCurrency,
-  IsDataURI,
-  IsDate,
-  IsDateString,
-  IsDecimal,
-  IsDefined,
-  IsDivisibleBy,
-  IsEAN,
-  IsEmail,
-  IsEmpty,
-  IsEnum,
-  IsEthereumAddress,
-  IsFirebasePushId,
-  IsFQDN,
-  IsFullWidth,
-  IsHalfWidth,
-  IsHash,
-  IsHexadecimal,
-  IsHexColor,
-  IsHSL,
-  IsIBAN,
-  IsIdentityCard,
-  IsIn,
-  IsInstance,
-  IsInt,
-  IsIP,
-  IsISBN,
-  IsISIN,
-  IsISO31661Alpha2,
-  IsISO31661Alpha3,
-  IsISO4217CurrencyCode,
-  IsISO8601,
-  IsISRC,
-  IsISSN,
-  IsJSON,
-  IsJWT,
-  IsLatitude,
-  IsLatLong,
-  IsLocale,
-  IsLongitude,
-  IsLowercase,
-  IsMACAddress,
-  IsMagnetURI,
-  IsMilitaryTime,
-  IsMimeType,
-  IsMobilePhone,
-  IsMongoId,
-  IsMultibyte,
-  IsNegative,
-  IsNotEmpty,
-  IsNotEmptyObject,
-  IsNotIn,
-  IsNumber,
-  IsNumberString,
-  IsObject,
-  IsOctal,
-  IsOptional,
-  IsPassportNumber,
-  IsPhoneNumber,
-  IsPort,
-  IsPositive,
-  IsPostalCode,
-  IsRFC3339,
-  IsRgbColor,
-  IsSemVer,
-  IsString,
-  IsStrongPassword,
-  IsSurrogatePair,
-  IsTaxId,
-  IsTimeZone,
-  IsUppercase,
-  IsUrl,
-  IsUUID,
-  IsVariableWidth,
-  Length,
-  Matches,
-  Max,
-  MaxDate,
-  MaxLength,
-  Min,
-  MinDate,
-  MinLength,
-  NotContains,
-  NotEquals,
-  ValidationOptions
-} from 'class-validator';
+import {ValidationStorage, ValidatorMapI, validatorsMap} from "./validation-storage";
 
-const validatorsMap = {
-  Min,
-  Max,
-  IsEmail,
-  IsDefined,
-  IsOptional,
-  Equals,
-  NotEquals,
-  IsEmpty,
-  IsNotEmpty,
-  IsIn,
-  IsNotIn,
-  IsBoolean,
-  IsDate,
-  IsString,
-  IsNumber,
-  IsInt,
-  IsArray,
-  IsEnum,
-  IsDivisibleBy,
-  IsPositive,
-  IsNegative,
-  MinDate,
-  MaxDate,
-  IsBooleanString,
-  IsDateString,
-  IsNumberString,
-  Contains,
-  NotContains,
-  IsAlpha,
-  IsAlphanumeric,
-  IsDecimal,
-  IsAscii,
-  IsBase32,
-  IsBase58,
-  IsBase64,
-  IsIBAN,
-  IsBIC,
-  IsByteLength,
-  IsCreditCard,
-  IsCurrency,
-  IsISO4217CurrencyCode,
-  IsEthereumAddress,
-  IsBtcAddress,
-  IsDataURI,
-  IsFQDN,
-  IsFullWidth,
-  IsHalfWidth,
-  IsVariableWidth,
-  IsHexColor,
-  IsHSL,
-  IsRgbColor,
-  IsIdentityCard,
-  IsPassportNumber,
-  IsPostalCode,
-  IsHexadecimal,
-  IsOctal,
-  IsMACAddress,
-  IsIP,
-  IsPort,
-  IsISBN,
-  IsEAN,
-  IsISIN,
-  IsISO8601,
-  IsJSON,
-  IsJWT,
-  IsObject,
-  IsNotEmptyObject,
-  IsLowercase,
-  IsLatLong,
-  IsLatitude,
-  IsLongitude,
-  IsMobilePhone,
-  IsISO31661Alpha2,
-  IsISO31661Alpha3,
-  IsLocale,
-  IsPhoneNumber,
-  IsMongoId,
-  IsMultibyte,
-  IsSurrogatePair,
-  IsTaxId,
-  IsUrl,
-  IsMagnetURI,
-  IsUUID,
-  IsFirebasePushId,
-  IsUppercase,
-  Length,
-  MinLength,
-  MaxLength,
-  Matches,
-  IsMilitaryTime,
-  IsTimeZone,
-  IsHash,
-  IsMimeType,
-  IsSemVer,
-  IsISSN,
-  IsISRC,
-  IsRFC3339,
-  IsStrongPassword,
-  ArrayContains,
-  ArrayNotContains,
-  ArrayNotEmpty,
-  ArrayMinSize,
-  ArrayMaxSize,
-  ArrayUnique,
-  IsInstance,
-  Allow
-};
+function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
+  validatorConfigs.forEach(config => {
+    const validator: any = validatorsMap[config.validator];
+    if (!validator) {
+      throw new Error(`Validator ${config.validator} is not supported.`);
+    }
+    if (config.value) {
+      validator(config.value, config.options)(cls.prototype, propertyKey);
+    } else {
+      validator(config.options)(cls.prototype, propertyKey);
+    }
+  });
+  ValidationStorage.getInstance().addValidations(cls, propertyKey, validatorConfigs)
+}
 
-interface ValidatorMapI {
-  validator: keyof typeof validatorsMap,
-  value?: any,
-  options?: ValidationOptions
+function applyParentValidations(cls: Function, propertyKey: string) {
+  const parentPrototype = Object.getPrototypeOf(cls.prototype);
+  if (parentPrototype && parentPrototype !== Object.prototype) {
+    const parentValidatorConfigs = ValidationStorage.getInstance().getValidations(parentPrototype.constructor, propertyKey);
+    if(parentValidatorConfigs.length > 0)   {
+      registerDecorator(cls, parentValidatorConfigs, propertyKey);
+    }
+  }
 }
 
 export function AddValidate(validatorConfigs: ValidatorMapI[], propertyKey: string = '_value') {
-
-  return function (constructor: Function) {
-    validatorConfigs.forEach(config => {
-      const validator: any = validatorsMap[config.validator];
-      if (!validator) {
-        console.warn(`Validator ${config.validator} is not supported.`);
-      }
-      if (config.value) {
-        validator(config.value, config.options)(constructor.prototype, propertyKey);
-      } else {
-        validator(config.options)(constructor.prototype, propertyKey);
-      }
-    });
+  return function (cls: Function) {
+    applyParentValidations(cls, propertyKey);
+    registerDecorator(cls, validatorConfigs, propertyKey);
   }
 }
+
+

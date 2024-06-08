@@ -1,98 +1,80 @@
 import {AddValidate} from "./type-validator";
-import {IsInt, IsNumber, validate} from 'class-validator';
+import {validate} from 'class-validator';
+import {ValidationStorage} from "./validation-storage";
 
 @AddValidate([
-    {validator: "MinLength", value: 3, options: {message: "Name is too short"}},
-    {validator: "MaxLength", value: 20},
+  {validator: "MinLength", value: 3, options: {message: "Name is too short"}},
+  {validator: "MaxLength", value: 20},
 ])
 class User {
-    public _value: string;
-    constructor(value: string) {
-        this._value = value;
-    }
+  public _value: string;
+
+  constructor(value: string) {
+    this._value = value;
+  }
 }
 
+
+
 describe('Validator', () => {
-    it('error validator', async () => {
-        const user = new User("J");
-        const errors = await validate(user);
-        expect(errors.length).toEqual(1);
-        expect(errors[0].property).toEqual('_value');
-        expect(errors[0].constraints.minLength).toBeDefined();
-        expect(errors[0].constraints.minLength).toEqual('Name is too short')
+  it('error validator', async () => {
+    const user = new User("J");
+    const errors = await validate(user);
+    expect(errors.length).toEqual(1);
+    expect(errors[0].property).toEqual('_value');
+    expect(errors[0].constraints.minLength).toBeDefined();
+    expect(errors[0].constraints.minLength).toEqual('Name is too short')
 
-    });
+  });
 
-    it('correct validator', async () => {
-        const user = new User("John");
-        const errors = await validate(user);
-        expect(errors.length).toEqual(0);
+  it('correct validator', async () => {
+    const user = new User("John");
+    const errors = await validate(user);
+    expect(errors.length).toEqual(0);
 
-    });
+  });
 });
 
 describe('Validator', () => {
-    it('should ', async () => {
-        class ParentPArentClass {
-            private _value: any;
+  it('should add parent validator ', async () => {
 
-            constructor(value: any) {
-                this._value = value;
-            }
+    class ParentPArentClass {
+      private _value: any;
 
-            get value(): any {
-                return this._value;
-            }
-        }
+      constructor(value: any) {
+        this._value = value;
+      }
 
-        @AddValidate([
-            {validator: "IsNumber"},
-        ],'_parentClassValidate')
-        class ParentClass extends ParentPArentClass {
-            private _parentClassValidate: any;
-            constructor(value: any) {
-                super(value);
-                this._parentClassValidate = value;
-            }
-        }
+      get value(): any {
+        return this._value;
+      }
+    }
 
-        @AddValidate([
-            {validator: "IsInt",},
-        ])
-        class ChildClass extends ParentClass {
+    @AddValidate([
+      {validator: "IsNumber"},
+    ])
+    class ParentClass extends ParentPArentClass {
+      constructor(value: any) {
+        super(value);
+      }
+    }
 
-        }
+    @AddValidate([
+      {validator: "IsInt",},
+    ])
+    class ChildClass extends ParentClass {
 
-        const parentInstance = new ParentClass('ParentClass');  // Esto debería fallar la validación IsNumber
-        const childInstance = new ChildClass('ChildClass');  // Esto debería fallar la validación IsInt
+    }
+    // ValidationStorage.getInstance().log();
 
-        const parentErrors = await validate(parentInstance);
-        const childErrors = await validate(childInstance);
-
-        // Expectations for ParentClass
-        expect(parentErrors).toHaveLength(1);
-        expect(parentErrors[0].property).toBe('_parentClassValidate');
-        expect(parentErrors[0].constraints).toEqual({
-            isNumber: '_parentClassValidate must be a number conforming to the specified constraints',
-        });
-
-        // Expectations for ChildClass
-        expect(childErrors).toHaveLength(2);
-
-        // Validation error for '_value' property
-        const valueError = childErrors.find(error => error.property === '_value');
-        expect(valueError).toBeDefined();
-        expect(valueError?.constraints).toEqual({
-            isInt: '_value must be an integer number',
-        });
-
-        // Validation error for '_parentClassValidate' property
-        const parentClassValidateError = childErrors.find(error => error.property === '_parentClassValidate');
-        expect(parentClassValidateError).toBeDefined();
-        expect(parentClassValidateError?.constraints).toEqual({
-            isNumber: '_parentClassValidate must be a number conforming to the specified constraints',
-        });
-
-
+    const childInstance = new ChildClass('ChildClassStr');  // Esto debería fallar la validación IsInt
+    const childErrors = await validate(childInstance);
+    // Validation error for '_value' property
+    const valueError = childErrors.find(error => error.property === '_value');
+    expect(valueError).toBeDefined();
+    expect(valueError?.constraints).toEqual({
+      isNumber: '_value must be a number conforming to the specified constraints',
+      isInt: '_value must be an integer number'
     });
+  });
 });
