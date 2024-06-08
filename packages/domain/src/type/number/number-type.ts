@@ -16,7 +16,6 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
   }
 
   protected filter(value: any): number | null {
-    return value;
     if (value === null) {
       return null;
     }
