@@ -225,6 +225,7 @@ export interface ValidatorMapI {
 
 export class ValidationStorage {
   private static instance: ValidationStorage;
+  //todo add simbol to replace intance class in ferenfrece
   private _validationMap: Map<any, Map<string, ValidatorMapI[]>>;
 
   private constructor() {
