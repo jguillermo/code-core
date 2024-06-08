@@ -33,5 +33,5 @@ export abstract class AbstractType<T> implements ValidatorInterface {
 
     abstract get toString(): string;
 
-    protected abstract filter(value: any): T;
+    protected abstract filter(value: any): any;
 }

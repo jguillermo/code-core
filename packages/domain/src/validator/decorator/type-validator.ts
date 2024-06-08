@@ -3,10 +3,17 @@ import {ValidationStorage, ValidatorMapI, validatorsMap} from "./validation-stor
 
 function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
   validatorConfigs.forEach(config => {
-    const validator: any = validatorsMap[config.validator];
-    if (!validator) {
-      throw new Error(`Validator ${config.validator} is not supported.`);
+    let validator: any;
+    if (typeof config.validator === 'string' && validatorsMap[config.validator]) {
+      validator = validatorsMap[config.validator];
+      if (!validator) {
+        throw new Error(`Validator ${config.validator} is not supported.`);
+      }
+    } else {
+      validator = config.validator;
     }
+    console.log('validator', validator);
+
     if (config.value) {
       validator(config.value, config.options)(cls.prototype, propertyKey);
     } else {
@@ -20,7 +27,7 @@ function applyParentValidations(cls: Function, propertyKey: string) {
   const parentPrototype = Object.getPrototypeOf(cls.prototype);
   if (parentPrototype && parentPrototype !== Object.prototype) {
     const parentValidatorConfigs = ValidationStorage.getInstance().getValidations(parentPrototype.constructor, propertyKey);
-    if(parentValidatorConfigs.length > 0)   {
+    if (parentValidatorConfigs.length > 0) {
       registerDecorator(cls, parentValidatorConfigs, propertyKey);
     }
   }

@@ -1,11 +1,10 @@
 import {AbstractType, ValueTypeNullable} from '../abstract-type';
 import {NumberValidator} from "../../validator";
 import {AddValidate} from "../../validator/decorator/type-validator";
-import {ValidationException} from "../../exceptions";
-import {universalToString} from "../../common/utils/string/universal-to-string";
+import {CanBeNumberValidator} from "../../validator/decorator/custom/can-be-number";
 
 @AddValidate([
-  {validator: "IsNumber"},
+  {validator: CanBeNumberValidator},
 ])
 export abstract class NumberType extends AbstractType<ValueTypeNullable<number>> {
   get toString(): string {
@@ -15,16 +14,14 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
     return `${this.value}`;
   }
 
-  protected filter(value: any): number | null {
-    // todo, create a custom validate numbre and separate validator and trasform
-    return value;
+  protected filter(value: any): any | null {
     if (value === null) {
       return null;
     }
-    if (!NumberValidator.canBeNumber(value)) {
-      throw new ValidationException([`invalid number value: ${universalToString(value)}`]);
+    if (NumberValidator.canBeNumber(value)) {
+      const number = Number(value);
+      return isNaN(number) ? NaN : number.valueOf();
     }
-    const number = Number(value);
-    return isNaN(number) ? NaN : number.valueOf();
+    return value;
   }
 }

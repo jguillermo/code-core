@@ -218,7 +218,7 @@ export const validatorsMap = {
 };
 
 export interface ValidatorMapI {
-  validator: keyof typeof validatorsMap,
+  validator: keyof typeof validatorsMap | Function,
   value?: any,
   options?: ValidationOptions
 }

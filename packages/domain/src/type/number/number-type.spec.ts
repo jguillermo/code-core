@@ -91,8 +91,7 @@ describe('Number Type', () => {
       const errors = await validate(valueObjectNumber);
       expect(errors.length).toEqual(1);
       expect(errors[0].property).toEqual('_value');
-      expect(errors[0].constraints.isNumber).toBeDefined();
-      expect(errors[0].constraints.isNumber).toEqual('_value must be a number conforming to the specified constraints');
+      expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
       expect(errors[0].constraints.isInt).toEqual('_value must be an integer number');
       expect(errors[0].constraints.min).toEqual('_value must not be less than 3');
       expect(errors[0].constraints.max).toEqual('_value must not be greater than 20');
