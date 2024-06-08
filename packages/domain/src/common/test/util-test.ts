@@ -1,4 +1,4 @@
-import {isString} from "class-validator";
+import {isString, validate} from "class-validator";
 import {universalToString} from "../utils/string/universal-to-string";
 
 interface ITestValidation {
@@ -58,6 +58,20 @@ export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
       it(dataInput.title, () => {
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
+      });
+    });
+  }
+}
+
+export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: { constraints: object, values: any[] } }) {
+  for (const exceptionItem in exceptionList) {
+    exceptionList[exceptionItem]['values'].forEach((value) => {
+      const valueText = isString(value) ? `'${value}'` : universalToString(value);
+      it(`type error validator ${exceptionItem} error with ${valueText}`, async () => {
+        const errors = await validate(new cls(value));
+        expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
+        expect(errors.length).toEqual(1);
+        expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
       });
     });
   }

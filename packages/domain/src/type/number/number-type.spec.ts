@@ -1,5 +1,5 @@
 import {NumberType, NumberTypeImp} from './';
-import {classExceptionSpec, classTestSpec, testValidation} from "../../common/test/util-test";
+import {classTestSpec, typeErrorValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
 import {validate} from "class-validator";
 
@@ -55,10 +55,12 @@ describe('Number Type', () => {
         ]
       }
     );
-    classExceptionSpec(NumberTypeImp, {
-      'ValidationException': {
-        'message': 'Validation failed, invalid number value:',
-        'values': [
+    typeErrorValidationSpec(NumberTypeImp, {
+      'canBeNumber': {
+        constraints: {
+          canBeNumber: '_value must be a number'
+        },
+        values: [
           'random',
           true,
           false,
@@ -86,7 +88,7 @@ describe('Number Type', () => {
     class ValueObjectNumber extends NumberType {
     }
 
-    it('should validate', async() => {
+    it('should validate', async () => {
       const valueObjectNumber = new ValueObjectNumber('21.1.1');
       const errors = await validate(valueObjectNumber);
       expect(errors.length).toEqual(1);
