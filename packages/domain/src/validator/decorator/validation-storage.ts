@@ -268,7 +268,7 @@ export class ValidationStorage {
     return this._validationMap;
   }
 
-  log(): void {
+  log(): string {
     const validationObject: any = {};
     this._validationMap.forEach((propertiesMap, cls) => {
       validationObject[cls] = {};
@@ -276,6 +276,6 @@ export class ValidationStorage {
         validationObject[cls][propertyKey] = validations;
       });
     });
-    console.log(JSON.stringify(validationObject, null, 2));
+    return JSON.stringify(validationObject, null, 2);
   }
 }

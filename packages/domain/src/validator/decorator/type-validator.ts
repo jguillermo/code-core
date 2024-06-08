@@ -12,7 +12,6 @@ function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], pro
     } else {
       validator = config.validator;
     }
-    console.log('validator', validator);
 
     if (config.value) {
       validator(config.value, config.options)(cls.prototype, propertyKey);
