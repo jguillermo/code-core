@@ -1,6 +1,6 @@
-import {AbstractNumberType} from './';
 import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
+import {AbstractNumberType} from "@code-core/domain";
 
 
 describe('Number Type', () => {
