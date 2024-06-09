@@ -1,11 +1,16 @@
-import {NumberType, NumberTypeImp} from './';
-import {classTestSpec, typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
+import {NumberType} from './';
+import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
 import {validate} from "class-validator";
+import {ValidationStorage} from "../../validator/decorator/validation-storage";
+
 
 describe('Number Type', () => {
-  describe('NumberTypeImp expect value', () => {
-    typeValidationSpec(NumberTypeImp, {
+  describe('NumberTypeRequired expect value', () => {
+    class NumberTypeRequired extends NumberType {
+    }
+
+    typeValidationSpec(NumberTypeRequired, {
         'value': [
           //valid number value
           [1, 1],
@@ -44,7 +49,87 @@ describe('Number Type', () => {
         ]
       }
     );
-    typeErrorValidationSpec(NumberTypeImp, {
+    typeErrorValidationSpec(NumberTypeRequired, {
+      'canBeNumber': {
+        constraints: {
+          canBeNumber: '_value must be a number'
+        },
+        values: [
+          [null, null],
+          [undefined, null],
+          'random',
+          true,
+          false,
+          '',
+          '   ',
+          [],
+          {},
+          [1, 2, 3],
+          new Date(),
+          {value: 123},
+          () => 123,
+          Symbol('123'),
+          new Function('return 123')
+        ],
+      }
+    });
+  });
+  describe('NumberTypeOptional expect value', () => {
+    @AddValidate([
+      {validator: "IsOptional"},
+    ])
+    class NumberTypeOptional extends NumberType {
+    }
+
+    console.log(ValidationStorage.getInstance().log());
+
+    typeValidationSpec(NumberTypeOptional, {
+        'value': [
+          //valid number value
+          [1, 1],
+          [-1, -1],
+          [1.1, 1.1],
+          [-1.1, -1.1],
+          [0, 0],
+          null,
+          [null, null],
+          [undefined, null],
+          //string
+          ['1', 1],
+          ['1.1', 1.1],
+          ['-1', -1],
+          ['-1.1', -1.1],
+          ['0', 0],
+        ],
+        'isNull': [
+          [null, true],
+          [undefined, true],
+          [0, false],
+          [0.1, false],
+          [1, false],
+          [1.1, false],
+          ['0', false],
+          ['1', false],
+        ],
+        'toString': [
+          [null, ''],
+          [undefined, ''],
+          //valid number value
+          [1, '1'],
+          [-1, '-1'],
+          [1.1, '1.1'],
+          [-1.1, '-1.1'],
+          [0, '0'],
+          //string
+          ['1', '1'],
+          ['1.1', '1.1'],
+          ['-1', '-1'],
+          ['-1.1', '-1.1'],
+          ['0', '0'],
+        ]
+      }
+    );
+    typeErrorValidationSpec(NumberTypeOptional, {
       'canBeNumber': {
         constraints: {
           canBeNumber: '_value must be a number'
