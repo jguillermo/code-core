@@ -6,7 +6,7 @@ import {CanBeNumberValidator} from "../../validator/decorator/custom/can-be-numb
 @AddValidate([
   {validator: CanBeNumberValidator},
 ])
-export abstract class NumberType extends AbstractType<ValueTypeNullable<number>> {
+export abstract class AbstractNumberType extends AbstractType<ValueTypeNullable<number>> {
   get toString(): string {
     if (this.isNull) {
       return '';

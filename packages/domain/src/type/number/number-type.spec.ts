@@ -1,11 +1,11 @@
-import {NumberType} from './';
+import {AbstractNumberType} from './';
 import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
 
 
 describe('Number Type', () => {
   describe('NumberTypeRequired expect value', () => {
-    class NumberTypeRequired extends NumberType {
+    class NumberTypeRequired extends AbstractNumberType {
     }
 
     typeValidationSpec(NumberTypeRequired, {
@@ -76,7 +76,7 @@ describe('Number Type', () => {
     @AddValidate([
       {validator: "IsOptional"},
     ])
-    class NumberTypeOptional extends NumberType {
+    class NumberTypeOptional extends AbstractNumberType {
     }
 
     typeValidationSpec(NumberTypeOptional, {
@@ -155,7 +155,7 @@ describe('Number Type', () => {
       {validator: "Min", value: 10},
       {validator: "Max", value: 20},
     ])
-    class ValueObjectNumber extends NumberType {
+    class ValueObjectNumber extends AbstractNumberType {
     }
     typeValidationSpec(ValueObjectNumber, {
         'value': [

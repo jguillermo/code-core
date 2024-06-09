@@ -1,1 +1,1 @@
-export * from './number-type';
+export * from './abstract-number-type';
