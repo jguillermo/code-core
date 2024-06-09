@@ -82,10 +82,9 @@ export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: 
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
-      it(`type error validator ${exceptionItem} error with ${valueText}`, async () => {
+      it(`type error validator ${exceptionItem} with ${valueText}`, async () => {
         const errors = await validate(new cls(value));
         expect(errors.length).toEqual(1);
-        expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
         expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
       });
     });

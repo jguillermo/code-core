@@ -1,8 +1,6 @@
 import {NumberType} from './';
 import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
-import {validate} from "class-validator";
-import {ValidationStorage} from "../../validator/decorator/validation-storage";
 
 
 describe('Number Type', () => {
@@ -55,8 +53,8 @@ describe('Number Type', () => {
           canBeNumber: '_value must be a number'
         },
         values: [
-          [null, null],
-          [undefined, null],
+          null,
+          undefined,
           'random',
           true,
           false,
@@ -133,8 +131,6 @@ describe('Number Type', () => {
           canBeNumber: '_value must be a number'
         },
         values: [
-          [null, null],
-          [undefined, null],
           'random',
           true,
           false,
@@ -156,23 +152,49 @@ describe('Number Type', () => {
   describe('AddValidate', () => {
     @AddValidate([
       {validator: "IsInt"},
-      {validator: "Min", value: 3},
+      {validator: "Min", value: 10},
       {validator: "Max", value: 20},
     ])
     class ValueObjectNumber extends NumberType {
     }
 
-    it('should validate', async () => {
-      const valueObjectNumber = new ValueObjectNumber('21.1.1');
-      const errors = await validate(valueObjectNumber);
-      expect(errors.length).toEqual(1);
-      expect(errors[0].property).toEqual('_value');
-      expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
-      expect(errors[0].constraints.isInt).toEqual('_value must be an integer number');
-      expect(errors[0].constraints.min).toEqual('_value must not be less than 3');
-      expect(errors[0].constraints.max).toEqual('_value must not be greater than 20');
 
+    typeErrorValidationSpec(ValueObjectNumber, {
+      'notNumber': {
+        constraints: {
+          canBeNumber: "_value must be a number",
+          isInt: "_value must be an integer number",
+          max: "_value must not be greater than 20",
+          min: "_value must not be less than 10"
+        },
+        values: [
+          'random',
+          '21.1.1',
+          true,
+          false,
+          '',
+          '   ',
+          [],
+          {},
+          [1, 2, 3],
+          new Date(),
+          {value: 123},
+          () => 123,
+          Symbol('123'),
+          new Function('return 123')
+        ],
+      },
+      'isInt': {
+        constraints: {
+          isInt: "_value must be an integer number"
+        },
+        values: [
+          '11.1',
+          11.1
+        ],
+      }
     });
+
   });
 });
 
