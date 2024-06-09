@@ -63,14 +63,29 @@ export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
   }
 }
 
+export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] }) {
+  for (const property in objectList) {
+    objectList[property].forEach((value) => {
+      const dataInput = processValidator(cls.name, value, property);
+      it(dataInput.title, async () => {
+        const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
+        expect(type[property]).toEqual(dataInput.expectValue);
+        const errors = await validate(type);
+        expect(errors.length).toEqual(0);
+
+      });
+    });
+  }
+}
+
 export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: { constraints: object, values: any[] } }) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
       it(`type error validator ${exceptionItem} error with ${valueText}`, async () => {
         const errors = await validate(new cls(value));
-        expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
         expect(errors.length).toEqual(1);
+        expect(errors[0].constraints.canBeNumber).toEqual('_value must be a number');
         expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
       });
     });

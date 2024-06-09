@@ -15,9 +15,6 @@ export abstract class NumberType extends AbstractType<ValueTypeNullable<number>>
   }
 
   protected filter(value: any): any | null {
-    if (value === null) {
-      return null;
-    }
     if (NumberValidator.canBeNumber(value)) {
       const number = Number(value);
       return isNaN(number) ? NaN : number.valueOf();

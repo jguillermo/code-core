@@ -1,11 +1,11 @@
 import {NumberType, NumberTypeImp} from './';
-import {classTestSpec, typeErrorValidationSpec} from "../../common/test/util-test";
+import {classTestSpec, typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
 import {validate} from "class-validator";
 
 describe('Number Type', () => {
   describe('NumberTypeImp expect value', () => {
-    classTestSpec(NumberTypeImp, {
+    typeValidationSpec(NumberTypeImp, {
         'value': [
           //valid number value
           [1, 1],
@@ -13,10 +13,6 @@ describe('Number Type', () => {
           [1.1, 1.1],
           [-1.1, -1.1],
           [0, 0],
-          //Empty
-          null,
-          [null, null],
-          [undefined, null],
           //string
           ['1', 1],
           ['1.1', 1.1],
@@ -25,9 +21,6 @@ describe('Number Type', () => {
           ['0', 0],
         ],
         'isNull': [
-          true,
-          [undefined, true],
-          [null, true],
           [0, false],
           [0.1, false],
           [1, false],
@@ -42,10 +35,6 @@ describe('Number Type', () => {
           [1.1, '1.1'],
           [-1.1, '-1.1'],
           [0, '0'],
-          //Empty
-          '',
-          [null, ''],
-          [undefined, ''],
           //string
           ['1', '1'],
           ['1.1', '1.1'],
@@ -61,6 +50,8 @@ describe('Number Type', () => {
           canBeNumber: '_value must be a number'
         },
         values: [
+          [null, null],
+          [undefined, null],
           'random',
           true,
           false,
