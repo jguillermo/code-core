@@ -157,7 +157,15 @@ describe('Number Type', () => {
     ])
     class ValueObjectNumber extends NumberType {
     }
-
+    typeValidationSpec(ValueObjectNumber, {
+        'value': [
+          //valid number value
+          [10, 10],
+          [15, 15],
+          [20, 20],
+        ]
+      }
+    );
 
     typeErrorValidationSpec(ValueObjectNumber, {
       'notNumber': {

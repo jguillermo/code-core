@@ -67,7 +67,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   for (const property in objectList) {
     objectList[property].forEach((value) => {
       const dataInput = processValidator(cls.name, value, property);
-      it(dataInput.title, async () => {
+      it(dataInput.title + ' and not error', async () => {
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
         const errors = await validate(type);
