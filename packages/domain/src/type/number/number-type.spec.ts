@@ -81,8 +81,6 @@ describe('Number Type', () => {
     class NumberTypeOptional extends NumberType {
     }
 
-    console.log(ValidationStorage.getInstance().log());
-
     typeValidationSpec(NumberTypeOptional, {
         'value': [
           //valid number value
