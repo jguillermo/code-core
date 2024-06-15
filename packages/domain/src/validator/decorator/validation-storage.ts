@@ -2,11 +2,12 @@ import {ValidatorMapI} from "./validators-map";
 
 export class ValidationStorage {
   private static instance: ValidationStorage;
-  //todo add simbol to replace intance class in ferenfrece
-  private _validationMap: Map<any, Map<string, ValidatorMapI[]>>;
+  private _validationMap: Map<symbol, Map<string, ValidatorMapI[]>>;
+  private _classMap: WeakMap<Function, symbol>;
 
   private constructor() {
     this._validationMap = new Map();
+    this._classMap = new WeakMap();
   }
 
   static getInstance(): ValidationStorage {
@@ -16,21 +17,19 @@ export class ValidationStorage {
     return ValidationStorage.instance;
   }
 
-  addValidations2(cls: Function, propertyKey: string, validatorConfigs: ValidatorMapI[]) {
-    if (!this._validationMap.has(cls)) {
-      this._validationMap.set(cls, new Map());
+  private getClassKey(cls: Function): symbol {
+    if (!this._classMap.has(cls)) {
+      this._classMap.set(cls, Symbol());
     }
-    const propertyValidations = this._validationMap.get(cls);
-    if (!propertyValidations?.has(propertyKey)) {
-      propertyValidations?.set(propertyKey, validatorConfigs);
-    }
+    return this._classMap.get(cls)!;
   }
 
   addValidations(cls: Function, propertyKey: string, validationConfigs: ValidatorMapI[]) {
-    if (!this._validationMap.has(cls)) {
-      this._validationMap.set(cls, new Map());
+    const clsKey = this.getClassKey(cls);
+    if (!this._validationMap.has(clsKey)) {
+      this._validationMap.set(clsKey, new Map());
     }
-    const propertyValidations = this._validationMap.get(cls);
+    const propertyValidations = this._validationMap.get(clsKey);
     if (!propertyValidations?.has(propertyKey)) {
       propertyValidations?.set(propertyKey, []);
     }
@@ -39,11 +38,8 @@ export class ValidationStorage {
   }
 
   getValidations(cls: Function, propertyKey: string): ValidatorMapI[] {
-    return this._validationMap.get(cls)?.get(propertyKey) || [];
-  }
-
-  getAll(): Map<string, Map<any, ValidatorMapI[]>> {
-    return this._validationMap;
+    const clsKey = this.getClassKey(cls);
+    return this._validationMap.get(clsKey)?.get(propertyKey) || [];
   }
 
   log(): string {
@@ -55,5 +51,9 @@ export class ValidationStorage {
       });
     });
     return JSON.stringify(validationObject, null, 2);
+  }
+
+  clearMap():void {
+    this._validationMap.clear();
   }
 }
