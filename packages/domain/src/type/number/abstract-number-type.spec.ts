@@ -1,6 +1,7 @@
 import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {AddValidate} from "../../validator/decorator/type-validator";
 import {AbstractNumberType} from "@code-core/domain";
+import {IsNotEmpty, Length, Max, Min, validate, ValidationArguments} from "class-validator";
 
 
 describe('Number Type', () => {
@@ -157,6 +158,7 @@ describe('Number Type', () => {
     ])
     class ValueObjectNumber extends AbstractNumberType {
     }
+
     typeValidationSpec(ValueObjectNumber, {
         'value': [
           //valid number value
@@ -205,6 +207,36 @@ describe('Number Type', () => {
 
   });
 });
+
+
+// describe('Number Type', () => {
+//   it('NumberTypeRequired expect value', async () => {
+//
+//     class User {
+//       @IsNotEmpty({message: 'La contraseña no puede estar vacía'})
+//       @Length(6, 20, {
+//         message: (args: ValidationArguments) => {
+//           return 'La contraseña debe tener entre 6 y 20 caracteres';
+//         }
+//       })
+//       password: string;
+//     }
+//
+//
+//     const user = new User();
+//     user.password = '123';
+//
+//     const errors = await validate(user);
+//
+//     if (errors.length > 0) {
+//       console.log('Errores de validación:', errors);
+//     } else {
+//       console.log('Validación exitosa!');
+//     }
+//
+//
+//   });
+// });
 
 
 
