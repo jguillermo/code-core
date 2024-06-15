@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import {ValidationStorage, ValidatorMapI, validatorsMap} from "./validation-storage";
+import {ValidationStorage} from "./validation-storage";
+import {ValidatorMapI, validatorsMap} from "./validators-map";
 
 function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
   validatorConfigs.forEach(config => {
