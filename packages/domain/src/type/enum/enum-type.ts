@@ -1,6 +1,5 @@
 import { AbstractType, ValueTypeNullable } from '../abstract-type';
-import {PrimitiveTypes} from "../../common";
-
+import { PrimitiveTypes } from '../../common';
 
 export abstract class EnumType<T> extends AbstractType<ValueTypeNullable<T>> {
   constructor(value: T | null) {
@@ -18,7 +17,10 @@ export abstract class EnumType<T> extends AbstractType<ValueTypeNullable<T>> {
     return value;
   }
 
-  static create<PT>(value: PrimitiveTypes | PT, entries: PrimitiveTypes[]): PT | null {
+  static create<PT>(
+    value: PrimitiveTypes | PT,
+    entries: PrimitiveTypes[],
+  ): PT | null {
     if (value === null) {
       return null;
     }

@@ -1,61 +1,64 @@
-import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
-import {AddValidate, validateType} from "../../validator/decorator/type-validator";
-import {AbstractNumberType} from "@code-core/domain";
-import {ValidationStorage} from "../../validator/decorator/validation-storage";
-
+import {
+  typeErrorValidationSpec,
+  typeValidationSpec,
+} from '../../common/test/util-test';
+import {
+  AddValidate,
+  validateType,
+} from '../../validator/decorator/type-validator';
+import { AbstractNumberType } from '@code-core/domain';
+import { ValidationStorage } from '../../validator/decorator/validation-storage';
 
 describe('Number Type', () => {
   describe('NumberTypeRequired expect value', () => {
-    class NumberTypeRequired extends AbstractNumberType {
-    }
+    class NumberTypeRequired extends AbstractNumberType {}
 
     describe('NumberTypeRequired expect value', () => {
       typeValidationSpec(NumberTypeRequired, {
-          'value': [
-            //valid number value
-            [1, 1],
-            [-1, -1],
-            [1.1, 1.1],
-            [-1.1, -1.1],
-            [0, 0],
-            //string
-            ['1', 1],
-            ['1.1', 1.1],
-            ['-1', -1],
-            ['-1.1', -1.1],
-            ['0', 0],
-          ],
-          'isNull': [
-            [0, false],
-            [0.1, false],
-            [1, false],
-            [1.1, false],
-            ['0', false],
-            ['1', false],
-          ],
-          'toString': [
-            //valid number value
-            [1, '1'],
-            [-1, '-1'],
-            [1.1, '1.1'],
-            [-1.1, '-1.1'],
-            [0, '0'],
-            //string
-            ['1', '1'],
-            ['1.1', '1.1'],
-            ['-1', '-1'],
-            ['-1.1', '-1.1'],
-            ['0', '0'],
-          ]
-        }
-      );
+        value: [
+          //valid number value
+          [1, 1],
+          [-1, -1],
+          [1.1, 1.1],
+          [-1.1, -1.1],
+          [0, 0],
+          //string
+          ['1', 1],
+          ['1.1', 1.1],
+          ['-1', -1],
+          ['-1.1', -1.1],
+          ['0', 0],
+        ],
+        isNull: [
+          [0, false],
+          [0.1, false],
+          [1, false],
+          [1.1, false],
+          ['0', false],
+          ['1', false],
+        ],
+        toString: [
+          //valid number value
+          [1, '1'],
+          [-1, '-1'],
+          [1.1, '1.1'],
+          [-1.1, '-1.1'],
+          [0, '0'],
+          //string
+          ['1', '1'],
+          ['1.1', '1.1'],
+          ['-1', '-1'],
+          ['-1.1', '-1.1'],
+          ['0', '0'],
+        ],
+      });
     });
 
     describe('NumberTypeRequired expect error', () => {
       typeErrorValidationSpec(NumberTypeRequired, {
-        'canBeNumber': {
+        canBeNumber: {
           constraints: {
-            canBeNumber: 'NumberTypeRequired must be a number'
+            canBeNumber: 'NumberTypeRequired must be a number',
           },
           values: [
             null,
@@ -69,73 +72,68 @@ describe('Number Type', () => {
             {},
             [1, 2, 3],
             new Date(),
-            {value: 123},
+            { value: 123 },
             () => 123,
             Symbol('123'),
-            new Function('return 123')
+            new Function('return 123'),
           ],
-        }
+        },
       });
     });
-
   });
   describe('NumberTypeOptional expect value', () => {
-    @AddValidate([
-      {validator: "IsOptional"},
-    ])
-    class NumberTypeOptional extends AbstractNumberType {
-    }
+    @AddValidate([{ validator: 'IsOptional' }])
+    class NumberTypeOptional extends AbstractNumberType {}
 
     typeValidationSpec(NumberTypeOptional, {
-        'value': [
-          //valid number value
-          [1, 1],
-          [-1, -1],
-          [1.1, 1.1],
-          [-1.1, -1.1],
-          [0, 0],
-          null,
-          [null, null],
-          [undefined, null],
-          //string
-          ['1', 1],
-          ['1.1', 1.1],
-          ['-1', -1],
-          ['-1.1', -1.1],
-          ['0', 0],
-        ],
-        'isNull': [
-          [null, true],
-          [undefined, true],
-          [0, false],
-          [0.1, false],
-          [1, false],
-          [1.1, false],
-          ['0', false],
-          ['1', false],
-        ],
-        'toString': [
-          [null, ''],
-          [undefined, ''],
-          //valid number value
-          [1, '1'],
-          [-1, '-1'],
-          [1.1, '1.1'],
-          [-1.1, '-1.1'],
-          [0, '0'],
-          //string
-          ['1', '1'],
-          ['1.1', '1.1'],
-          ['-1', '-1'],
-          ['-1.1', '-1.1'],
-          ['0', '0'],
-        ]
-      }
-    );
+      value: [
+        //valid number value
+        [1, 1],
+        [-1, -1],
+        [1.1, 1.1],
+        [-1.1, -1.1],
+        [0, 0],
+        null,
+        [null, null],
+        [undefined, null],
+        //string
+        ['1', 1],
+        ['1.1', 1.1],
+        ['-1', -1],
+        ['-1.1', -1.1],
+        ['0', 0],
+      ],
+      isNull: [
+        [null, true],
+        [undefined, true],
+        [0, false],
+        [0.1, false],
+        [1, false],
+        [1.1, false],
+        ['0', false],
+        ['1', false],
+      ],
+      toString: [
+        [null, ''],
+        [undefined, ''],
+        //valid number value
+        [1, '1'],
+        [-1, '-1'],
+        [1.1, '1.1'],
+        [-1.1, '-1.1'],
+        [0, '0'],
+        //string
+        ['1', '1'],
+        ['1.1', '1.1'],
+        ['-1', '-1'],
+        ['-1.1', '-1.1'],
+        ['0', '0'],
+      ],
+    });
     typeErrorValidationSpec(NumberTypeOptional, {
-      'canBeNumber': {
+      canBeNumber: {
         constraints: {
-          canBeNumber: 'NumberTypeOptional must be a number'
+          canBeNumber: 'NumberTypeOptional must be a number',
         },
         values: [
           'random',
@@ -147,41 +145,39 @@ describe('Number Type', () => {
           {},
           [1, 2, 3],
           new Date(),
-          {value: 123},
+          { value: 123 },
           () => 123,
           Symbol('123'),
-          new Function('return 123')
+          new Function('return 123'),
         ],
-      }
+      },
     });
   });
 
   describe('AddValidate', () => {
     @AddValidate([
-      {validator: "IsInt"},
-      {validator: "Min", value: 10},
-      {validator: "Max", value: 20},
+      { validator: 'IsInt' },
+      { validator: 'Min', value: 10 },
+      { validator: 'Max', value: 20 },
     ])
-    class ValueObjectNumber extends AbstractNumberType {
-    }
+    class ValueObjectNumber extends AbstractNumberType {}
 
     typeValidationSpec(ValueObjectNumber, {
-        'value': [
-          //valid number value
-          [10, 10],
-          [15, 15],
-          [20, 20],
-        ]
-      }
-    );
+      value: [
+        //valid number value
+        [10, 10],
+        [15, 15],
+        [20, 20],
+      ],
+    });
 
     typeErrorValidationSpec(ValueObjectNumber, {
-      'notNumber': {
+      notNumber: {
         constraints: {
-          canBeNumber: "ValueObjectNumber must be a number",
-          isInt: "ValueObjectNumber must be an integer number",
-          max: "ValueObjectNumber must not be greater than 20",
-          min: "ValueObjectNumber must not be less than 10"
+          canBeNumber: 'ValueObjectNumber must be a number',
+          isInt: 'ValueObjectNumber must be an integer number',
+          max: 'ValueObjectNumber must not be greater than 20',
+          min: 'ValueObjectNumber must not be less than 10',
         },
         values: [
           'random',
@@ -194,25 +190,18 @@ describe('Number Type', () => {
           {},
           [1, 2, 3],
           new Date(),
-          {value: 123},
+          { value: 123 },
           () => 123,
           Symbol('123'),
-          new Function('return 123')
+          new Function('return 123'),
         ],
       },
-      'isInt': {
+      isInt: {
         constraints: {
-          isInt: "ValueObjectNumber must be an integer number"
+          isInt: 'ValueObjectNumber must be an integer number',
         },
-        values: [
-          '11.1',
-          11.1
-        ],
-      }
+        values: ['11.1', 11.1],
+      },
     });
-
   });
 });
-
-
-

@@ -1,4 +1,4 @@
-import {ValidatorMapI} from "./validators-map";
+import { ValidatorMapI } from './validators-map';
 
 export class ValidationStorage {
   private static instance: ValidationStorage;
@@ -29,7 +29,11 @@ export class ValidationStorage {
     return this._classMap.get(cls)!;
   }
 
-  addValidations(cls: Function, propertyKey: string, validationConfigs: ValidatorMapI[]) {
+  addValidations(
+    cls: Function,
+    propertyKey: string,
+    validationConfigs: ValidatorMapI[],
+  ) {
     const clsKey = this.getClassKey(cls);
     if (!this._validationMap.has(clsKey)) {
       this._validationMap.set(clsKey, new Map());
@@ -39,7 +43,10 @@ export class ValidationStorage {
       propertyValidations?.set(propertyKey, []);
     }
     const existingValidations = propertyValidations?.get(propertyKey) || [];
-    propertyValidations?.set(propertyKey, existingValidations.concat(validationConfigs));
+    propertyValidations?.set(
+      propertyKey,
+      existingValidations.concat(validationConfigs),
+    );
   }
 
   getValidations(cls: Function, propertyKey: string): ValidatorMapI[] {
@@ -52,10 +59,10 @@ export class ValidationStorage {
     //private _validationMap: Map<symbol, Map<string, ValidatorMapI[]>>;
     this._validationMap.forEach((propertiesMap, clsKey) => {
       propertiesMap.forEach((validations, propertyKey) => {
-        const objList={}
-        objList[propertyKey]=validations
+        const objList = {};
+        objList[propertyKey] = validations;
         result.push(objList);
-      } );
+      });
     });
 
     return result;

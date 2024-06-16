@@ -1,6 +1,5 @@
-import {ValidationStorage} from "./validation-storage";
-import {ValidatorMapI} from "./validators-map";
-
+import { ValidationStorage } from './validation-storage';
+import { ValidatorMapI } from './validators-map';
 
 describe('ValidationStorage', () => {
   let storage: ValidationStorage;
@@ -16,10 +15,12 @@ describe('ValidationStorage', () => {
   });
 
   test('should add and retrieve validations for a class property', () => {
-    class TestClass {
-    }
+    class TestClass {}
 
-    const validator: ValidatorMapI = {validator: 'IsEmail', options: {message: 'Invalid email'}};
+    const validator: ValidatorMapI = {
+      validator: 'IsEmail',
+      options: { message: 'Invalid email' },
+    };
     storage.addValidations(TestClass, 'testProperty', [validator]);
 
     const validations = storage.getValidations(TestClass, 'testProperty');
@@ -28,11 +29,16 @@ describe('ValidationStorage', () => {
   });
 
   test('should concatenate validations if they already exist', () => {
-    class TestClass {
-    }
+    class TestClass {}
 
-    const validator1: ValidatorMapI = {validator: 'IsEmail', options: {message: 'Invalid email'}};
-    const validator2: ValidatorMapI = {validator: 'IsString', options: {message: 'Must be a string'}};
+    const validator1: ValidatorMapI = {
+      validator: 'IsEmail',
+      options: { message: 'Invalid email' },
+    };
+    const validator2: ValidatorMapI = {
+      validator: 'IsString',
+      options: { message: 'Must be a string' },
+    };
     storage.addValidations(TestClass, 'testProperty', [validator1]);
     storage.addValidations(TestClass, 'testProperty', [validator2]);
 
@@ -43,10 +49,12 @@ describe('ValidationStorage', () => {
   });
 
   test('should return empty array if no validations are present', () => {
-    class TestClass {
-    }
+    class TestClass {}
 
-    const validations = storage.getValidations(TestClass, 'nonExistentProperty');
+    const validations = storage.getValidations(
+      TestClass,
+      'nonExistentProperty',
+    );
     expect(validations).toHaveLength(0);
   });
 });

@@ -7,7 +7,9 @@ export interface StringIsLengthValidator {
   exactly?: number;
 }
 
-export abstract class StringType extends AbstractType<ValueTypeNullable<string>> {
+export abstract class StringType extends AbstractType<
+  ValueTypeNullable<string>
+> {
   get isEmpty(): boolean {
     if (this.isNull) {
       return true;

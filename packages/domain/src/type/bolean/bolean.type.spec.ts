@@ -129,7 +129,7 @@ describe('Boolean required Type', () => {
     describe('null value', () => {
       it('null', () => {
         expect(() => {
-         new BooleanRequiredTypeImp();
+          new BooleanRequiredTypeImp();
         }).toThrow(`is required.`);
       });
     });

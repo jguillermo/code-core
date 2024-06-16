@@ -1,10 +1,17 @@
-import {AddValidate, validateType} from "./type-validator";
-import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
-import {ValidationStorage} from "./validation-storage";
+import { AddValidate, validateType } from './type-validator';
+import {
+  typeErrorValidationSpec,
+  typeValidationSpec,
+} from '../../common/test/util-test';
+import { ValidationStorage } from './validation-storage';
 
 @AddValidate([
-  {validator: "MinLength", value: 3, options: {message: "Name is too short"}},
-  {validator: "MaxLength", value: 20},
+  {
+    validator: 'MinLength',
+    value: 3,
+    options: { message: 'Name is too short' },
+  },
+  { validator: 'MaxLength', value: 20 },
 ])
 class User {
   public _value: string;
@@ -14,27 +21,23 @@ class User {
   }
 }
 
-
 describe('Validator', () => {
   it('error validator', async () => {
-    const user = new User("J");
+    const user = new User('J');
     const errors = await validateType(user);
     expect(errors.length).toEqual(1);
     expect(errors[0].property).toEqual('_value');
     expect(errors[0].constraints.minLength).toBeDefined();
-    expect(errors[0].constraints.minLength).toEqual('Name is too short')
-
+    expect(errors[0].constraints.minLength).toEqual('Name is too short');
   });
 
   it('correct validator', async () => {
-    const user = new User("John");
+    const user = new User('John');
     const errors = await validateType(user);
     expect(errors.length).toEqual(0);
-
   });
 
   it('should add parent validator ', async () => {
-
     class ParentPArentClass {
       private _value: any;
 
@@ -47,40 +50,32 @@ describe('Validator', () => {
       }
     }
 
-    @AddValidate([
-      {validator: "IsNumber"},
-    ])
+    @AddValidate([{ validator: 'IsNumber' }])
     class ParentClass extends ParentPArentClass {
       constructor(value: any) {
         super(value);
       }
     }
 
-    @AddValidate([
-      {validator: "IsInt",},
-    ])
-    class ChildClass extends ParentClass {
-
-    }
+    @AddValidate([{ validator: 'IsInt' }])
+    class ChildClass extends ParentClass {}
 
     // ValidationStorage.getInstance().log();
 
-    const childInstance = new ChildClass('ChildClassStr');  // Esto debería fallar la validación IsInt
+    const childInstance = new ChildClass('ChildClassStr'); // Esto debería fallar la validación IsInt
     const childErrors = await validateType(childInstance);
     // Validation error for '_value' property
-    const valueError = childErrors.find(error => error.property === '_value');
+    const valueError = childErrors.find((error) => error.property === '_value');
     expect(valueError).toBeDefined();
     expect(valueError?.constraints).toEqual({
-      isNumber: 'ChildClass must be a number conforming to the specified constraints',
-      isInt: 'ChildClass must be an integer number'
+      isNumber:
+        'ChildClass must be a number conforming to the specified constraints',
+      isInt: 'ChildClass must be an integer number',
     });
   });
 
   describe('should validate herency class', () => {
-    @AddValidate([
-      {validator: "IsNumber"},
-      {validator: "IsInt"},
-    ])
+    @AddValidate([{ validator: 'IsNumber' }, { validator: 'IsInt' }])
     class ParentParentClass {
       private _value: any;
 
@@ -94,8 +89,8 @@ describe('Validator', () => {
     }
 
     @AddValidate([
-      {validator: "Min", value: 10},
-      {validator: "Max", value: 20},
+      { validator: 'Min', value: 10 },
+      { validator: 'Max', value: 20 },
     ])
     class ParentClass extends ParentParentClass {
       constructor(value: any) {
@@ -103,26 +98,25 @@ describe('Validator', () => {
       }
     }
 
-    class ChildClass extends ParentClass {
-    }
+    class ChildClass extends ParentClass {}
 
     typeValidationSpec(ChildClass, {
-        'value': [
-          //valid number value
-          [10, 10],
-          [15, 15],
-          [20, 20],
-        ]
-      }
-    );
+      value: [
+        //valid number value
+        [10, 10],
+        [15, 15],
+        [20, 20],
+      ],
+    });
 
     typeErrorValidationSpec(ChildClass, {
-      'notNumber': {
+      notNumber: {
         constraints: {
-          "isInt": "ChildClass must be an integer number",
-          "isNumber": "ChildClass must be a number conforming to the specified constraints",
-          "max": "ChildClass must not be greater than 20",
-          "min": "ChildClass must not be less than 10"
+          isInt: 'ChildClass must be an integer number',
+          isNumber:
+            'ChildClass must be a number conforming to the specified constraints',
+          max: 'ChildClass must not be greater than 20',
+          min: 'ChildClass must not be less than 10',
         },
         values: [
           'random',
@@ -135,32 +129,24 @@ describe('Validator', () => {
           {},
           [1, 2, 3],
           new Date(),
-          {value: 123},
+          { value: 123 },
           () => 123,
           Symbol('123'),
-          new Function('return 123')
+          new Function('return 123'),
         ],
       },
-      'isInt': {
+      isInt: {
         constraints: {
-          isInt: "ChildClass must be an integer number"
+          isInt: 'ChildClass must be an integer number',
         },
-        values: [
-          11.1
-        ],
+        values: [11.1],
       },
-      'max': {
+      max: {
         constraints: {
-          max: "ChildClass must not be greater than 20",
+          max: 'ChildClass must not be greater than 20',
         },
-        values: [
-          50,
-          50.0,
-        ],
-      }
+        values: [50, 50.0],
+      },
     });
-
-
   });
 });
-

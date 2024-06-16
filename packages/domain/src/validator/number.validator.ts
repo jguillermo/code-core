@@ -10,7 +10,7 @@ export class NumberValidator {
     if (type === 'number') {
       // Retorna falso si el número es NaN o infinito
       return !isNaN(value) && isFinite(value);
-    } else if (type === 'string' && value.trim() !== "") {
+    } else if (type === 'string' && value.trim() !== '') {
       // Intenta convertir la cadena a un número y verifica si es NaN y finito
       const num = Number(value);
       return !isNaN(num) && isFinite(num);

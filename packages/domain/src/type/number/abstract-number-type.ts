@@ -1,12 +1,12 @@
-import {AbstractType, ValueTypeNullable} from '../abstract-type';
-import {NumberValidator} from "../../validator";
-import {AddValidate} from "../../validator/decorator/type-validator";
-import {CanBeNumberValidator} from "../../validator/decorator/custom/can-be-number";
+import { AbstractType, ValueTypeNullable } from '../abstract-type';
+import { NumberValidator } from '../../validator';
+import { AddValidate } from '../../validator/decorator/type-validator';
+import { CanBeNumberValidator } from '../../validator/decorator/custom/can-be-number';
 
-@AddValidate([
-  {validator: CanBeNumberValidator},
-])
-export abstract class AbstractNumberType extends AbstractType<ValueTypeNullable<number>> {
+@AddValidate([{ validator: CanBeNumberValidator }])
+export abstract class AbstractNumberType extends AbstractType<
+  ValueTypeNullable<number>
+> {
   get toString(): string {
     if (this.isNull) {
       return '';

@@ -1,4 +1,4 @@
-import {AbstractType, ValueTypeNullable} from "./abstract-type";
+import { AbstractType, ValueTypeNullable } from './abstract-type';
 
 export class ValueGenerator {
   static valueString(value: string): any {

@@ -3,7 +3,9 @@ import { AbstractType, ValueTypeNullable } from '../abstract-type';
 
 const DNS_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
-export abstract class UuidType<TT = ValueTypeNullable<string>> extends AbstractType<TT> {
+export abstract class UuidType<
+  TT = ValueTypeNullable<string>,
+> extends AbstractType<TT> {
   static random(): string {
     return uuidv4();
   }

@@ -197,7 +197,9 @@ describe('String Type', () => {
       expect(DateTypeImp.create(null).toString).toEqual('');
     });
     it('ISO', () => {
-      expect(DateTypeImp.create('2018-03-23T16:02:15.000Z').toString).toEqual('2018-03-23T16:02:15.000Z');
+      expect(DateTypeImp.create('2018-03-23T16:02:15.000Z').toString).toEqual(
+        '2018-03-23T16:02:15.000Z',
+      );
     });
   });
 });

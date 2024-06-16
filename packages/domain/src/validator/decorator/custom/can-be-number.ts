@@ -1,7 +1,11 @@
-import {registerDecorator, ValidationArguments, ValidationOptions} from 'class-validator';
-import {NumberValidator} from "@code-core/domain";
+import {
+  registerDecorator,
+  ValidationArguments,
+  ValidationOptions,
+} from 'class-validator';
+import { NumberValidator } from '@code-core/domain';
 
-export function CanBeNumberValidator( validationOptions?: ValidationOptions) {
+export function CanBeNumberValidator(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
       name: 'canBeNumber',
@@ -14,7 +18,7 @@ export function CanBeNumberValidator( validationOptions?: ValidationOptions) {
         },
         defaultMessage(args: ValidationArguments) {
           return `${args.property} must be a number`;
-        }
+        },
       },
     });
   };

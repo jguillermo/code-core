@@ -1,15 +1,9 @@
-import {AddValidate} from "./type-validator";
-import {ValidationStorage} from "./validation-storage";
-
+import { AddValidate } from './type-validator';
+import { ValidationStorage } from './validation-storage';
 
 describe('ValidationStorage instance', () => {
-
   test('should log the validations correctly', () => {
-
-    @AddValidate([
-      {validator: "IsNumber"},
-      {validator: "IsInt"},
-    ])
+    @AddValidate([{ validator: 'IsNumber' }, { validator: 'IsInt' }])
     class ParentParentClass {
       private _value: any;
 
@@ -23,8 +17,8 @@ describe('ValidationStorage instance', () => {
     }
 
     @AddValidate([
-      {validator: "Min", value: 10},
-      {validator: "Max", value: 20},
+      { validator: 'Min', value: 10 },
+      { validator: 'Max', value: 20 },
     ])
     class ParentClass extends ParentParentClass {
       constructor(value: any) {
@@ -32,11 +26,10 @@ describe('ValidationStorage instance', () => {
       }
     }
 
-    class ChildClass extends ParentClass {
-    }
+    class ChildClass extends ParentClass {}
 
     const log = ValidationStorage.getInstance().log();
 
-    expect(log.length).toBe(2)
+    expect(log.length).toBe(2);
   });
 });

@@ -1,9 +1,7 @@
-import {ApplicationException} from "./application.exception";
-import {ExceptionCode} from "../exception-code";
+import { ApplicationException } from './application.exception';
+import { ExceptionCode } from '../exception-code';
 
 describe('Exceptions', () => {
-
-
   describe('ApplicationException', () => {
     it('should create an instance with correct properties', () => {
       const message = 'Application error';
@@ -11,10 +9,13 @@ describe('Exceptions', () => {
 
       expect(exception).toBeInstanceOf(ApplicationException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.ApplicationException]);
-      expect(exception.exceptionMessage).toEqual('Application Exception (APP000)');
+      expect(exception.exceptionCodes).toEqual([
+        ExceptionCode.ApplicationException,
+      ]);
+      expect(exception.exceptionMessage).toEqual(
+        'Application Exception (APP000)',
+      );
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });
-
 });

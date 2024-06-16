@@ -214,11 +214,11 @@ export const validatorsMap = {
   ArrayMaxSize,
   ArrayUnique,
   IsInstance,
-  Allow
+  Allow,
 };
 
 export interface ValidatorMapI {
-  validator: keyof typeof validatorsMap | Function,
-  value?: any,
-  options?: ValidationOptions
+  validator: keyof typeof validatorsMap | Function;
+  value?: any;
+  options?: ValidationOptions;
 }

@@ -2,7 +2,9 @@ import { AbstractType, ValueTypeNullable } from '../abstract-type';
 import validator from 'validator';
 type BooleanTypes = boolean | null;
 
-export abstract class BooleanType<TT extends BooleanTypes = ValueTypeNullable<boolean>> extends AbstractType<TT> {
+export abstract class BooleanType<
+  TT extends BooleanTypes = ValueTypeNullable<boolean>,
+> extends AbstractType<TT> {
   get toString(): string {
     if (this.isNull) {
       return '';
