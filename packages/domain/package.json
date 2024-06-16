@@ -27,7 +27,10 @@
     "prebuild": "rm -rf dis && rm tsconfig.build.tsbuildinfo",
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write ."
   },
   "jest": {
     "moduleFileExtensions": [
