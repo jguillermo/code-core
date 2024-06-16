@@ -1,7 +1,6 @@
 import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
-import {AddValidate} from "../../validator/decorator/type-validator";
+import {AddValidate, validateType} from "../../validator/decorator/type-validator";
 import {AbstractNumberType} from "@code-core/domain";
-import {IsNotEmpty, Length, Max, Min, validate, ValidationArguments} from "class-validator";
 
 
 describe('Number Type', () => {
@@ -9,69 +8,75 @@ describe('Number Type', () => {
     class NumberTypeRequired extends AbstractNumberType {
     }
 
-    typeValidationSpec(NumberTypeRequired, {
-        'value': [
-          //valid number value
-          [1, 1],
-          [-1, -1],
-          [1.1, 1.1],
-          [-1.1, -1.1],
-          [0, 0],
-          //string
-          ['1', 1],
-          ['1.1', 1.1],
-          ['-1', -1],
-          ['-1.1', -1.1],
-          ['0', 0],
-        ],
-        'isNull': [
-          [0, false],
-          [0.1, false],
-          [1, false],
-          [1.1, false],
-          ['0', false],
-          ['1', false],
-        ],
-        'toString': [
-          //valid number value
-          [1, '1'],
-          [-1, '-1'],
-          [1.1, '1.1'],
-          [-1.1, '-1.1'],
-          [0, '0'],
-          //string
-          ['1', '1'],
-          ['1.1', '1.1'],
-          ['-1', '-1'],
-          ['-1.1', '-1.1'],
-          ['0', '0'],
-        ]
-      }
-    );
-    typeErrorValidationSpec(NumberTypeRequired, {
-      'canBeNumber': {
-        constraints: {
-          canBeNumber: '_value must be a number'
-        },
-        values: [
-          null,
-          undefined,
-          'random',
-          true,
-          false,
-          '',
-          '   ',
-          [],
-          {},
-          [1, 2, 3],
-          new Date(),
-          {value: 123},
-          () => 123,
-          Symbol('123'),
-          new Function('return 123')
-        ],
-      }
+    describe('NumberTypeRequired expect value', () => {
+      typeValidationSpec(NumberTypeRequired, {
+          'value': [
+            //valid number value
+            [1, 1],
+            [-1, -1],
+            [1.1, 1.1],
+            [-1.1, -1.1],
+            [0, 0],
+            //string
+            ['1', 1],
+            ['1.1', 1.1],
+            ['-1', -1],
+            ['-1.1', -1.1],
+            ['0', 0],
+          ],
+          'isNull': [
+            [0, false],
+            [0.1, false],
+            [1, false],
+            [1.1, false],
+            ['0', false],
+            ['1', false],
+          ],
+          'toString': [
+            //valid number value
+            [1, '1'],
+            [-1, '-1'],
+            [1.1, '1.1'],
+            [-1.1, '-1.1'],
+            [0, '0'],
+            //string
+            ['1', '1'],
+            ['1.1', '1.1'],
+            ['-1', '-1'],
+            ['-1.1', '-1.1'],
+            ['0', '0'],
+          ]
+        }
+      );
     });
+
+    describe('NumberTypeRequired expect error', () => {
+      typeErrorValidationSpec(NumberTypeRequired, {
+        'canBeNumber': {
+          constraints: {
+            canBeNumber: 'NumberTypeRequired must be a number'
+          },
+          values: [
+            null,
+            undefined,
+            'random',
+            true,
+            false,
+            '',
+            '   ',
+            [],
+            {},
+            [1, 2, 3],
+            new Date(),
+            {value: 123},
+            () => 123,
+            Symbol('123'),
+            new Function('return 123')
+          ],
+        }
+      });
+    });
+
   });
   describe('NumberTypeOptional expect value', () => {
     @AddValidate([
@@ -129,7 +134,7 @@ describe('Number Type', () => {
     typeErrorValidationSpec(NumberTypeOptional, {
       'canBeNumber': {
         constraints: {
-          canBeNumber: '_value must be a number'
+          canBeNumber: 'NumberTypeOptional must be a number'
         },
         values: [
           'random',
@@ -172,10 +177,10 @@ describe('Number Type', () => {
     typeErrorValidationSpec(ValueObjectNumber, {
       'notNumber': {
         constraints: {
-          canBeNumber: "_value must be a number",
-          isInt: "_value must be an integer number",
-          max: "_value must not be greater than 20",
-          min: "_value must not be less than 10"
+          canBeNumber: "ValueObjectNumber must be a number",
+          isInt: "ValueObjectNumber must be an integer number",
+          max: "ValueObjectNumber must not be greater than 20",
+          min: "ValueObjectNumber must not be less than 10"
         },
         values: [
           'random',
@@ -196,7 +201,7 @@ describe('Number Type', () => {
       },
       'isInt': {
         constraints: {
-          isInt: "_value must be an integer number"
+          isInt: "ValueObjectNumber must be an integer number"
         },
         values: [
           '11.1',

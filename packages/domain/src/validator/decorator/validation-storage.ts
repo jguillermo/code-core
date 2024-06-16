@@ -17,6 +17,10 @@ export class ValidationStorage {
     return ValidationStorage.instance;
   }
 
+  public hasClassRegister(cls: any): boolean {
+    return this._classMap.has(cls);
+  }
+
   private getClassKey(cls: Function): symbol {
     if (!this._classMap.has(cls)) {
       this._classMap.set(cls, Symbol());
@@ -53,7 +57,7 @@ export class ValidationStorage {
     return JSON.stringify(validationObject, null, 2);
   }
 
-  clearMap():void {
+  clearMap(): void {
     this._validationMap.clear();
   }
 }

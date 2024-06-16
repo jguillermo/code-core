@@ -1,5 +1,6 @@
-import {isString, validate} from "class-validator";
+import {isString} from "class-validator";
 import {universalToString} from "../utils/string/universal-to-string";
+import {validateType} from "../../validator/decorator/type-validator";
 
 interface ITestValidation {
   hastTwoValues: boolean,
@@ -70,7 +71,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
       it(dataInput.title + ' and not error', async () => {
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
-        const errors = await validate(type);
+        const errors = await validateType(type);
         expect(errors.length).toEqual(0);
 
       });
@@ -83,7 +84,7 @@ export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: 
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
       it(`type error validator ${exceptionItem} with ${valueText}`, async () => {
-        const errors = await validate(new cls(value));
+        const errors = await validateType(new cls(value));
         expect(errors.length).toEqual(1);
         expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
       });

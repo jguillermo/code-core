@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import {ValidationStorage} from "./validation-storage";
 import {ValidatorMapI, validatorsMap} from "./validators-map";
+import {validate, ValidationError} from "class-validator";
+import {ValidatorOptions} from "class-validator/types/validation/ValidatorOptions";
 
 function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
   validatorConfigs.forEach(config => {
@@ -40,4 +42,41 @@ export function AddValidate(validatorConfigs: ValidatorMapI[], propertyKey: stri
   }
 }
 
+
+function replacePropertyWithClassName(errors: ValidationError[]): ValidationError[] {
+  errors.forEach(error => {
+    if (error.target) {
+      const className = error.target.constructor.name;
+      const property = error.property;
+      if (error.constraints) {
+        Object.keys(error.constraints).forEach(key => {
+          error.constraints[key] = error.constraints[key].replace(new RegExp(property, 'g'), className);
+        });
+      }
+    }
+  });
+  return errors;
+}
+
+function getClassHierarchy(klass: any): any[] {
+  let hierarchy = [];
+  let currentClass = klass;
+
+  while (currentClass && currentClass !== Function.prototype) {
+    hierarchy.push(currentClass);
+    currentClass = Object.getPrototypeOf(currentClass);
+  }
+
+  return hierarchy;
+}
+
+export async function validateType(object: object, validatorOptions?: ValidatorOptions): Promise<ValidationError[]> {
+  const errors = await validate(object, validatorOptions);
+  if (errors.length === 0) {
+    return errors;
+  }
+  const classHierarchy = getClassHierarchy(object.constructor);
+  const isType = classHierarchy.some(klass => ValidationStorage.getInstance().hasClassRegister(klass));
+  return isType ? replacePropertyWithClassName(errors) : errors;
+}
 

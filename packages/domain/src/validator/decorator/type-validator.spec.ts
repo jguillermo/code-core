@@ -1,5 +1,4 @@
-import {AddValidate} from "./type-validator";
-import {validate} from 'class-validator';
+import {AddValidate, validateType} from "./type-validator";
 import {ValidationStorage} from "./validation-storage";
 
 @AddValidate([
@@ -19,7 +18,7 @@ class User {
 describe('Validator', () => {
   it('error validator', async () => {
     const user = new User("J");
-    const errors = await validate(user);
+    const errors = await validateType(user);
     expect(errors.length).toEqual(1);
     expect(errors[0].property).toEqual('_value');
     expect(errors[0].constraints.minLength).toBeDefined();
@@ -29,7 +28,7 @@ describe('Validator', () => {
 
   it('correct validator', async () => {
     const user = new User("John");
-    const errors = await validate(user);
+    const errors = await validateType(user);
     expect(errors.length).toEqual(0);
 
   });
@@ -68,13 +67,13 @@ describe('Validator', () => {
     // ValidationStorage.getInstance().log();
 
     const childInstance = new ChildClass('ChildClassStr');  // Esto debería fallar la validación IsInt
-    const childErrors = await validate(childInstance);
+    const childErrors = await validateType(childInstance);
     // Validation error for '_value' property
     const valueError = childErrors.find(error => error.property === '_value');
     expect(valueError).toBeDefined();
     expect(valueError?.constraints).toEqual({
-      isNumber: '_value must be a number conforming to the specified constraints',
-      isInt: '_value must be an integer number'
+      isNumber: 'ChildClass must be a number conforming to the specified constraints',
+      isInt: 'ChildClass must be an integer number'
     });
   });
 });
