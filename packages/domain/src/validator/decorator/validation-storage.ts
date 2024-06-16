@@ -12,6 +12,7 @@ export class ValidationStorage {
 
   static getInstance(): ValidationStorage {
     if (!ValidationStorage.instance) {
+      //console.log('===========Creating new instance=================================Creating new instance=================================Creating new instance=================================Creating new instance=================================Creating new instance======================');
       ValidationStorage.instance = new ValidationStorage();
     }
     return ValidationStorage.instance;
@@ -46,14 +47,17 @@ export class ValidationStorage {
     return this._validationMap.get(clsKey)?.get(propertyKey) || [];
   }
 
-  log(): string {
-    const validationObject: any = {};
-    this._validationMap.forEach((propertiesMap, cls) => {
-      validationObject[cls] = {};
+  log(): any[] {
+    const result: any = [];
+    //private _validationMap: Map<symbol, Map<string, ValidatorMapI[]>>;
+    this._validationMap.forEach((propertiesMap, clsKey) => {
       propertiesMap.forEach((validations, propertyKey) => {
-        validationObject[cls][propertyKey] = validations;
-      });
+        const objList={}
+        objList[propertyKey]=validations
+        result.push(objList);
+      } );
     });
-    return JSON.stringify(validationObject, null, 2);
+
+    return result;
   }
 }

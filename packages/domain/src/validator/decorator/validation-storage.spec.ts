@@ -49,21 +49,4 @@ describe('ValidationStorage', () => {
     const validations = storage.getValidations(TestClass, 'nonExistentProperty');
     expect(validations).toHaveLength(0);
   });
-
-  // test('should log the validations correctly', () => {
-  //   class TestClass {
-  //   }
-  //
-  //   const validator: ValidatorMapI = {validator: 'IsEmail', options: {message: 'Invalid email'}};
-  //   storage.addValidations(TestClass, 'testProperty', [validator]);
-  //
-  //   const log = storage.log();
-  //   const expectedLog = JSON.stringify({
-  //     TestClass: {
-  //       testProperty: [validator]
-  //     }
-  //   }, null, 2);
-  //
-  //   expect(log).toBe(expectedLog);
-  // });
 });
