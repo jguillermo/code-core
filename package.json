@@ -11,7 +11,7 @@
     "lint": "lerna run lint --stream",
     "lint:fix": "lerna run lint:fix --stream",
     "format": "lerna run format --stream",
-    "prepare": "husky install"
+    "prepare": "husky install && husky add .husky/pre-commit \"npx lint-staged\""
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -29,7 +29,7 @@
     "typescript": "^5.4.3"
   },
   "lint-staged": {
-    "src/**/*.{js,ts,tsx,json,css,scss,md}": [
+    "packages/**/src/**/*.{js,ts,tsx,json,css,scss,md}": [
       "eslint --fix",
       "prettier --write"
     ]
