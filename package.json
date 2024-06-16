@@ -10,7 +10,8 @@
     "coverage": "lerna run coverage --stream",
     "lint": "lerna run lint --stream",
     "lint:fix": "lerna run lint:fix --stream",
-    "format": "lerna run format --stream"
+    "format": "lerna run format --stream",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -27,16 +28,10 @@
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "src/**/*.{js,ts,tsx,json,css,scss,md}": [
-      "prettier --write",
       "eslint --fix",
-      "git add"
+      "prettier --write"
     ]
   }
 }
