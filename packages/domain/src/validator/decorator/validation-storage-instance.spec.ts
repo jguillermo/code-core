@@ -28,8 +28,11 @@ describe('ValidationStorage instance', () => {
 
     class ChildClass extends ParentClass {}
 
+    const data = new ChildClass('ChildClassStr');
+
     const log = ValidationStorage.getInstance().log();
 
     expect(log.length).toBe(2);
+    expect(data.value).toBe('ChildClassStr');
   });
 });

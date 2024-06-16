@@ -1,7 +1,6 @@
 import { isString } from 'class-validator';
 import { universalToString } from '../utils/string/universal-to-string';
 import { validateType } from '../../validator/decorator/type-validator';
-import { ValidationStorage } from '../../validator/decorator/validation-storage';
 
 interface ITestValidation {
   hastTwoValues: boolean;

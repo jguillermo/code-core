@@ -57,7 +57,7 @@ export class ValidationStorage {
   log(): any[] {
     const result: any = [];
     //private _validationMap: Map<symbol, Map<string, ValidatorMapI[]>>;
-    this._validationMap.forEach((propertiesMap, clsKey) => {
+    this._validationMap.forEach((propertiesMap) => {
       propertiesMap.forEach((validations, propertyKey) => {
         const objList = {};
         objList[propertyKey] = validations;

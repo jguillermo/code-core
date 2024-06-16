@@ -3,7 +3,6 @@ import {
   typeErrorValidationSpec,
   typeValidationSpec,
 } from '../../common/test/util-test';
-import { ValidationStorage } from './validation-storage';
 
 @AddValidate([
   {

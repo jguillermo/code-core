@@ -7,7 +7,6 @@ describe('Exceptions', () => {
     describe('InfrastructureException', () => {
       it('should create an instance with correct properties', () => {
         const message = 'Infrastructure error';
-        const exceptionCodes = ExceptionCode.InfrastructureException;
         const exception = new InfrastructureException(message);
 
         expect(exception).toBeInstanceOf(InfrastructureException);
