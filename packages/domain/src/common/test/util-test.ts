@@ -1,6 +1,7 @@
 import {isString} from "class-validator";
 import {universalToString} from "../utils/string/universal-to-string";
 import {validateType} from "../../validator/decorator/type-validator";
+import {ValidationStorage} from "../../validator/decorator/validation-storage";
 
 interface ITestValidation {
   hastTwoValues: boolean,
@@ -79,7 +80,9 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: { constraints: object, values: any[] } }) {
+export function typeErrorValidationSpec(cls: any, exceptionList: {
+  [P: string]: { constraints: object, values: any[] }
+}) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);

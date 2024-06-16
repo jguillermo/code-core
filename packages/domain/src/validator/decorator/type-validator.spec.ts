@@ -1,4 +1,5 @@
 import {AddValidate, validateType} from "./type-validator";
+import {typeErrorValidationSpec, typeValidationSpec} from "../../common/test/util-test";
 import {ValidationStorage} from "./validation-storage";
 
 @AddValidate([
@@ -12,7 +13,6 @@ class User {
     this._value = value;
   }
 }
-
 
 
 describe('Validator', () => {
@@ -32,9 +32,7 @@ describe('Validator', () => {
     expect(errors.length).toEqual(0);
 
   });
-});
 
-describe('Validator', () => {
   it('should add parent validator ', async () => {
 
     class ParentPArentClass {
@@ -64,6 +62,7 @@ describe('Validator', () => {
     class ChildClass extends ParentClass {
 
     }
+
     // ValidationStorage.getInstance().log();
 
     const childInstance = new ChildClass('ChildClassStr');  // Esto debería fallar la validación IsInt
@@ -76,4 +75,92 @@ describe('Validator', () => {
       isInt: 'ChildClass must be an integer number'
     });
   });
+
+  describe('should validate herency class', () => {
+    @AddValidate([
+      {validator: "IsNumber"},
+      {validator: "IsInt"},
+    ])
+    class ParentParentClass {
+      private _value: any;
+
+      constructor(value: any) {
+        this._value = value;
+      }
+
+      get value(): any {
+        return this._value;
+      }
+    }
+
+    @AddValidate([
+      {validator: "Min", value: 10},
+      {validator: "Max", value: 20},
+    ])
+    class ParentClass extends ParentParentClass {
+      constructor(value: any) {
+        super(value);
+      }
+    }
+
+    class ChildClass extends ParentClass {
+    }
+
+    typeValidationSpec(ChildClass, {
+        'value': [
+          //valid number value
+          [10, 10],
+          [15, 15],
+          [20, 20],
+        ]
+      }
+    );
+
+    typeErrorValidationSpec(ChildClass, {
+      'notNumber': {
+        constraints: {
+          "isInt": "ChildClass must be an integer number",
+          "isNumber": "ChildClass must be a number conforming to the specified constraints",
+          "max": "ChildClass must not be greater than 20",
+          "min": "ChildClass must not be less than 10"
+        },
+        values: [
+          'random',
+          '21.1.1',
+          true,
+          false,
+          '',
+          '   ',
+          [],
+          {},
+          [1, 2, 3],
+          new Date(),
+          {value: 123},
+          () => 123,
+          Symbol('123'),
+          new Function('return 123')
+        ],
+      },
+      'isInt': {
+        constraints: {
+          isInt: "ChildClass must be an integer number"
+        },
+        values: [
+          11.1
+        ],
+      },
+      'max': {
+        constraints: {
+          max: "ChildClass must not be greater than 20",
+        },
+        values: [
+          50,
+          50.0,
+        ],
+      }
+    });
+
+
+  });
 });
+

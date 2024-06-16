@@ -56,8 +56,4 @@ export class ValidationStorage {
     });
     return JSON.stringify(validationObject, null, 2);
   }
-
-  clearMap(): void {
-    this._validationMap.clear();
-  }
 }

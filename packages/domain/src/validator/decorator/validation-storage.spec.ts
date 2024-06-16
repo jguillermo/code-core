@@ -5,9 +5,8 @@ import {ValidatorMapI} from "./validators-map";
 describe('ValidationStorage', () => {
   let storage: ValidationStorage;
 
-  beforeEach(() => {
+  beforeAll(() => {
     storage = ValidationStorage.getInstance();
-    storage.clearMap();
   });
 
   test('should be a singleton', () => {
