@@ -4,6 +4,8 @@ import {
 } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
+import { expectTypeOf } from 'expect-type';
+import { ValueTypeRequired } from '../abstract-type';
 
 describe('Number Type', () => {
   describe('NumberTypeRequired expect value', () => {
@@ -149,7 +151,6 @@ describe('Number Type', () => {
       },
     });
   });
-
   describe('AddValidate', () => {
     @AddValidate([
       { validator: 'IsInt' },
@@ -199,5 +200,30 @@ describe('Number Type', () => {
         values: ['11.1', 11.1],
       },
     });
+  });
+
+  describe('Type required and optional', () => {
+    it('should be required number type', () => {
+      class A {
+        constructor(public value: number) {}
+      }
+
+      expectTypeOf<A['value']>().toEqualTypeOf<number>();
+    });
+    it.skip('should be required number type', () => {
+      class NumberTypeRequired extends AbstractNumberType {}
+
+      expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
+      expectTypeOf<ValueTypeRequired<number>>().not.toEqualTypeOf<
+        NumberTypeRequired['value']
+      >();
+    });
+
+    // it('should be optional number type', () => {
+    //   class NumberTypeOptional extends AbstractNumberType<ValueTypeOptional> {}
+    //   const numberTypeOptional = new NumberTypeOptional(1);
+    //   numberTypeOptional.value;
+    //   expectTypeOf(numberTypeOptional.value).toEqualTypeOf<number | null>();
+    // });
   });
 });

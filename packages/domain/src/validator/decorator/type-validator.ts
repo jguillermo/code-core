@@ -69,6 +69,7 @@ function replacePropertyWithClassName(
       const property = error.property;
       if (error.constraints) {
         Object.keys(error.constraints).forEach((key) => {
+          // @ts-ignore
           error.constraints[key] = error.constraints[key].replace(
             new RegExp(property, 'g'),
             className,
@@ -85,6 +86,7 @@ function getClassHierarchy(klass: any): any[] {
   let currentClass = klass;
 
   while (currentClass && currentClass !== Function.prototype) {
+    // @ts-ignore
     hierarchy.push(currentClass);
     currentClass = Object.getPrototypeOf(currentClass);
   }
