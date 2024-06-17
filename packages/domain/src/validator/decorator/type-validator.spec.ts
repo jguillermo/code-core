@@ -26,8 +26,8 @@ describe('Validator', () => {
     const errors = await validateType(user);
     expect(errors.length).toEqual(1);
     expect(errors[0].property).toEqual('_value');
-    expect(errors[0].constraints.minLength).toBeDefined();
-    expect(errors[0].constraints.minLength).toEqual('Name is too short');
+    expect(errors[0].constraints?.minLength).toBeDefined();
+    expect(errors[0].constraints?.minLength).toEqual('Name is too short');
   });
 
   it('correct validator', async () => {

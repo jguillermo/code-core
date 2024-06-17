@@ -210,7 +210,7 @@ describe('Number Type', () => {
 
       expectTypeOf<A['value']>().toEqualTypeOf<number>();
     });
-    it.skip('should be required number type', () => {
+    it('should be required number type', () => {
       class NumberTypeRequired extends AbstractNumberType {}
 
       expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
