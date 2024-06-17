@@ -1,7 +1,7 @@
 import { ValidatorInterface } from '@code-core/domain';
 
-export type ValueTypeNullable<T> = T | null;
 export type ValueTypeRequired<T> = T;
+export type ValueTypeOptional<T> = T | null;
 
 export abstract class AbstractType<T> implements ValidatorInterface {
   protected _value: T;

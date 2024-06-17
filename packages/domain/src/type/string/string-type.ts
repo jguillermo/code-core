@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { AbstractType, ValueTypeNullable } from '../abstract-type';
+import { AbstractType, ValueTypeRequired } from '../abstract-type';
 
 export interface StringIsLengthValidator {
   min?: number;
@@ -8,7 +8,7 @@ export interface StringIsLengthValidator {
 }
 
 export abstract class StringType extends AbstractType<
-  ValueTypeNullable<string>
+  ValueTypeRequired<string>
 > {
   get isEmpty(): boolean {
     if (this.isNull) {

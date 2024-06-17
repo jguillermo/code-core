@@ -1,10 +1,10 @@
 import { v4 as uuidv4, v5 as uuidv5, validate as uuidValidate } from 'uuid';
-import { AbstractType, ValueTypeNullable } from '../abstract-type';
+import { AbstractType, ValueTypeRequired } from '../abstract-type';
 
 const DNS_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
 export abstract class UuidType<
-  TT = ValueTypeNullable<string>,
+  TT = ValueTypeRequired<string>,
 > extends AbstractType<TT> {
   static random(): string {
     return uuidv4();

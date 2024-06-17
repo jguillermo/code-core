@@ -1,7 +1,7 @@
-import { AbstractType, ValueTypeNullable } from '../abstract-type';
+import { AbstractType, ValueTypeRequired } from '../abstract-type';
 import { PrimitiveTypes } from '../../common';
 
-export abstract class EnumType<T> extends AbstractType<ValueTypeNullable<T>> {
+export abstract class EnumType<T> extends AbstractType<ValueTypeRequired<T>> {
   constructor(value: T | null) {
     super(value);
   }
