@@ -1,16 +1,21 @@
 import { ValidatorInterface } from '@code-core/domain';
 
 export type ValueTypeRequired<T> = T;
-export type ValueTypeOptional<T> = T | null;
 
-export abstract class AbstractType<T> implements ValidatorInterface {
-  protected _value: T;
+export abstract class AbstractType<T, R extends null | undefined = undefined>
+  implements ValidatorInterface
+{
+  protected _value: R extends null ? T | null : T;
 
-  constructor(value: any = null) {
+  constructor(
+    value: R extends null ? T | null : T = null as R extends null
+      ? T | null
+      : T,
+  ) {
     this._value = this.filter(value);
   }
 
-  get value(): T {
+  get value(): R extends null ? T | null : T {
     return this._value;
   }
 
@@ -32,5 +37,7 @@ export abstract class AbstractType<T> implements ValidatorInterface {
 
   abstract get toString(): string;
 
-  protected abstract filter(value: any): any;
+  protected abstract filter(
+    value: R extends null ? T | null : T,
+  ): R extends null ? T | null : T;
 }
