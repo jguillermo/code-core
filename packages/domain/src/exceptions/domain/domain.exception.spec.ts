@@ -9,20 +9,12 @@ describe('DomainException', () => {
       const aggregateName = 'User';
       const aggregateId = '123';
       const message = `User with ID 123 not found.`;
-      const exception = new AggregateNotFoundException(
-        aggregateName,
-        aggregateId,
-      );
+      const exception = new AggregateNotFoundException(aggregateName, aggregateId);
 
       expect(exception).toBeInstanceOf(AggregateNotFoundException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([
-        ExceptionCode.DomainException,
-        ExceptionCode.AggregateNotFound,
-      ]);
-      expect(exception.exceptionMessage).toEqual(
-        'Domain Exception (DOM000), Aggregate Not Found (DOM002)',
-      );
+      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.AggregateNotFound]);
+      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Aggregate Not Found (DOM002)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });
@@ -35,13 +27,8 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(ValidationException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([
-        ExceptionCode.DomainException,
-        ExceptionCode.ValidationFailed,
-      ]);
-      expect(exception.exceptionMessage).toEqual(
-        'Domain Exception (DOM000), Validation Failed (DOM001)',
-      );
+      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.ValidationFailed]);
+      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Validation Failed (DOM001)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });

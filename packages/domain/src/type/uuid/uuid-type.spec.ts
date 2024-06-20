@@ -142,10 +142,7 @@ describe('UUID Type', () => {
       expect(value).toEqual('9342d47a-1bab-5709-9869-c840b2eac501');
     });
     it('message "hello" namespace owner', () => {
-      const value = UuidTypeImp.fromValue(
-        'hello',
-        '53b4661d-904b-41a7-906d-5892b658b2f6',
-      );
+      const value = UuidTypeImp.fromValue('hello', '53b4661d-904b-41a7-906d-5892b658b2f6');
       expect(uuidValidate(value)).toEqual(true);
       expect(value).toEqual('71afd48d-b40e-5367-a007-1e7a76a3c2f1');
     });

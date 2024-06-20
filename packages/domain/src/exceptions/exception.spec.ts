@@ -12,9 +12,7 @@ describe('Exceptions', () => {
     it('should create an instance with correct properties', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const message = 'Test message';
-      const exception = new TestException(message, [
-        ExceptionCode.DomainException,
-      ]);
+      const exception = new TestException(message, [ExceptionCode.DomainException]);
 
       expect(exception).toBeInstanceOf(AbstractException);
       expect(exception.message).toBe(message);

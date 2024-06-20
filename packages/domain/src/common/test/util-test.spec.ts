@@ -1,9 +1,4 @@
-import {
-  splitString,
-  testValidation,
-  titleGenerate,
-  toEqualArray,
-} from './util-test';
+import { splitString, testValidation, titleGenerate, toEqualArray } from './util-test';
 
 describe('Util Test', () => {
   it('splitString', () => {
@@ -25,69 +20,24 @@ describe('Util Test', () => {
       [titleGenerate('abc', null, 1, false), 'validate abc() toEqual 1'],
       [titleGenerate('abc', null, '1', false), "validate abc() toEqual '1'"],
       //error function
-      [
-        titleGenerate('abc', 1, 1, true, 1),
-        'abc(1) Expected: 1, but return: 1',
-      ],
-      [
-        titleGenerate('abc', '1', 1, true, 1),
-        "abc('1') Expected: 1, but return: 1",
-      ],
-      [
-        titleGenerate('abc', '1', '1', true, 1),
-        "abc('1') Expected: '1', but return: 1",
-      ],
-      [
-        titleGenerate('abc', null, 1, false, 1),
-        'abc() Expected: 1, but return: 1',
-      ],
-      [
-        titleGenerate('abc', null, '1', false, 1),
-        "abc() Expected: '1', but return: 1",
-      ],
+      [titleGenerate('abc', 1, 1, true, 1), 'abc(1) Expected: 1, but return: 1'],
+      [titleGenerate('abc', '1', 1, true, 1), "abc('1') Expected: 1, but return: 1"],
+      [titleGenerate('abc', '1', '1', true, 1), "abc('1') Expected: '1', but return: 1"],
+      [titleGenerate('abc', null, 1, false, 1), 'abc() Expected: 1, but return: 1'],
+      [titleGenerate('abc', null, '1', false, 1), "abc() Expected: '1', but return: 1"],
 
       //function:properties
-      [
-        titleGenerate('abc:def', 1, 1, true),
-        'validate (new abc(1)).def() toEqual 1',
-      ],
-      [
-        titleGenerate('abc:def', '1', 1, true),
-        "validate (new abc('1')).def() toEqual 1",
-      ],
-      [
-        titleGenerate('abc:def', '1', '1', true),
-        "validate (new abc('1')).def() toEqual '1'",
-      ],
-      [
-        titleGenerate('abc:def', null, 1, false),
-        'validate (new abc()).def() toEqual 1',
-      ],
-      [
-        titleGenerate('abc:def', null, '1', false),
-        "validate (new abc()).def() toEqual '1'",
-      ],
+      [titleGenerate('abc:def', 1, 1, true), 'validate (new abc(1)).def() toEqual 1'],
+      [titleGenerate('abc:def', '1', 1, true), "validate (new abc('1')).def() toEqual 1"],
+      [titleGenerate('abc:def', '1', '1', true), "validate (new abc('1')).def() toEqual '1'"],
+      [titleGenerate('abc:def', null, 1, false), 'validate (new abc()).def() toEqual 1'],
+      [titleGenerate('abc:def', null, '1', false), "validate (new abc()).def() toEqual '1'"],
       //error function:properties
-      [
-        titleGenerate('abc:def', 1, 1, true, 1),
-        '(new abc(1)).def() Expected: 1, but return: 1',
-      ],
-      [
-        titleGenerate('abc:def', '1', 1, true, 1),
-        "(new abc('1')).def() Expected: 1, but return: 1",
-      ],
-      [
-        titleGenerate('abc:def', '1', '1', true, 1),
-        "(new abc('1')).def() Expected: '1', but return: 1",
-      ],
-      [
-        titleGenerate('abc:def', null, 1, false, 1),
-        '(new abc()).def() Expected: 1, but return: 1',
-      ],
-      [
-        titleGenerate('abc:def', null, '1', false, 1),
-        "(new abc()).def() Expected: '1', but return: 1",
-      ],
+      [titleGenerate('abc:def', 1, 1, true, 1), '(new abc(1)).def() Expected: 1, but return: 1'],
+      [titleGenerate('abc:def', '1', 1, true, 1), "(new abc('1')).def() Expected: 1, but return: 1"],
+      [titleGenerate('abc:def', '1', '1', true, 1), "(new abc('1')).def() Expected: '1', but return: 1"],
+      [titleGenerate('abc:def', null, 1, false, 1), '(new abc()).def() Expected: 1, but return: 1'],
+      [titleGenerate('abc:def', null, '1', false, 1), "(new abc()).def() Expected: '1', but return: 1"],
     ]);
   });
   describe('testValidation', () => {

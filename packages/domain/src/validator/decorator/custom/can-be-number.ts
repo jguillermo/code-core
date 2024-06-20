@@ -1,8 +1,4 @@
-import {
-  registerDecorator,
-  ValidationArguments,
-  ValidationOptions,
-} from 'class-validator';
+import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 import { NumberValidator } from '@code-core/domain';
 
 export function CanBeNumberValidator(validationOptions?: ValidationOptions) {

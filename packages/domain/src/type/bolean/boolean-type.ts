@@ -3,9 +3,7 @@ import validator from 'validator';
 
 type BooleanTypes = boolean | null;
 
-export abstract class BooleanType<
-  TT extends BooleanTypes = boolean,
-> extends AbstractType<TT> {
+export abstract class BooleanType<TT extends BooleanTypes = boolean> extends AbstractType<TT> {
   get toString(): string {
     if (this.isNull) {
       return '';

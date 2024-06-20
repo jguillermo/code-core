@@ -8,10 +8,7 @@ export function universalToString(value) {
   } else if (value instanceof Date) {
     return `Date(${value.toISOString()})`;
   } else if (value instanceof Map) {
-    const entries = Array.from(
-      value,
-      ([key, val]) => `${universalToString(key)}: ${universalToString(val)}`,
-    );
+    const entries = Array.from(value, ([key, val]) => `${universalToString(key)}: ${universalToString(val)}`);
     return `Map({${entries.join(', ')}})`;
   } else if (value instanceof Set) {
     const entries = Array.from(value, universalToString);

@@ -51,10 +51,7 @@ describe('ValidationStorage', () => {
   test('should return empty array if no validations are present', () => {
     class TestClass {}
 
-    const validations = storage.getValidations(
-      TestClass,
-      'nonExistentProperty',
-    );
+    const validations = storage.getValidations(TestClass, 'nonExistentProperty');
     expect(validations).toHaveLength(0);
   });
 });

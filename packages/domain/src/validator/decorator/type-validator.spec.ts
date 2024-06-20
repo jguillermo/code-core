@@ -1,8 +1,5 @@
 import { AddValidate, validateType } from './type-validator';
-import {
-  typeErrorValidationSpec,
-  typeValidationSpec,
-} from '../../common/test/util-test';
+import { typeErrorValidationSpec, typeValidationSpec } from '../../common/test/util-test';
 
 @AddValidate([
   {
@@ -67,8 +64,7 @@ describe('Validator', () => {
     const valueError = childErrors.find((error) => error.property === '_value');
     expect(valueError).toBeDefined();
     expect(valueError?.constraints).toEqual({
-      isNumber:
-        'ChildClass must be a number conforming to the specified constraints',
+      isNumber: 'ChildClass must be a number conforming to the specified constraints',
       isInt: 'ChildClass must be an integer number',
     });
   });
@@ -112,8 +108,7 @@ describe('Validator', () => {
       notNumber: {
         constraints: {
           isInt: 'ChildClass must be an integer number',
-          isNumber:
-            'ChildClass must be a number conforming to the specified constraints',
+          isNumber: 'ChildClass must be a number conforming to the specified constraints',
           max: 'ChildClass must not be greater than 20',
           min: 'ChildClass must not be less than 10',
         },

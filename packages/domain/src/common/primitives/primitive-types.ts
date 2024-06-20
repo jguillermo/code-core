@@ -1,7 +1,1 @@
-export type PrimitiveTypes =
-  | string
-  | number
-  | boolean
-  | Date
-  | undefined
-  | null;
+export type PrimitiveTypes = string | number | boolean | Date | undefined | null;

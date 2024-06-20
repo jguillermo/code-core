@@ -38,14 +38,8 @@ export function titleGenerate(
   hastTwoValues: boolean,
   result: any = null,
 ): string {
-  const txtExpectValue = isString(expectValue)
-    ? `'${expectValue}'`
-    : universalToString(expectValue);
-  const txtInput = !hastTwoValues
-    ? ''
-    : isString(input)
-      ? `'${input}'`
-      : universalToString(input);
+  const txtExpectValue = isString(expectValue) ? `'${expectValue}'` : universalToString(expectValue);
+  const txtInput = !hastTwoValues ? '' : isString(input) ? `'${input}'` : universalToString(input);
   const objectNameProperty = splitString(objectName);
   const titleObject = objectNameProperty.property
     ? `(new ${objectNameProperty.name}(${txtInput})).${objectNameProperty.property}()`
@@ -57,11 +51,7 @@ export function titleGenerate(
   }
 }
 
-export function processValidator(
-  name: string,
-  objectItem: any,
-  property: string | null = null,
-): ITestValidation {
+export function processValidator(name: string, objectItem: any, property: string | null = null): ITestValidation {
   const hastTwoValues = Array.isArray(objectItem) && objectItem.length === 2;
   const voProperties = property ? `${name}:${property}` : `${name}`;
   const input = hastTwoValues ? objectItem[0] : '';
@@ -80,26 +70,19 @@ export function classTestSpec(cls: any, objectList: { [P: string]: any[] }) {
     objectList[property].forEach((value) => {
       const dataInput = processValidator(cls.name, value, property);
       it(dataInput.title, () => {
-        const type = dataInput.hastTwoValues
-          ? new cls(dataInput.input)
-          : new cls();
+        const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
       });
     });
   }
 }
 
-export function typeValidationSpec(
-  cls: any,
-  objectList: { [P: string]: any[] },
-) {
+export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] }) {
   for (const property in objectList) {
     objectList[property].forEach((value) => {
       const dataInput = processValidator(cls.name, value, property);
       it(dataInput.title + ' and not error', async () => {
-        const type = dataInput.hastTwoValues
-          ? new cls(dataInput.input)
-          : new cls();
+        const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
         const errors = await validateType(type);
         expect(errors.length).toEqual(0);
@@ -116,29 +99,20 @@ export function typeErrorValidationSpec(
 ) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
-      const valueText = isString(value)
-        ? `'${value}'`
-        : universalToString(value);
+      const valueText = isString(value) ? `'${value}'` : universalToString(value);
       it(`type error validator ${exceptionItem} with ${valueText}`, async () => {
         const errors = await validateType(new cls(value));
         expect(errors.length).toEqual(1);
-        expect(errors[0].constraints).toEqual(
-          exceptionList[exceptionItem]['constraints'],
-        );
+        expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
       });
     });
   }
 }
 
-export function classExceptionSpec(
-  cls: any,
-  exceptionList: { [P: string]: { message: string; values: any[] } },
-) {
+export function classExceptionSpec(cls: any, exceptionList: { [P: string]: { message: string; values: any[] } }) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
-      const valueText = isString(value)
-        ? `'${value}'`
-        : universalToString(value);
+      const valueText = isString(value) ? `'${value}'` : universalToString(value);
       it(`validate ${exceptionItem} exception with ${valueText}`, () => {
         expect(() => {
           new cls(value);

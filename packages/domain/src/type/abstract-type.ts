@@ -1,15 +1,9 @@
 import { ValidatorInterface } from '@code-core/domain';
 
-export abstract class AbstractType<T, R extends null | undefined = undefined>
-  implements ValidatorInterface
-{
+export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
   protected _value: R extends null ? T | null : T;
 
-  constructor(
-    value: R extends null ? T | null : T = null as R extends null
-      ? T | null
-      : T,
-  ) {
+  constructor(value: R extends null ? T | null : T = null as R extends null ? T | null : T) {
     this._value = this.filter(value);
   }
 
@@ -35,7 +29,5 @@ export abstract class AbstractType<T, R extends null | undefined = undefined>
 
   abstract get toString(): string;
 
-  protected abstract filter(
-    value: R extends null ? T | null : T,
-  ): R extends null ? T | null : T;
+  protected abstract filter(value: R extends null ? T | null : T): R extends null ? T | null : T;
 }

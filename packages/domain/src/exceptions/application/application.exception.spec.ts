@@ -9,12 +9,8 @@ describe('Exceptions', () => {
 
       expect(exception).toBeInstanceOf(ApplicationException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([
-        ExceptionCode.ApplicationException,
-      ]);
-      expect(exception.exceptionMessage).toEqual(
-        'Application Exception (APP000)',
-      );
+      expect(exception.exceptionCodes).toEqual([ExceptionCode.ApplicationException]);
+      expect(exception.exceptionMessage).toEqual('Application Exception (APP000)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });

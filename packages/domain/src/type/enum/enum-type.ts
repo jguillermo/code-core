@@ -19,10 +19,7 @@ export abstract class EnumType<T> extends AbstractType<T> {
     return value;
   }
 
-  static create<PT>(
-    value: PrimitiveTypes | PT,
-    entries: PrimitiveTypes[],
-  ): PT | null {
+  static create<PT>(value: PrimitiveTypes | PT, entries: PrimitiveTypes[]): PT | null {
     if (value === null) {
       return null;
     }
