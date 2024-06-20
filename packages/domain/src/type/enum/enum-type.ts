@@ -1,8 +1,9 @@
-import { AbstractType, ValueTypeRequired } from '../abstract-type';
+import { AbstractType } from '../abstract-type';
 import { PrimitiveTypes } from '../../common';
 
-export abstract class EnumType<T> extends AbstractType<ValueTypeRequired<T>> {
+export abstract class EnumType<T> extends AbstractType<T> {
   constructor(value: T | null) {
+    // @ts-ignore
     super(value);
   }
 
@@ -13,6 +14,7 @@ export abstract class EnumType<T> extends AbstractType<ValueTypeRequired<T>> {
     return `${this.value}`;
   }
 
+  // @ts-ignore
   protected filter(value: T | null): T | null {
     return value;
   }

@@ -1,12 +1,11 @@
-import { AbstractType, ValueTypeRequired } from '../abstract-type';
+import { AbstractType } from '../abstract-type';
 
-export abstract class ArrayType<T> extends AbstractType<
-  ValueTypeRequired<Array<T>>
-> {
+export abstract class ArrayType<T> extends AbstractType<Array<T>> {
   get toString(): string {
     return this.value ? this.value.toString() : '';
   }
 
+  // @ts-ignore
   protected filter(value: any): Array<T> | null {
     if (!value) {
       return null;

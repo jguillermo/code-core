@@ -1,14 +1,15 @@
 import * as dayjs from 'dayjs';
 import * as utc from 'dayjs/plugin/utc';
-import { AbstractType, ValueTypeRequired } from '../abstract-type';
+import { AbstractType } from '../abstract-type';
 
 dayjs.extend(utc);
 
-export abstract class DateType extends AbstractType<ValueTypeRequired<Date>> {
+export abstract class DateType extends AbstractType<Date> {
   constructor(value: any = null) {
     super(value);
   }
 
+  // @ts-ignore
   protected filter(value: any): Date | null {
     if (value === null) {
       return null;

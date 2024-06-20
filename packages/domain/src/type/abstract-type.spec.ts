@@ -20,7 +20,7 @@ export class ValueGenerator {
 }
 
 describe('Abstract Type', () => {
-  describe('infer Type', () => {
+  describe('Validation abstract Type', () => {
     it('should be required number type', () => {
       class A {
         constructor(public value: number) {}

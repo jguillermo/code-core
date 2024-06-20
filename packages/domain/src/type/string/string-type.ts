@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { AbstractType, ValueTypeRequired } from '../abstract-type';
+import { AbstractType } from '../abstract-type';
 
 export interface StringIsLengthValidator {
   min?: number;
@@ -7,9 +7,7 @@ export interface StringIsLengthValidator {
   exactly?: number;
 }
 
-export abstract class StringType extends AbstractType<
-  ValueTypeRequired<string>
-> {
+export abstract class StringType extends AbstractType<string> {
   get isEmpty(): boolean {
     if (this.isNull) {
       return true;
@@ -39,6 +37,7 @@ export abstract class StringType extends AbstractType<
     return <string>this.value;
   }
 
+  // @ts-ignore
   protected filter(value: any): string | null {
     if (value === null) {
       return null;

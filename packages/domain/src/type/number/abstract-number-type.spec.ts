@@ -4,6 +4,7 @@ import {
 } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
+import { expectTypeOf } from 'expect-type';
 
 describe('Number Type', () => {
   describe('NumberTypeRequired expect value', () => {
@@ -79,7 +80,7 @@ describe('Number Type', () => {
   });
   describe('NumberTypeOptional expect value', () => {
     @AddValidate([{ validator: 'IsOptional' }])
-    class NumberTypeOptional extends AbstractNumberType {}
+    class NumberTypeOptional extends AbstractNumberType<null> {}
 
     typeValidationSpec(NumberTypeOptional, {
       value: [
@@ -200,21 +201,34 @@ describe('Number Type', () => {
     });
   });
 
-  // describe('Type required and optional', () => {
-  //   // it('should be required number type', () => {
-  //   //   class NumberTypeRequired extends AbstractNumberType {}
-  //   //
-  //   //   expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
-  //   //   expectTypeOf<ValueTypeRequired<number>>().not.toEqualTypeOf<
-  //   //     NumberTypeRequired['value']
-  //   //   >();
-  //   // });
-  //
-  //   // it('should be optional number type', () => {
-  //   //   class NumberTypeOptional extends AbstractNumberType<ValueTypeOptional> {}
-  //   //   const numberTypeOptional = new NumberTypeOptional(1);
-  //   //   numberTypeOptional.value;
-  //   //   expectTypeOf(numberTypeOptional.value).toEqualTypeOf<number | null>();
-  //   // });
-  // });
+  describe('Validation number Type', () => {
+    it('should correctly handle type validation for value with null and number ', () => {
+      class B extends AbstractNumberType<null> {}
+
+      expectTypeOf<B['value']>().toEqualTypeOf<number | null>();
+      expectTypeOf<number | null>().toEqualTypeOf<B['value']>();
+
+      const instance1 = new B();
+      expectTypeOf(instance1.value).toEqualTypeOf<number | null>();
+
+      const instance2 = new B(42);
+      expectTypeOf(instance2.value).toEqualTypeOf<number | null>();
+
+      const instance3 = new B(null);
+      expectTypeOf(instance3.value).toEqualTypeOf<number | null>();
+    });
+
+    it('should correctly handle type validation for strict value number ', () => {
+      class C extends AbstractNumberType {}
+
+      expectTypeOf<C['value']>().toEqualTypeOf<number>();
+      expectTypeOf<number>().toEqualTypeOf<C['value']>();
+
+      const instance1 = new C();
+      expectTypeOf(instance1.value).toEqualTypeOf<number>();
+
+      const instance2 = new C(42);
+      expectTypeOf(instance2.value).toEqualTypeOf<number>();
+    });
+  });
 });

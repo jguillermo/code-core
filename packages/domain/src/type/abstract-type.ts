@@ -1,7 +1,5 @@
 import { ValidatorInterface } from '@code-core/domain';
 
-export type ValueTypeRequired<T> = T;
-
 export abstract class AbstractType<T, R extends null | undefined = undefined>
   implements ValidatorInterface
 {
