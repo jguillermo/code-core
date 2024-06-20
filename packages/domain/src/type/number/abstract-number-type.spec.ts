@@ -1,7 +1,4 @@
-import {
-  typeErrorValidationSpec,
-  typeValidationSpec,
-} from '../../common/test/util-test';
+import { typeErrorValidationSpec, typeValidationSpec } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
@@ -151,11 +148,7 @@ describe('Number Type', () => {
     });
   });
   describe('AddValidate', () => {
-    @AddValidate([
-      { validator: 'IsInt' },
-      { validator: 'Min', value: 10 },
-      { validator: 'Max', value: 20 },
-    ])
+    @AddValidate([{ validator: 'IsInt' }, { validator: 'Min', value: 10 }, { validator: 'Max', value: 20 }])
     class ValueObjectNumber extends AbstractNumberType {}
 
     typeValidationSpec(ValueObjectNumber, {
