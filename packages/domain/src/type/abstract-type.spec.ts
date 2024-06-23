@@ -32,10 +32,6 @@ describe('Abstract Type', () => {
 
     it('should correctly handle type validation for value with null and number ', () => {
       class B extends AbstractType<number, null> {
-        get toString(): string {
-          return '';
-        }
-
         protected filter(value: number | null): number | null {
           return value;
         }
@@ -56,10 +52,6 @@ describe('Abstract Type', () => {
 
     it('should correctly handle type validation for strict value number ', () => {
       class C extends AbstractType<number> {
-        get toString(): string {
-          return '';
-        }
-
         protected filter(value: number): number {
           return value;
         }

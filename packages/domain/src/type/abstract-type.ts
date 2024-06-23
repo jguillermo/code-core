@@ -1,4 +1,5 @@
 import { ValidatorInterface } from '@code-core/domain';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
   protected _value: R extends null ? T | null : T;
@@ -27,7 +28,9 @@ export abstract class AbstractType<T, R extends null | undefined = undefined> im
     return 'value ($value) is not valid.';
   }
 
-  abstract get toString(): string;
+  get toString(): string {
+    return this.isNull ? '' : universalToString(this._value);
+  }
 
   protected abstract filter(value: R extends null ? T | null : T): R extends null ? T | null : T;
 }
