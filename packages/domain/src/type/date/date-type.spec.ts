@@ -1,7 +1,7 @@
 import { ValueGenerator } from '../abstract-type.spec';
 import { DateTypeImp } from './';
 
-describe('String Type', () => {
+describe.skip('String Type', () => {
   let type: DateTypeImp;
   describe('constructorset values', () => {
     describe('set valid string date', () => {

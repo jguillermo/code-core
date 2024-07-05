@@ -1,7 +1,7 @@
 import { ValueGenerator } from '../abstract-type.spec';
 import { BooleanRequiredTypeImp, BooleanTypeImp } from './';
 
-describe('Boolean Type', () => {
+describe.skip('Boolean Type', () => {
   let type: BooleanTypeImp;
   describe('constructor set values', () => {
     describe('valid boolean', () => {

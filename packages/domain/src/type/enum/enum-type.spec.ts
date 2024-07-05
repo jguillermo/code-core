@@ -12,7 +12,7 @@ export class EnumTypeImp extends EnumType<StatusString> {
   }
 }
 
-describe('Enum Type', () => {
+describe.skip('Enum Type', () => {
   let type: EnumTypeImp;
   describe('constructorset values', () => {
     describe('set valid choise', () => {

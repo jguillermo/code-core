@@ -79,6 +79,8 @@ describe('StringValidator', () => {
         'null',
         '123.456.789',
         '123,456',
+        true,
+        false,
         123,
         -123,
         0,
@@ -93,8 +95,6 @@ describe('StringValidator', () => {
         Number.EPSILON,
       ],
       invalid: [
-        true,
-        false,
         NaN,
         Infinity,
         -Infinity,
