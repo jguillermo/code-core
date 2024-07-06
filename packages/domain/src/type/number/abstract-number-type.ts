@@ -5,7 +5,7 @@ import { CanBeNumberValidator } from '../../validator/decorator/custom/can-be-nu
 
 @AddValidate([{ validator: CanBeNumberValidator }])
 export class AbstractNumberType<R extends null | undefined = undefined> extends AbstractType<number, R> {
-  protected filter(value: R extends null ? number | null : number): R extends null ? number | null : number {
+  protected filter(value: any): any {
     if (NumberValidator.canBeNumber(value)) {
       const number = Number(value);
       return isNaN(number) ? NaN : number.valueOf();

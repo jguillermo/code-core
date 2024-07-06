@@ -32,6 +32,10 @@ describe('Abstract Type', () => {
 
     it('should correctly handle type validation for value with null and number ', () => {
       class B extends AbstractType<number, null> {
+        constructor(value: number | null = null) {
+          super(value);
+        }
+
         protected filter(value: number | null): number | null {
           return value;
         }
@@ -52,6 +56,10 @@ describe('Abstract Type', () => {
 
     it('should correctly handle type validation for strict value number ', () => {
       class C extends AbstractType<number> {
+        constructor(value: number = 0) {
+          super(value);
+        }
+
         protected filter(value: number): number {
           return value;
         }
@@ -79,7 +87,11 @@ describe('Abstract Type', () => {
   });
 
   describe('TestBaseType', () => {
-    class TestBaseType extends AbstractType<string> {
+    class TestBaseType extends AbstractType<string, null> {
+      constructor(value: string | null = null) {
+        super(value);
+      }
+
       get toString(): string {
         if (this.isNull) {
           return '';

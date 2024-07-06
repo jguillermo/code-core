@@ -6,7 +6,11 @@ import { expectTypeOf } from 'expect-type';
 class NumberTypeRequired extends AbstractNumberType {}
 
 @AddValidate([{ validator: 'IsOptional' }])
-class NumberTypeOptional extends AbstractNumberType<null> {}
+class NumberTypeOptional extends AbstractNumberType<null> {
+  constructor(value: number | null = null) {
+    super(value);
+  }
+}
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
@@ -220,9 +224,6 @@ describe('AbstractNumberType', () => {
     it('string', () => {
       expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
       expectTypeOf<number>().toEqualTypeOf<NumberTypeRequired['value']>();
-
-      const instance1 = new NumberTypeRequired();
-      expectTypeOf(instance1.value).toEqualTypeOf<number>();
 
       const instance2 = new NumberTypeRequired(42);
       expectTypeOf(instance2.value).toEqualTypeOf<number>();

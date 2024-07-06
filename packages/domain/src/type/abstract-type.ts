@@ -4,8 +4,8 @@ import { universalToString } from '../common/utils/string/universal-to-string';
 export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
   protected _value: R extends null ? T | null : T;
 
-  constructor(value: R extends null ? T | null : T = null as R extends null ? T | null : T) {
-    this._value = this.filter(value);
+  constructor(value: R extends null ? T | null : T) {
+    this._value = this.filter(value ?? null);
   }
 
   get value(): R extends null ? T | null : T {
@@ -32,5 +32,5 @@ export abstract class AbstractType<T, R extends null | undefined = undefined> im
     return this.isNull ? '' : universalToString(this._value);
   }
 
-  protected abstract filter(value: R extends null ? T | null : T): R extends null ? T | null : T;
+  protected abstract filter(value: any | null): any | null;
 }
