@@ -61,23 +61,7 @@ describe('AbstractNumberType', () => {
           constraints: {
             canBeNumber: 'NumberTypeRequired must be a number',
           },
-          values: [
-            null,
-            undefined,
-            'random',
-            true,
-            false,
-            '',
-            '   ',
-            [],
-            {},
-            [1, 2, 3],
-            new Date(),
-            { value: 123 },
-            () => 123,
-            Symbol('123'),
-            new Function('return 123'),
-          ],
+          values: [null, undefined, 'random', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
         },
       });
     });
@@ -136,21 +120,7 @@ describe('AbstractNumberType', () => {
           constraints: {
             canBeNumber: 'NumberTypeOptional must be a number',
           },
-          values: [
-            'random',
-            true,
-            false,
-            '',
-            '   ',
-            [],
-            {},
-            [1, 2, 3],
-            new Date(),
-            { value: 123 },
-            () => 123,
-            Symbol('123'),
-            new Function('return 123'),
-          ],
+          values: ['random', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
         },
       });
     });
@@ -179,22 +149,7 @@ describe('AbstractNumberType', () => {
             max: 'ValueObjectNumber must not be greater than 20',
             min: 'ValueObjectNumber must not be less than 10',
           },
-          values: [
-            'random',
-            '21.1.1',
-            true,
-            false,
-            '',
-            '   ',
-            [],
-            {},
-            [1, 2, 3],
-            new Date(),
-            { value: 123 },
-            () => 123,
-            Symbol('123'),
-            new Function('return 123'),
-          ],
+          values: ['random', '21.1.1', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
         },
         isInt: {
           constraints: {

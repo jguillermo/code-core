@@ -112,22 +112,7 @@ describe('Validator', () => {
           max: 'ChildClass must not be greater than 20',
           min: 'ChildClass must not be less than 10',
         },
-        values: [
-          'random',
-          '21.1.1',
-          true,
-          false,
-          '',
-          '   ',
-          [],
-          {},
-          [1, 2, 3],
-          new Date(),
-          { value: 123 },
-          () => 123,
-          Symbol('123'),
-          new Function('return 123'),
-        ],
+        values: ['random', '21.1.1', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
       },
       isInt: {
         constraints: {

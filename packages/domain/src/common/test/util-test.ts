@@ -31,19 +31,11 @@ export function splitString(input): {
   };
 }
 
-export function titleGenerate(
-  objectName: string,
-  input: any,
-  expectValue: any,
-  hastTwoValues: boolean,
-  result: any = null,
-): string {
+export function titleGenerate(objectName: string, input: any, expectValue: any, hastTwoValues: boolean, result: any = null): string {
   const txtExpectValue = isString(expectValue) ? `'${expectValue}'` : universalToString(expectValue);
   const txtInput = !hastTwoValues ? '' : isString(input) ? `'${input}'` : universalToString(input);
   const objectNameProperty = splitString(objectName);
-  const titleObject = objectNameProperty.property
-    ? `(new ${objectNameProperty.name}(${txtInput})).${objectNameProperty.property}()`
-    : `${objectName}(${txtInput})`;
+  const titleObject = objectNameProperty.property ? `(new ${objectNameProperty.name}(${txtInput})).${objectNameProperty.property}()` : `${objectName}(${txtInput})`;
   if (result) {
     return `${titleObject} Expected: ${txtExpectValue}, but return: ${universalToString(result)}`;
   } else {

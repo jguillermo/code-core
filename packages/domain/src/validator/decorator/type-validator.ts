@@ -28,10 +28,7 @@ function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], pro
 function applyParentValidations(cls: Function, propertyKey: string) {
   const parentPrototype = Object.getPrototypeOf(cls.prototype);
   if (parentPrototype && parentPrototype !== Object.prototype) {
-    const parentValidatorConfigs = ValidationStorage.getInstance().getValidations(
-      parentPrototype.constructor,
-      propertyKey,
-    );
+    const parentValidatorConfigs = ValidationStorage.getInstance().getValidations(parentPrototype.constructor, propertyKey);
     if (parentValidatorConfigs.length > 0) {
       registerDecorator(cls, parentValidatorConfigs, propertyKey);
     }
