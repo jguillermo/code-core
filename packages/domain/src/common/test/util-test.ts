@@ -77,7 +77,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
         const errors = await validateType(type);
-        expect(errors.length).toEqual(0);
+        expect(errors).toEqual([]);
       });
     });
   }

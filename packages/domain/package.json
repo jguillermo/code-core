@@ -63,6 +63,7 @@
   },
   "gitHead": "be6fd777c043365c7134ce950db5e2f5d70ef4bc",
   "dependencies": {
+    "ajv": "^8.16.0",
     "class-validator": "^0.14.1",
     "dayjs": "^1.11.10",
     "reflect-metadata": "^0.2.2",
