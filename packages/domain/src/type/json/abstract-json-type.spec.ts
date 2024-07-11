@@ -65,7 +65,10 @@ describe('AbstractJsonType', () => {
           constraints: {
             jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /a must be >= 10',
           },
-          values: [{ a: 1, email: 'a@mail.com' }],
+          values: [
+            { a: 1, email: 'a@mail.com' },
+            { a: 2, email: 'a@mail.com' },
+          ],
         },
       });
     });

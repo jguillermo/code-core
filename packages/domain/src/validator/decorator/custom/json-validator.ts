@@ -13,6 +13,9 @@ export function JsonValidator(jsonSchema: any, validationOptions?: ValidationOpt
       options: validationOptions,
       validator: {
         validate(value: any, args: any) {
+          if ((args as any).constraints[0].errors) {
+            delete (args as any).constraints[0].errors;
+          }
           if (!JsonValidatorCore.canBeJson(value)) {
             // esto parece raro, pero esta validacon ya esta en el canBeJson y aqui solo debeia llegar valores correctos, por eso no se valida, porque ya se valido antes y ya saliio eerror en al otro afuncion
             return true;

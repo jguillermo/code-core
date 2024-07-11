@@ -83,12 +83,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function typeErrorValidationSpec(
-  cls: any,
-  exceptionList: {
-    [P: string]: { constraints: object; values: any[] };
-  },
-) {
+export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
