@@ -2,6 +2,7 @@ import { registerDecorator, ValidationArguments, ValidationOptions } from 'class
 import Ajv from 'ajv';
 
 import { JsonValidator as JsonValidatorCore } from '../../json.validator';
+import { JSON_FORMAT_VALIDATES } from '../json-fotmat-validate';
 
 export function JsonValidator(jsonSchema: any, validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
@@ -20,7 +21,12 @@ export function JsonValidator(jsonSchema: any, validationOptions?: ValidationOpt
             // esto parece raro, pero esta validacon ya esta en el canBeJson y aqui solo debeia llegar valores correctos, por eso no se valida, porque ya se valido antes y ya saliio eerror en al otro afuncion
             return true;
           }
+          //todo, mejorar la instancia a un singleton
           const ajv = new Ajv();
+          Object.keys(JSON_FORMAT_VALIDATES).forEach((formatName) => {
+            ajv.addFormat(formatName, JSON_FORMAT_VALIDATES[formatName]);
+          });
+
           const validate = ajv.compile(jsonSchema);
           const valid = validate(value);
           if (valid) {

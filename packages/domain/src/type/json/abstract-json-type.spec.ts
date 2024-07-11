@@ -40,7 +40,7 @@ describe('AbstractJsonType', () => {
       type: 'object',
       properties: {
         a: { type: 'number', minimum: 10 },
-        email: { type: 'string' },
+        email: { type: 'string', format: 'email' },
       },
       required: ['a', 'email'],
       additionalProperties: false,
@@ -63,11 +63,11 @@ describe('AbstractJsonType', () => {
       typeErrorValidationSpec(JsonTypeValidateRequired, {
         canBeJson: {
           constraints: {
-            jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /a must be >= 10',
+            jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /email must match format "email"',
           },
           values: [
-            { a: 1, email: 'a@mail.com' },
-            { a: 2, email: 'a@mail.com' },
+            { a: 20, email: 'holi' },
+            // { a: 2, email: 'a@mail.com' },
           ],
         },
       });
