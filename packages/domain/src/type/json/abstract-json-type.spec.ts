@@ -2,7 +2,6 @@ import { typeErrorValidationSpec, typeValidationSpec } from '../../common/test/u
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { JsonValidator } from '../../validator/decorator/custom/json-validator';
-import { JSONSchemaType } from 'ajv';
 
 interface JsonValuesTest {
   a: number;
@@ -33,12 +32,17 @@ describe('AbstractJsonType', () => {
   });
 
   describe('Validate jsonSchema Required', () => {
-    const jsonSchema: JSONSchemaType<JsonValuesTest> = {
+    interface JsonTypeValidateRequired extends JsonValuesTest {
+      email: string;
+    }
+
+    const jsonSchema = {
       type: 'object',
       properties: {
         a: { type: 'number', minimum: 10 },
+        email: { type: 'string' },
       },
-      required: ['a'],
+      required: ['a', 'email'],
       additionalProperties: false,
     };
 
@@ -48,8 +52,10 @@ describe('AbstractJsonType', () => {
     describe('Correct', () => {
       typeValidationSpec(JsonTypeValidateRequired, {
         value: [
-          [{ a: 11 }, { a: 11 }],
-          ['{ "a": 11 }', { a: 11 }],
+          [
+            { a: 11, email: 'a@mail.com' },
+            { a: 11, email: 'a@mail.com' },
+          ],
         ],
       });
     });
@@ -59,7 +65,7 @@ describe('AbstractJsonType', () => {
           constraints: {
             jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /a must be >= 10',
           },
-          values: [{ a: 1 }],
+          values: [{ a: 1, email: 'a@mail.com' }],
         },
       });
     });
