@@ -13,6 +13,12 @@ export function universalToString(value) {
   } else if (value instanceof Set) {
     const entries = Array.from(value, universalToString);
     return `Set(${entries.join(', ')})`;
+  } else if (value instanceof RegExp) {
+    return `RegExp(${value.toString()})`;
+  } else if (value instanceof Error) {
+    return `new ${value.name}(${value.message})`;
+  } else if (value instanceof Promise) {
+    return 'Promise';
   } else if (typeof value === 'object') {
     try {
       return JSON.stringify(value) || value.toString();

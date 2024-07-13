@@ -1,4 +1,4 @@
-import { typeErrorValidationSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { JsonValidator } from '../../validator/decorator/custom/json-validator';
@@ -20,7 +20,7 @@ describe('AbstractJsonType', () => {
       });
     });
     describe('Error', () => {
-      typeErrorValidationSpec(JsonTypeRequired, {
+      errorTypeValidatorSpec(JsonTypeRequired, {
         canBeJson: {
           constraints: {
             canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
@@ -60,7 +60,7 @@ describe('AbstractJsonType', () => {
       });
     });
     describe('Error', () => {
-      typeErrorValidationSpec(JsonTypeValidateRequired, {
+      errorTypeValidatorSpec(JsonTypeValidateRequired, {
         canBeJson: {
           constraints: {
             jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /email must match format "email"',

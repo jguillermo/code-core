@@ -32,6 +32,9 @@ describe('universalToString', () => {
     [new Set([1, 2, 3]), 'Set(1, 2, 3)'],
     [function example() {}, 'Function(example)'],
     [Symbol('sym'), 'Symbol(sym)'],
+    [Promise.resolve('data promise'), 'Promise'],
+    [new Error('data error'), 'new Error(data error)'],
+    [new RegExp('test'), 'RegExp(/test/)'],
     [circularObj, '[Circular or too complex to stringify]'],
   ]);
 });

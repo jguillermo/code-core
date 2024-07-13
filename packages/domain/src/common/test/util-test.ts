@@ -83,7 +83,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
+export function errorTypeValidatorSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
@@ -94,6 +94,42 @@ export function typeErrorValidationSpec(cls: any, exceptionList: { [P: string]: 
       });
     });
   }
+}
+
+export function typeInvalidValueSpec(cls: any, items: any[], errorsData: { [P: string]: string }) {
+  items.forEach((value) => {
+    it(`type error validator: ${classTxt(cls, value)}`, async () => {
+      const type = new cls(value);
+      const errors = await validateType(type);
+      expect(errors.length).toEqual(1);
+      expect(errors[0].constraints).toBeDefined();
+      for (const errorItem in errorsData) {
+        expect((errors[0].constraints as any)[errorItem]).toEqual(errorsData[errorItem]);
+      }
+    });
+  });
+}
+
+export function typeValidValueSpec(cls: any, items: any[], validateTypeOf?: string) {
+  items.forEach((value) => {
+    it(`Valid type: ${classTxt(cls, value)}`, async () => {
+      const type = new cls(value);
+      const errors = await validateType(type);
+      expect(errors).toEqual([]);
+    });
+  });
+  if (validateTypeOf) {
+    items.forEach((value) => {
+      it(`Valid type: typeof (${classTxt(cls, value)}).value === ${validateTypeOf}`, async () => {
+        expect(typeof new cls(value).value).toEqual(validateTypeOf);
+      });
+    });
+  }
+}
+
+function classTxt(cls: any, value: any): string {
+  const txtInput = isString(value) ? `'${value}'` : universalToString(value);
+  return `new ${cls.name}(${txtInput})`;
 }
 
 export function classExceptionSpec(cls: any, exceptionList: { [P: string]: { message: string; values: any[] } }) {

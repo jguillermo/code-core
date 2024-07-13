@@ -1,7 +1,8 @@
-import { typeErrorValidationSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidatorSpec, typeInvalidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
+import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 class NumberTypeRequired extends AbstractNumberType {}
 
@@ -15,6 +16,14 @@ class NumberTypeOptional extends AbstractNumberType<null> {
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
     describe('Correct', () => {
+      typeValidValueSpec(NumberTypeRequired, [...canByType(PrimitivesKeys.NUMBER)], 'number');
+    });
+
+    describe('Error', () => {
+      typeInvalidValueSpec(NumberTypeRequired, [...skipByType(PrimitivesKeys.NUMBER)], { canBeNumber: 'NumberTypeRequired must be a number' });
+    });
+
+    describe('valid properties', () => {
       typeValidationSpec(NumberTypeRequired, {
         value: [
           //valid number value
@@ -52,17 +61,6 @@ describe('AbstractNumberType', () => {
           ['-1.1', '-1.1'],
           ['0', '0'],
         ],
-      });
-    });
-
-    describe('Error', () => {
-      typeErrorValidationSpec(NumberTypeRequired, {
-        canBeNumber: {
-          constraints: {
-            canBeNumber: 'NumberTypeRequired must be a number',
-          },
-          values: [null, undefined, 'random', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
-        },
       });
     });
   });
@@ -115,7 +113,7 @@ describe('AbstractNumberType', () => {
       });
     });
     describe('Error', () => {
-      typeErrorValidationSpec(NumberTypeOptional, {
+      errorTypeValidatorSpec(NumberTypeOptional, {
         canBeNumber: {
           constraints: {
             canBeNumber: 'NumberTypeOptional must be a number',
@@ -141,7 +139,7 @@ describe('AbstractNumberType', () => {
       });
     });
     describe('Error', () => {
-      typeErrorValidationSpec(ValueObjectNumber, {
+      errorTypeValidatorSpec(ValueObjectNumber, {
         notNumber: {
           constraints: {
             canBeNumber: 'ValueObjectNumber must be a number',
