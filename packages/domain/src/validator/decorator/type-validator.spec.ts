@@ -1,5 +1,6 @@
 import { AddValidate, validateType } from './type-validator';
-import { deprecadoerrorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
+import { PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 @AddValidate([
   {
@@ -104,28 +105,25 @@ describe('Validator', () => {
       ],
     });
 
-    deprecadoerrorTypeValidatorSpec(ChildClass, {
-      notNumber: {
-        constraints: {
-          isInt: 'ChildClass must be an integer number',
-          isNumber: 'ChildClass must be a number conforming to the specified constraints',
-          max: 'ChildClass must not be greater than 20',
-          min: 'ChildClass must not be less than 10',
-        },
-        values: ['random', '21.1.1', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
+    const errorData = {
+      isInt: 'ChildClass must be an integer number',
+      isNumber: 'ChildClass must be a number conforming to the specified constraints',
+      max: 'ChildClass must not be greater than 20',
+      min: 'ChildClass must not be less than 10',
+    };
+    errorTypeValidatorSpec<keyof typeof errorData>(ChildClass, errorData, [
+      {
+        constraints: ['isInt', 'isNumber', 'max', 'min'],
+        values: skipByType(PrimitivesKeys.NUMBER),
       },
-      isInt: {
-        constraints: {
-          isInt: 'ChildClass must be an integer number',
-        },
+      {
+        constraints: ['isInt'],
         values: [11.1],
       },
-      max: {
-        constraints: {
-          max: 'ChildClass must not be greater than 20',
-        },
+      {
+        constraints: ['max'],
         values: [50, 50.0],
       },
-    });
+    ]);
   });
 });

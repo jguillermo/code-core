@@ -1,4 +1,4 @@
-import { deprecatetypeInvalidValueSpec, errorTypeValidatorSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
+import { errorTypeValidatorSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
@@ -19,7 +19,15 @@ describe('AbstractNumberType', () => {
       typeValidValueSpec(NumberTypeRequired, canByType(PrimitivesKeys.NUMBER), 'number');
     });
     describe('Invalid Values', () => {
-      deprecatetypeInvalidValueSpec(NumberTypeRequired, skipByType(PrimitivesKeys.NUMBER), { canBeNumber: 'NumberTypeRequired must be a number' });
+      const errorData = {
+        canBeNumber: 'NumberTypeRequired must be a number',
+      };
+      errorTypeValidatorSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
+        {
+          constraints: ['canBeNumber'],
+          values: skipByType(PrimitivesKeys.NUMBER),
+        },
+      ]);
     });
     describe('Compare values', () => {
       typeValidationSpec(NumberTypeRequired, {
@@ -34,9 +42,15 @@ describe('AbstractNumberType', () => {
       typeValidValueSpec(NumberTypeOptional, canByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'number');
     });
     describe('Invalid Values', () => {
-      deprecatetypeInvalidValueSpec(NumberTypeOptional, skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), {
+      const errorData = {
         canBeNumber: 'NumberTypeOptional must be a number',
-      });
+      };
+      errorTypeValidatorSpec<keyof typeof errorData>(NumberTypeOptional, errorData, [
+        {
+          constraints: ['canBeNumber'],
+          values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+        },
+      ]);
     });
     describe('compare values', () => {
       typeValidationSpec(NumberTypeOptional, {

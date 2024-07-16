@@ -1,7 +1,8 @@
-import { deprecadoerrorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { JsonValidator } from '../../validator/decorator/custom/json-validator';
+import { PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 interface JsonValuesTest {
   a: number;
@@ -20,14 +21,15 @@ describe('AbstractJsonType', () => {
       });
     });
     describe('Error', () => {
-      deprecadoerrorTypeValidatorSpec(JsonTypeRequired, {
-        canBeJson: {
-          constraints: {
-            canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
-          },
-          values: [null, undefined, 'random', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), () => 123, Symbol('123'), new Function('return 123')],
+      const errorData = {
+        canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
+      };
+      errorTypeValidatorSpec<keyof typeof errorData>(JsonTypeRequired, errorData, [
+        {
+          constraints: ['canBeJson'],
+          values: [...skipByType(PrimitivesKeys.OBJECT), {}],
         },
-      });
+      ]);
     });
   });
 
@@ -60,17 +62,15 @@ describe('AbstractJsonType', () => {
       });
     });
     describe('Error', () => {
-      deprecadoerrorTypeValidatorSpec(JsonTypeValidateRequired, {
-        canBeJson: {
-          constraints: {
-            jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /email must match format "email"',
-          },
-          values: [
-            { a: 20, email: 'holi' },
-            // { a: 2, email: 'a@mail.com' },
-          ],
+      const errorData = {
+        jsonValidator: 'JsonTypeValidateRequired error in valid json schema: /email must match format "email"',
+      };
+      errorTypeValidatorSpec<keyof typeof errorData>(JsonTypeValidateRequired, errorData, [
+        {
+          constraints: ['jsonValidator'],
+          values: [{ a: 20, email: 'holi' }],
         },
-      });
+      ]);
     });
   });
 });

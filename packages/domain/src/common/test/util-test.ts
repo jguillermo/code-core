@@ -83,19 +83,6 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function deprecadoerrorTypeValidatorSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
-  for (const exceptionItem in exceptionList) {
-    exceptionList[exceptionItem]['values'].forEach((value) => {
-      const valueText = isString(value) ? `'${value}'` : universalToString(value);
-      it(`type error validator ${exceptionItem} with ${valueText}`, async () => {
-        const errors = await validateType(new cls(value));
-        expect(errors.length).toEqual(1);
-        expect(errors[0].constraints).toEqual(exceptionList[exceptionItem]['constraints']);
-      });
-    });
-  }
-}
-
 export function errorTypeValidatorSpec<T>(cls: any, errorData: any, items: Array<{ constraints: T[]; values: any[] }>) {
   items.forEach((item) => {
     item.values.forEach((value) => {
@@ -110,18 +97,6 @@ export function errorTypeValidatorSpec<T>(cls: any, errorData: any, items: Array
         expect(errors[0].constraints).toBeDefined();
         expect(errors[0].constraints).toEqual(constraints);
       });
-    });
-  });
-}
-
-export function deprecatetypeInvalidValueSpec(cls: any, items: any[], errorsData: { [P: string]: string }) {
-  items.forEach((value) => {
-    it(`type error validator: ${classTxt(cls, value)}`, async () => {
-      const type = new cls(value);
-      const errors = await validateType(type);
-      expect(errors[0]).toBeDefined();
-      expect(errors[0].constraints).toBeDefined();
-      expect(errors[0].constraints).toEqual(errorsData);
     });
   });
 }
