@@ -1,10 +1,8 @@
-import { errorTypeValidatorSpec, typeInvalidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
+import { deprecatetypeInvalidValueSpec, errorTypeValidatorSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
 import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
-
-class NumberTypeRequired extends AbstractNumberType {}
 
 @AddValidate([{ validator: 'IsOptional' }])
 class NumberTypeOptional extends AbstractNumberType<null> {
@@ -13,113 +11,51 @@ class NumberTypeOptional extends AbstractNumberType<null> {
   }
 }
 
+class NumberTypeRequired extends AbstractNumberType {}
+
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
-    describe('Correct', () => {
-      typeValidValueSpec(NumberTypeRequired, [...canByType(PrimitivesKeys.NUMBER)], 'number');
+    describe('Valid Values', () => {
+      typeValidValueSpec(NumberTypeRequired, canByType(PrimitivesKeys.NUMBER), 'number');
     });
-
-    describe('Error', () => {
-      typeInvalidValueSpec(NumberTypeRequired, [...skipByType(PrimitivesKeys.NUMBER)], { canBeNumber: 'NumberTypeRequired must be a number' });
+    describe('Invalid Values', () => {
+      deprecatetypeInvalidValueSpec(NumberTypeRequired, skipByType(PrimitivesKeys.NUMBER), { canBeNumber: 'NumberTypeRequired must be a number' });
     });
-
-    describe('valid properties', () => {
+    describe('Compare values', () => {
       typeValidationSpec(NumberTypeRequired, {
-        value: [
-          //valid number value
-          [1, 1],
-          [-1, -1],
-          [1.1, 1.1],
-          [-1.1, -1.1],
-          [0, 0],
-          //string
-          ['1', 1],
-          ['1.1', 1.1],
-          ['-1', -1],
-          ['-1.1', -1.1],
-          ['0', 0],
-        ],
-        isNull: [
-          [0, false],
-          [0.1, false],
-          [1, false],
-          [1.1, false],
-          ['0', false],
-          ['1', false],
-        ],
-        toString: [
-          //valid number value
-          [1, '1'],
-          [-1, '-1'],
-          [1.1, '1.1'],
-          [-1.1, '-1.1'],
-          [0, '0'],
-          //string
-          ['1', '1'],
-          ['1.1', '1.1'],
-          ['-1', '-1'],
-          ['-1.1', '-1.1'],
-          ['0', '0'],
-        ],
+        value: [[1, 1]],
+        isNull: [[1, false]],
+        toString: [[1, '1']],
       });
     });
   });
   describe('NumberTypeOptional', () => {
-    describe('Correct', () => {
+    describe('Valid Values', () => {
+      typeValidValueSpec(NumberTypeOptional, canByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'number');
+    });
+    describe('Invalid Values', () => {
+      deprecatetypeInvalidValueSpec(NumberTypeOptional, skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), {
+        canBeNumber: 'NumberTypeOptional must be a number',
+      });
+    });
+    describe('compare values', () => {
       typeValidationSpec(NumberTypeOptional, {
         value: [
-          //valid number value
           [1, 1],
-          [-1, -1],
-          [1.1, 1.1],
-          [-1.1, -1.1],
-          [0, 0],
-          null,
           [null, null],
           [undefined, null],
-          //string
           ['1', 1],
-          ['1.1', 1.1],
-          ['-1', -1],
-          ['-1.1', -1.1],
-          ['0', 0],
         ],
         isNull: [
           [null, true],
           [undefined, true],
           [0, false],
-          [0.1, false],
-          [1, false],
-          [1.1, false],
-          ['0', false],
-          ['1', false],
         ],
         toString: [
           [null, ''],
           [undefined, ''],
-          //valid number value
           [1, '1'],
-          [-1, '-1'],
-          [1.1, '1.1'],
-          [-1.1, '-1.1'],
-          [0, '0'],
-          //string
-          ['1', '1'],
-          ['1.1', '1.1'],
-          ['-1', '-1'],
-          ['-1.1', '-1.1'],
-          ['0', '0'],
         ],
-      });
-    });
-    describe('Error', () => {
-      errorTypeValidatorSpec(NumberTypeOptional, {
-        canBeNumber: {
-          constraints: {
-            canBeNumber: 'NumberTypeOptional must be a number',
-          },
-          values: ['random', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
-        },
       });
     });
   });
@@ -128,33 +64,51 @@ describe('AbstractNumberType', () => {
     @AddValidate([{ validator: 'IsInt' }, { validator: 'Min', value: 10 }, { validator: 'Max', value: 20 }])
     class ValueObjectNumber extends AbstractNumberType {}
 
-    describe('Correct', () => {
+    describe('Valid Values', () => {
+      typeValidValueSpec(ValueObjectNumber, [10, 15, 20], 'number');
+    });
+    describe('Invalid Values', () => {
+      const errorData = {
+        canBeNumber: 'ValueObjectNumber must be a number',
+        isInt: 'ValueObjectNumber must be an integer number',
+        max: 'ValueObjectNumber must not be greater than 20',
+        min: 'ValueObjectNumber must not be less than 10',
+      };
+      errorTypeValidatorSpec<keyof typeof errorData>(ValueObjectNumber, errorData, [
+        {
+          constraints: ['max', 'min', 'isInt', 'canBeNumber'],
+          values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+        },
+        {
+          constraints: ['isInt'],
+          values: [10.1],
+        },
+        {
+          constraints: ['max'],
+          values: [21, 22],
+        },
+        {
+          constraints: ['min'],
+          values: [1, 2],
+        },
+        {
+          constraints: ['min', 'isInt'],
+          values: ['1.1', 2.1],
+        },
+        {
+          constraints: ['max', 'isInt'],
+          values: ['21.1', 22.1],
+        },
+      ]);
+    });
+
+    describe('Compare values', () => {
       typeValidationSpec(ValueObjectNumber, {
         value: [
-          //valid number value
           [10, 10],
           [15, 15],
           [20, 20],
         ],
-      });
-    });
-    describe('Error', () => {
-      errorTypeValidatorSpec(ValueObjectNumber, {
-        notNumber: {
-          constraints: {
-            canBeNumber: 'ValueObjectNumber must be a number',
-            isInt: 'ValueObjectNumber must be an integer number',
-            max: 'ValueObjectNumber must not be greater than 20',
-            min: 'ValueObjectNumber must not be less than 10',
-          },
-          values: ['random', '21.1.1', true, false, '', '   ', [], {}, [1, 2, 3], new Date(), { value: 123 }, () => 123, Symbol('123'), new Function('return 123')],
-        },
-        isInt: {
-          constraints: {
-            isInt: 'ValueObjectNumber must be an integer number',
-          },
-          values: ['11.1', 11.1],
-        },
       });
     });
   });

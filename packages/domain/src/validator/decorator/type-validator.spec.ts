@@ -1,5 +1,5 @@
 import { AddValidate, validateType } from './type-validator';
-import { errorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
+import { deprecadoerrorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
 
 @AddValidate([
   {
@@ -104,7 +104,7 @@ describe('Validator', () => {
       ],
     });
 
-    errorTypeValidatorSpec(ChildClass, {
+    deprecadoerrorTypeValidatorSpec(ChildClass, {
       notNumber: {
         constraints: {
           isInt: 'ChildClass must be an integer number',

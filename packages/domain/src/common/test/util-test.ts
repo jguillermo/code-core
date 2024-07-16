@@ -83,7 +83,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function errorTypeValidatorSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
+export function deprecadoerrorTypeValidatorSpec(cls: any, exceptionList: { [P: string]: { constraints: object; values: any[] } }) {
   for (const exceptionItem in exceptionList) {
     exceptionList[exceptionItem]['values'].forEach((value) => {
       const valueText = isString(value) ? `'${value}'` : universalToString(value);
@@ -96,16 +96,32 @@ export function errorTypeValidatorSpec(cls: any, exceptionList: { [P: string]: {
   }
 }
 
-export function typeInvalidValueSpec(cls: any, items: any[], errorsData: { [P: string]: string }) {
+export function errorTypeValidatorSpec<T>(cls: any, errorData: any, items: Array<{ constraints: T[]; values: any[] }>) {
+  items.forEach((item) => {
+    item.values.forEach((value) => {
+      it(`type error validate (${item.constraints.join(', ')}) : ${classTxt(cls, value)}`, async () => {
+        const constraints = item.constraints.reduce((acc, key) => {
+          acc[String(key)] = errorData[key];
+          return acc;
+        }, {});
+        const type = new cls(value);
+        const errors = await validateType(type);
+        expect(errors[0]).toBeDefined();
+        expect(errors[0].constraints).toBeDefined();
+        expect(errors[0].constraints).toEqual(constraints);
+      });
+    });
+  });
+}
+
+export function deprecatetypeInvalidValueSpec(cls: any, items: any[], errorsData: { [P: string]: string }) {
   items.forEach((value) => {
     it(`type error validator: ${classTxt(cls, value)}`, async () => {
       const type = new cls(value);
       const errors = await validateType(type);
-      expect(errors.length).toEqual(1);
+      expect(errors[0]).toBeDefined();
       expect(errors[0].constraints).toBeDefined();
-      for (const errorItem in errorsData) {
-        expect((errors[0].constraints as any)[errorItem]).toEqual(errorsData[errorItem]);
-      }
+      expect(errors[0].constraints).toEqual(errorsData);
     });
   });
 }
@@ -120,9 +136,15 @@ export function typeValidValueSpec(cls: any, items: any[], validateTypeOf?: stri
   });
   if (validateTypeOf) {
     items.forEach((value) => {
-      it(`Valid type: typeof (${classTxt(cls, value)}).value === ${validateTypeOf}`, async () => {
-        expect(typeof new cls(value).value).toEqual(validateTypeOf);
-      });
+      if (value === null || value === undefined) {
+        it(`Valid type: typeof (${classTxt(cls, value)}).isNull is true`, async () => {
+          expect(new cls(value).isNull).toEqual(true);
+        });
+      } else {
+        it(`Valid type: typeof (${classTxt(cls, value)}).value === ${validateTypeOf}`, async () => {
+          expect(typeof new cls(value).value).toEqual(validateTypeOf);
+        });
+      }
     });
   }
 }
