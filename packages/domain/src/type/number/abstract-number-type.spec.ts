@@ -1,4 +1,4 @@
-import { errorTypeValidatorSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
@@ -22,7 +22,7 @@ describe('AbstractNumberType', () => {
       const errorData = {
         canBeNumber: 'NumberTypeRequired must be a number',
       };
-      errorTypeValidatorSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
         {
           constraints: ['canBeNumber'],
           values: skipByType(PrimitivesKeys.NUMBER),
@@ -45,7 +45,7 @@ describe('AbstractNumberType', () => {
       const errorData = {
         canBeNumber: 'NumberTypeOptional must be a number',
       };
-      errorTypeValidatorSpec<keyof typeof errorData>(NumberTypeOptional, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeOptional, errorData, [
         {
           constraints: ['canBeNumber'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -88,7 +88,7 @@ describe('AbstractNumberType', () => {
         max: 'ValueObjectNumber must not be greater than 20',
         min: 'ValueObjectNumber must not be less than 10',
       };
-      errorTypeValidatorSpec<keyof typeof errorData>(ValueObjectNumber, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(ValueObjectNumber, errorData, [
         {
           constraints: ['max', 'min', 'isInt', 'canBeNumber'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),

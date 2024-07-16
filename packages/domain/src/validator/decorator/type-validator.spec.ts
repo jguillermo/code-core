@@ -1,5 +1,5 @@
 import { AddValidate, validateType } from './type-validator';
-import { errorTypeValidatorSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidValueSpec, typeValidationSpec } from '../../common/test/util-test';
 import { PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 @AddValidate([
@@ -111,7 +111,7 @@ describe('Validator', () => {
       max: 'ChildClass must not be greater than 20',
       min: 'ChildClass must not be less than 10',
     };
-    errorTypeValidatorSpec<keyof typeof errorData>(ChildClass, errorData, [
+    errorTypeValidValueSpec<keyof typeof errorData>(ChildClass, errorData, [
       {
         constraints: ['isInt', 'isNumber', 'max', 'min'],
         values: skipByType(PrimitivesKeys.NUMBER),

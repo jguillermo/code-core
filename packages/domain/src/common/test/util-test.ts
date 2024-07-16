@@ -83,7 +83,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function errorTypeValidatorSpec<T>(cls: any, errorData: any, items: Array<{ constraints: T[]; values: any[] }>) {
+export function errorTypeValidValueSpec<T>(cls: any, errorData: any, items: Array<{ constraints: T[]; values: any[] }>) {
   items.forEach((item) => {
     item.values.forEach((value) => {
       it(`type error validate (${item.constraints.join(', ')}) : ${classTxt(cls, value)}`, async () => {
