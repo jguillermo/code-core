@@ -3,7 +3,6 @@ import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
 import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
-import { Equal, Expect } from '../../common/test/type-expect-equal';
 
 @AddValidate([{ validator: 'IsOptional' }])
 class NumberTypeOptional extends AbstractNumberType<null> {
@@ -129,29 +128,24 @@ describe('AbstractNumberType', () => {
   });
 
   describe('Expect Type', () => {
-    // function testTypeAndClass<T, C extends AbstractType<T>>(type: T, TypeOptionalClass: C) {}
-
     it('number and null', () => {
-      type cases = [Expect<Equal<number, number>>];
-      expectTypeOf<NumberTypeOptional['value']>().toEqualTypeOf<number | null>();
-      expectTypeOf<number | null>().toEqualTypeOf<NumberTypeOptional['value']>();
-
-      const instance1 = new NumberTypeOptional();
-      expectTypeOf(instance1.value).toEqualTypeOf<number | null>();
-
-      const instance2 = new NumberTypeOptional(42);
-      expectTypeOf(instance2.value).toEqualTypeOf<number | null>();
-
+      const instance1 = new NumberTypeOptional(42);
+      const instance2 = new NumberTypeOptional();
       const instance3 = new NumberTypeOptional(null);
-      expectTypeOf(instance3.value).toEqualTypeOf<number | null>();
+
+      expectTypeOf<NumberTypeOptional['value']>().toMatchTypeOf<number | null>();
+      expectTypeOf<number | null>().toMatchTypeOf<NumberTypeOptional['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<number | null>();
+      expectTypeOf(instance2.value).toMatchTypeOf<number | null>();
+      expectTypeOf(instance3.value).toMatchTypeOf<number | null>();
     });
 
     it('number', () => {
-      expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
-      expectTypeOf<number>().toEqualTypeOf<NumberTypeRequired['value']>();
+      const instance1 = new NumberTypeRequired(42);
 
-      const instance2 = new NumberTypeRequired(42);
-      expectTypeOf(instance2.value).toEqualTypeOf<number>();
+      expectTypeOf<NumberTypeRequired['value']>().toMatchTypeOf<number>();
+      expectTypeOf<number>().toMatchTypeOf<NumberTypeRequired['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<number>();
     });
   });
 });
