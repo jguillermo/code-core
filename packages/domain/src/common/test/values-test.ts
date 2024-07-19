@@ -66,9 +66,6 @@ export function skipByType(...primitiveType: PrimitivesKeys[]) {
     if (!primitiveType.includes(key as PrimitivesKeys)) {
       values.push(...PrimitivesValues[key]);
     }
-    // if (key !== primitiveType) {
-    //   values.push(...PrimitivesValues[key]);
-    // }
   }
   return values;
 }

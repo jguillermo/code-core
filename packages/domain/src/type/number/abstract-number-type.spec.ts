@@ -3,6 +3,7 @@ import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractNumberType } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
 import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { Equal, Expect } from '../../common/test/type-expect-equal';
 
 @AddValidate([{ validator: 'IsOptional' }])
 class NumberTypeOptional extends AbstractNumberType<null> {
@@ -128,7 +129,10 @@ describe('AbstractNumberType', () => {
   });
 
   describe('Expect Type', () => {
-    it('string and null', () => {
+    // function testTypeAndClass<T, C extends AbstractType<T>>(type: T, TypeOptionalClass: C) {}
+
+    it('number and null', () => {
+      type cases = [Expect<Equal<number, number>>];
       expectTypeOf<NumberTypeOptional['value']>().toEqualTypeOf<number | null>();
       expectTypeOf<number | null>().toEqualTypeOf<NumberTypeOptional['value']>();
 
@@ -142,7 +146,7 @@ describe('AbstractNumberType', () => {
       expectTypeOf(instance3.value).toEqualTypeOf<number | null>();
     });
 
-    it('string', () => {
+    it('number', () => {
       expectTypeOf<NumberTypeRequired['value']>().toEqualTypeOf<number>();
       expectTypeOf<number>().toEqualTypeOf<NumberTypeRequired['value']>();
 
