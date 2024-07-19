@@ -1,3 +1,5 @@
+import { universalToString } from '../utils/string/universal-to-string';
+
 export enum PrimitivesKeys {
   STRING = 'string',
   NUMBER = 'number',
@@ -20,7 +22,7 @@ const PrimitivesValues = {
   [PrimitivesKeys.STRING]: ['random', '', '   '],
   [PrimitivesKeys.NUMBER]: [1, -1, 1.1, -1.1, 0],
   [PrimitivesKeys.BOOLEAN]: [true, false],
-  [PrimitivesKeys.OBJECT]: [{}, { value: 123 }],
+  [PrimitivesKeys.OBJECT]: [{ a: 123 }],
   [PrimitivesKeys.ARRAY]: [[], [1, 2, 3]],
   [PrimitivesKeys.FUNCTION]: [() => 123, new Function('return 123')],
   [PrimitivesKeys.UNDEFINED]: [undefined],
@@ -51,6 +53,10 @@ export function canByType(...primitiveTypes: PrimitivesKeys[]) {
       case PrimitivesKeys.BOOLEAN:
         values.push(...PrimitivesValues[PrimitivesKeys.BOOLEAN]);
         values.push(...PrimitivesValues[PrimitivesKeys.BOOLEAN].map((value) => value.toString()));
+        break;
+      case PrimitivesKeys.OBJECT:
+        values.push(...PrimitivesValues[PrimitivesKeys.OBJECT]);
+        values.push(...PrimitivesValues[PrimitivesKeys.OBJECT].map((value) => universalToString(value)));
         break;
       default:
         values.push(...PrimitivesValues[primitiveType]);

@@ -128,24 +128,25 @@ describe('AbstractNumberType', () => {
   });
 
   describe('Expect Type', () => {
+    type ExpectType = number;
     it('number and null', () => {
       const instance1 = new NumberTypeOptional(42);
       const instance2 = new NumberTypeOptional();
       const instance3 = new NumberTypeOptional(null);
 
-      expectTypeOf<NumberTypeOptional['value']>().toMatchTypeOf<number | null>();
-      expectTypeOf<number | null>().toMatchTypeOf<NumberTypeOptional['value']>();
-      expectTypeOf(instance1.value).toMatchTypeOf<number | null>();
-      expectTypeOf(instance2.value).toMatchTypeOf<number | null>();
-      expectTypeOf(instance3.value).toMatchTypeOf<number | null>();
+      expectTypeOf<NumberTypeOptional['value']>().toMatchTypeOf<ExpectType | null>();
+      expectTypeOf<ExpectType | null>().toMatchTypeOf<NumberTypeOptional['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<ExpectType | null>();
+      expectTypeOf(instance2.value).toMatchTypeOf<ExpectType | null>();
+      expectTypeOf(instance3.value).toMatchTypeOf<ExpectType | null>();
     });
 
     it('number', () => {
       const instance1 = new NumberTypeRequired(42);
 
-      expectTypeOf<NumberTypeRequired['value']>().toMatchTypeOf<number>();
-      expectTypeOf<number>().toMatchTypeOf<NumberTypeRequired['value']>();
-      expectTypeOf(instance1.value).toMatchTypeOf<number>();
+      expectTypeOf<NumberTypeRequired['value']>().toMatchTypeOf<ExpectType>();
+      expectTypeOf<ExpectType>().toMatchTypeOf<NumberTypeRequired['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
     });
   });
 });

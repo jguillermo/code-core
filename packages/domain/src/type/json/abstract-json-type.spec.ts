@@ -1,26 +1,29 @@
-import { errorTypeValidValueSpec, typeValidationSpec } from '../../common/test/util-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { JsonValidator } from '../../validator/decorator/custom/json-validator';
-import { PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { expectTypeOf } from 'expect-type';
 
 interface JsonValuesTest {
   a: number;
 }
 
+@AddValidate([{ validator: 'IsOptional' }])
+class JsonTypeOptional extends AbstractJsonType<JsonValuesTest, null> {
+  constructor(value: JsonValuesTest | null = null) {
+    super(value);
+  }
+}
+
 class JsonTypeRequired extends AbstractJsonType<JsonValuesTest> {}
 
 describe('AbstractJsonType', () => {
-  describe('AbstractJsonType Required', () => {
-    describe('Correct', () => {
-      typeValidationSpec(JsonTypeRequired, {
-        value: [
-          [{ a: 1 }, { a: 1 }],
-          ['{ "a": 1 }', { a: 1 }],
-        ],
-      });
+  describe('JsonTypeRequired', () => {
+    describe('Valid Values', () => {
+      typeValidValueSpec(JsonTypeRequired, canByType(PrimitivesKeys.OBJECT));
     });
-    describe('Error', () => {
+    describe('Invalid Values', () => {
       const errorData = {
         canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
       };
@@ -31,10 +34,52 @@ describe('AbstractJsonType', () => {
         },
       ]);
     });
+    describe('Compare values', () => {
+      typeValidationSpec(JsonTypeRequired, {
+        value: [[{ a: 1 }, { a: 1 }]],
+        isNull: [[{ a: 1 }, false]],
+        toString: [[{ a: 1 }, '{"a":1}']],
+      });
+    });
+  });
+  describe('JsonTypeOptional', () => {
+    describe('Valid Values', () => {
+      typeValidValueSpec(JsonTypeOptional, canByType(PrimitivesKeys.OBJECT, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED));
+    });
+    describe('Invalid Values', () => {
+      const errorData = {
+        canBeJson: 'JsonTypeOptional must be a object or a valid JSON string.',
+      };
+      errorTypeValidValueSpec<keyof typeof errorData>(JsonTypeOptional, errorData, [
+        {
+          constraints: ['canBeJson'],
+          values: [...skipByType(PrimitivesKeys.OBJECT, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), {}],
+        },
+      ]);
+    });
+    describe('Compare values', () => {
+      typeValidationSpec(JsonTypeOptional, {
+        value: [
+          [{ a: 1 }, { a: 1 }],
+          [null, null],
+          [undefined, null],
+        ],
+        isNull: [
+          [{ a: 1 }, false],
+          [null, true],
+          [undefined, true],
+        ],
+        toString: [
+          [null, ''],
+          [undefined, ''],
+          [{ a: 1 }, '{"a":1}'],
+        ],
+      });
+    });
   });
 
-  describe('Validate jsonSchema Required', () => {
-    interface JsonTypeValidateRequired extends JsonValuesTest {
+  describe('AddValidate', () => {
+    interface JsonTypeValidateRequiredType extends JsonValuesTest {
       email: string;
     }
 
@@ -49,7 +94,7 @@ describe('AbstractJsonType', () => {
     };
 
     @AddValidate([{ validator: JsonValidator, value: jsonSchema }])
-    class JsonTypeValidateRequired extends AbstractJsonType<JsonValuesTest> {}
+    class JsonTypeValidateRequired extends AbstractJsonType<JsonTypeValidateRequiredType> {}
 
     describe('Correct', () => {
       typeValidationSpec(JsonTypeValidateRequired, {
@@ -71,6 +116,29 @@ describe('AbstractJsonType', () => {
           values: [{ a: 20, email: 'holi' }],
         },
       ]);
+    });
+  });
+
+  describe('Expect Type', () => {
+    type ExpectType = JsonValuesTest;
+    it('number and null', () => {
+      const instance1 = new JsonTypeOptional({ a: 1 });
+      const instance2 = new JsonTypeOptional();
+      const instance3 = new JsonTypeOptional(null);
+
+      expectTypeOf<JsonTypeOptional['value']>().toMatchTypeOf<ExpectType | null>();
+      expectTypeOf<ExpectType | null>().toMatchTypeOf<JsonTypeOptional['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<ExpectType | null>();
+      expectTypeOf(instance2.value).toMatchTypeOf<ExpectType | null>();
+      expectTypeOf(instance3.value).toMatchTypeOf<ExpectType | null>();
+    });
+
+    it('number', () => {
+      const instance1 = new JsonTypeRequired({ a: 1 });
+
+      expectTypeOf<JsonTypeRequired['value']>().toMatchTypeOf<ExpectType>();
+      expectTypeOf<ExpectType>().toMatchTypeOf<JsonTypeRequired['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
     });
   });
 });
