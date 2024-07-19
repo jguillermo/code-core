@@ -52,7 +52,7 @@ export function canByType(...primitiveTypes: PrimitivesKeys[]) {
         break;
       case PrimitivesKeys.BOOLEAN:
         values.push(...PrimitivesValues[PrimitivesKeys.BOOLEAN]);
-        values.push(...PrimitivesValues[PrimitivesKeys.BOOLEAN].map((value) => value.toString()));
+        values.push(...['True', 'False', 'TRUE', 'FALSE', 'true', 'false', '  True  ', ' False ', ' TRUE ', '  FALSE ', ' true ', ' false ']);
         break;
       case PrimitivesKeys.OBJECT:
         values.push(...PrimitivesValues[PrimitivesKeys.OBJECT]);

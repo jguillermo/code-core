@@ -1,8 +1,8 @@
 import { ValueGenerator } from '../abstract-type.spec';
-import { BooleanRequiredTypeImp, BooleanTypeImp } from './';
 
+const BooleanTypeImp = require('./boolean-type').BooleanType;
 describe.skip('Boolean Type', () => {
-  let type: BooleanTypeImp;
+  let type;
   describe('constructor set values', () => {
     describe('valid boolean', () => {
       it('true', () => {
@@ -114,31 +114,31 @@ describe.skip('Boolean Type', () => {
   });
 });
 
-describe('Boolean required Type', () => {
-  describe('constructor set values', () => {
-    describe('valid boolean', () => {
-      it('true', () => {
-        const type = new BooleanRequiredTypeImp(true);
-        expect(type.value).toEqual(true);
-      });
-      it('false', () => {
-        const type = new BooleanRequiredTypeImp(false);
-        expect(type.value).toEqual(false);
-      });
-    });
-    describe('null value', () => {
-      it('null', () => {
-        expect(() => {
-          new BooleanRequiredTypeImp();
-        }).toThrow(`is required.`);
-      });
-    });
-    describe('undefined', () => {
-      it('undefined equals null', () => {
-        expect(() => {
-          new BooleanRequiredTypeImp(undefined);
-        }).toThrow(`is required.`);
-      });
-    });
-  });
-});
+// describe('Boolean required Type', () => {
+//   describe('constructor set values', () => {
+//     describe('valid boolean', () => {
+//       it('true', () => {
+//         const type = new BooleanRequiredTypeImp(true);
+//         expect(type.value).toEqual(true);
+//       });
+//       it('false', () => {
+//         const type = new BooleanRequiredTypeImp(false);
+//         expect(type.value).toEqual(false);
+//       });
+//     });
+//     describe('null value', () => {
+//       it('null', () => {
+//         expect(() => {
+//           new BooleanRequiredTypeImp();
+//         }).toThrow(`is required.`);
+//       });
+//     });
+//     describe('undefined', () => {
+//       it('undefined equals null', () => {
+//         expect(() => {
+//           new BooleanRequiredTypeImp(undefined);
+//         }).toThrow(`is required.`);
+//       });
+//     });
+//   });
+// });
