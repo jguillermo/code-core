@@ -19,7 +19,7 @@ export enum PrimitivesKeys {
 }
 
 const PrimitivesValues = {
-  [PrimitivesKeys.STRING]: ['random', '', '   '],
+  [PrimitivesKeys.STRING]: ['random', '', '   ', 'áéíóú', 'abc123'],
   [PrimitivesKeys.NUMBER]: [1, -1, 1.1, -1.1, 0],
   [PrimitivesKeys.BOOLEAN]: [true, false],
   [PrimitivesKeys.OBJECT]: [{ a: 123 }],

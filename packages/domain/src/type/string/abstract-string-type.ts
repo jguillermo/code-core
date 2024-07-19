@@ -5,7 +5,7 @@ import { StringValidator } from '@code-core/domain';
 
 @AddValidate([{ validator: CanBeStringValidator }])
 export class AbstractStringType<R extends null | undefined = undefined> extends AbstractType<string, R> {
-  protected filter(value: R extends null ? string | null : string): R extends null ? string | null : string {
+  protected filter(value: any): any {
     if (StringValidator.canBeString(value)) {
       if (typeof value === 'boolean') {
         return value ? 'true' : 'false';
