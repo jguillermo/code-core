@@ -1,4 +1,4 @@
-export * from './boolean/boolean-type';
+export * from './boolean/abstract-boolean-type';
 export * from './string/abstract-string-type';
 export * from './date';
 export * from './enum';
