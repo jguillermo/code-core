@@ -5,7 +5,12 @@ export class BooleanValidator {
     }
     if (typeof value === 'string') {
       value = value.toLowerCase().trim();
-      if (value === 'false' || value === 'true') {
+      if (value === 'false' || value === 'true' || value === '1' || value === '0') {
+        return true;
+      }
+    }
+    if (typeof value === 'number') {
+      if (value === 1 || value === 0) {
         return true;
       }
     }

@@ -1,7 +1,7 @@
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractBooleanType } from './abstract-boolean-type';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 @AddValidate([{ validator: 'IsOptional' }])
@@ -25,13 +25,21 @@ describe('AbstractBooleanType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(BooleanTypeRequired, errorData, [
         {
           constraints: ['canBeBoolean'],
-          values: skipByType(PrimitivesKeys.BOOLEAN),
+          values: excludeItems(skipByType(PrimitivesKeys.BOOLEAN), [1, 0]),
         },
       ]);
     });
     describe('Compare values', () => {
       typeValidationSpec(BooleanTypeRequired, {
-        value: [[true, true]],
+        value: [
+          [true, true],
+          ['true', true],
+          ['false', false],
+          ['1', true],
+          [1, true],
+          ['0', false],
+          [0, false],
+        ],
         isNull: [[true, false]],
         toString: [[true, 'true']],
       });
@@ -48,7 +56,7 @@ describe('AbstractBooleanType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(BooleanTypeOptional, errorData, [
         {
           constraints: ['canBeBoolean'],
-          values: skipByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          values: excludeItems(skipByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), [0, 1]),
         },
       ]);
     });
@@ -58,7 +66,13 @@ describe('AbstractBooleanType', () => {
           [true, true],
           [null, null],
           [undefined, null],
+          [true, true],
           ['true', true],
+          ['false', false],
+          ['1', true],
+          [1, true],
+          ['0', false],
+          [0, false],
         ],
         isNull: [
           [null, true],

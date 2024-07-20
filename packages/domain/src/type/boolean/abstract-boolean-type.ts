@@ -8,7 +8,8 @@ export class AbstractBooleanType<R extends null | undefined = undefined> extends
   protected filter(value: any): any {
     if (BooleanValidator.canBeBoolean(value)) {
       if (typeof value === 'string') {
-        return value.toLowerCase().trim() === 'true';
+        value = value.toLowerCase().trim();
+        return value === 'true' || value === '1';
       }
       return !!value;
     }

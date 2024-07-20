@@ -53,6 +53,7 @@ export function canByType(...primitiveTypes: PrimitivesKeys[]) {
       case PrimitivesKeys.BOOLEAN:
         values.push(...PrimitivesValues[PrimitivesKeys.BOOLEAN]);
         values.push(...['True', 'False', 'TRUE', 'FALSE', 'true', 'false', '  True  ', ' False ', ' TRUE ', '  FALSE ', ' true ', ' false ']);
+        values.push(...['1', ' 1', '0', ' 0', 0, 1]);
         break;
       case PrimitivesKeys.OBJECT:
         values.push(...PrimitivesValues[PrimitivesKeys.OBJECT]);
@@ -73,5 +74,15 @@ export function skipByType(...primitiveType: PrimitivesKeys[]) {
       values.push(...PrimitivesValues[key]);
     }
   }
+  return values;
+}
+
+export function excludeItems(allItems: any[], excludes: any[]) {
+  const values: any[] = [];
+  allItems.forEach((item) => {
+    if (!excludes.includes(item)) {
+      values.push(item);
+    }
+  });
   return values;
 }
