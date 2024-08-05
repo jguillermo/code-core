@@ -17,7 +17,6 @@ export class AbstractDateType<R extends null | undefined = undefined> extends Ab
   }
 }
 
-
 // import * as dayjs from 'dayjs';
 // import * as utc from 'dayjs/plugin/utc';
 // import { AbstractType } from '../abstract-type';
