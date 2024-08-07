@@ -1,5 +1,5 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { AbstractStringType } from './abstract-string-type';
+import { AbstractStringType } from '@code-core/domain';
 import { AddValidate } from '../../validator/decorator/type-validator';
 import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
@@ -25,7 +25,7 @@ describe('AbstractStringType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(StringTypeRequire, errorData, [
         {
           constraints: ['canBeString'],
-          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
+          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.UUID, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
         },
       ]);
     });
@@ -48,7 +48,7 @@ describe('AbstractStringType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(StringTypeOptional, errorData, [
         {
           constraints: ['canBeString'],
-          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
         },
       ]);
     });
@@ -87,7 +87,7 @@ describe('AbstractStringType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(ValueObjectString, errorData, [
         {
           constraints: ['maxLength', 'minLength', 'canBeString'],
-          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
         },
         {
           constraints: ['maxLength'],
