@@ -1,8 +1,8 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
 import { AbstractJsonType } from './abstract-json-type';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { JsonValidator } from '../../validator/decorator/custom/json-validator';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { JsonValidator } from '../validator/decorator/custom/json-validator';
+import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 interface JsonValuesTest {

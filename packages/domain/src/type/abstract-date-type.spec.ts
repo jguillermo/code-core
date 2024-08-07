@@ -1,17 +1,7 @@
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { AbstractDateType } from '@code-core/domain';
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { DateTypeOptional, DateTypeRequired } from '@code-core/domain';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-
-@AddValidate([{ validator: 'IsOptional' }])
-class DateTypeOptional extends AbstractDateType<null> {
-  constructor(value: Date | null = null) {
-    super(value);
-  }
-}
-
-class DateTypeRequired extends AbstractDateType {}
 
 describe('AbstractDateType', () => {
   describe('DateTypeRequired', () => {

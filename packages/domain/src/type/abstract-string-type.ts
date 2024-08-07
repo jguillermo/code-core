@@ -1,6 +1,6 @@
-import { AbstractType } from '../abstract-type';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { CanBeStringValidator } from '../../validator/decorator/custom/can-be-string';
+import { AbstractType } from './abstract-type';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { CanBeStringValidator } from '../validator/decorator/custom/can-be-string';
 import { StringValidator } from '@code-core/domain';
 
 @AddValidate([{ validator: CanBeStringValidator }])

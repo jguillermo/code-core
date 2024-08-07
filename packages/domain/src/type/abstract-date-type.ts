@@ -1,7 +1,7 @@
-import { AbstractType } from '../abstract-type';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { CanBeDate } from '../../validator/decorator/custom/can-be-date';
-import { DateValidator } from '../../validator/date.validator';
+import { AbstractType } from './abstract-type';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { CanBeDate } from '../validator/decorator/custom/can-be-date';
+import { DateValidator } from '../validator/date.validator';
 
 @AddValidate([{ validator: CanBeDate }])
 export class AbstractDateType<R extends null | undefined = undefined> extends AbstractType<Date, R> {

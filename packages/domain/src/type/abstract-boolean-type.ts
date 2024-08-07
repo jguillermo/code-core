@@ -1,7 +1,7 @@
-import { AbstractType } from '../abstract-type';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { CanBeBooleanValidator } from '../../validator/decorator/custom/can-be-boolean';
-import { BooleanValidator } from '../../validator/boolean.validator';
+import { AbstractType } from './abstract-type';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { CanBeBooleanValidator } from '../validator/decorator/custom/can-be-boolean';
+import { BooleanValidator } from '../validator/boolean.validator';
 
 @AddValidate([{ validator: CanBeBooleanValidator }])
 export class AbstractBooleanType<R extends null | undefined = undefined> extends AbstractType<boolean, R> {

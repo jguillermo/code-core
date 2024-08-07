@@ -1,5 +1,5 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { IdType, UuidTypeOptional, UuidTypeRequired } from '@code-core/domain';
 

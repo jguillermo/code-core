@@ -1,4 +1,4 @@
-import { AbstractType } from '../abstract-type';
+import { AbstractType } from './abstract-type';
 
 export abstract class AbstractEnumType<T, R extends null | undefined = undefined> extends AbstractType<T, R> {
   // constructor(value: T | null) {

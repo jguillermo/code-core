@@ -1,17 +1,8 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { AbstractNumberType } from '@code-core/domain';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { AbstractNumberType, NumberTypeOptional, NumberTypeRequired } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
-
-@AddValidate([{ validator: 'IsOptional' }])
-class NumberTypeOptional extends AbstractNumberType<null> {
-  constructor(value: number | null = null) {
-    super(value);
-  }
-}
-
-class NumberTypeRequired extends AbstractNumberType {}
+import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {

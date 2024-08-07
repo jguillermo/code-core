@@ -1,17 +1,8 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { AbstractStringType } from '@code-core/domain';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { AbstractStringType, StringTypeOptional, StringTypeRequire } from '@code-core/domain';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-
-class StringTypeRequire extends AbstractStringType {}
-
-@AddValidate([{ validator: 'IsOptional' }])
-class StringTypeOptional extends AbstractStringType<null> {
-  constructor(value: string | null = null) {
-    super(value);
-  }
-}
 
 describe('AbstractStringType', () => {
   describe('StringTypeRequire', () => {

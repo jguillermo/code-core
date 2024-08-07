@@ -1,17 +1,8 @@
-import { AddValidate } from '../../validator/decorator/type-validator';
 import { AbstractBooleanType } from './abstract-boolean-type';
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-
-@AddValidate([{ validator: 'IsOptional' }])
-class BooleanTypeOptional extends AbstractBooleanType<null> {
-  constructor(value: boolean | null = null) {
-    super(value);
-  }
-}
-
-class BooleanTypeRequired extends AbstractBooleanType {}
+import { BooleanTypeOptional, BooleanTypeRequired } from '@code-core/domain';
 
 describe('AbstractBooleanType', () => {
   describe('BooleanTypeRequired', () => {

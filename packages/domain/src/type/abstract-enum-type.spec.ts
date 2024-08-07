@@ -1,7 +1,7 @@
 import { AbstractEnumType } from '@code-core/domain';
-import { AddValidate } from '../../validator/decorator/type-validator';
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../../common/test/util-test';
-import { allTypes, canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
+import { allTypes, canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 enum StatusString {
