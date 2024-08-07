@@ -83,6 +83,10 @@ export function skipByType(...primitiveType: PrimitivesKeys[]) {
   return values;
 }
 
+export function allTypes(): PrimitivesKeys[] {
+  return Object.values(PrimitivesKeys);
+}
+
 export function excludeItems(allItems: any[], excludes: any[]) {
   const values: any[] = [];
   allItems.forEach((item) => {
