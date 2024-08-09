@@ -21,9 +21,11 @@ export class BooleanTypeOptional extends AbstractBooleanType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class BooleanTypeRequired extends AbstractBooleanType {}
 
 //AbstractDateType
+
 @AddValidate([{ validator: 'IsOptional' }])
 export class DateTypeOptional extends AbstractDateType<null> {
   constructor(value: Date | null = null) {
@@ -31,9 +33,11 @@ export class DateTypeOptional extends AbstractDateType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class DateTypeRequired extends AbstractDateType {}
 
 //AbstractUuidType
+
 @AddValidate([{ validator: 'IsOptional' }])
 export class UuidTypeOptional extends AbstractUuidType<null> {
   constructor(value: string | null = null) {
@@ -55,6 +59,7 @@ export class NumberTypeOptional extends AbstractNumberType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class NumberTypeRequired extends AbstractNumberType {}
 
 //AbstractStringType
@@ -65,4 +70,5 @@ export class StringTypeOptional extends AbstractStringType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class StringTypeRequire extends AbstractStringType {}

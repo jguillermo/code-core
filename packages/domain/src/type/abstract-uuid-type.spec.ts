@@ -1,5 +1,5 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, emptyTypes, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { IdType, UuidTypeOptional, UuidTypeRequired } from '@code-core/domain';
 
@@ -18,11 +18,11 @@ describe('AbstractUuidType', () => {
       errorTypeValidValueSpec<keyof typeof errorData>(IdType, errorData, [
         {
           constraints: ['isUuid'],
-          values: excludeItems(skipByType(PrimitivesKeys.UUID, PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ['']),
+          values: skipByTypeRequired(PrimitivesKeys.UUID),
         },
         {
           constraints: ['isUuid', 'isNotEmpty'],
-          values: [...canByType(PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ''],
+          values: emptyTypes(),
         },
       ]);
     });

@@ -2,7 +2,7 @@ import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from 
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { JsonValidator } from '../validator/decorator/custom/json-validator';
-import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 interface JsonValuesTest {
@@ -16,6 +16,7 @@ class JsonTypeOptional extends AbstractJsonType<JsonValuesTest, null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 class JsonTypeRequired extends AbstractJsonType<JsonValuesTest> {}
 
 describe('AbstractJsonType', () => {
@@ -26,11 +27,16 @@ describe('AbstractJsonType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
+        isNotEmpty: 'JsonTypeRequired should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(JsonTypeRequired, errorData, [
         {
           constraints: ['canBeJson'],
-          values: [...skipByType(PrimitivesKeys.OBJECT), {}],
+          values: [...skipByTypeRequired(PrimitivesKeys.OBJECT), {}],
+        },
+        {
+          constraints: ['canBeJson', 'isNotEmpty'],
+          values: emptyTypes(),
         },
       ]);
     });

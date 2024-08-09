@@ -1,7 +1,7 @@
 import { AbstractEnumType } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { allTypes, canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { allTypesRequired, canByType, emptyTypes, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 enum StatusString {
@@ -9,7 +9,7 @@ enum StatusString {
   DOWN = 'down',
 }
 
-@AddValidate([{ validator: 'IsEnum', value: StatusString }])
+@AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsNotEmpty' }])
 export class EnumTypeRequired extends AbstractEnumType<StatusString> {}
 
 @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
@@ -23,11 +23,16 @@ describe('AbstractEnumType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         isEnum: 'EnumTypeRequired must be one of the following values: up, down',
+        isNotEmpty: 'EnumTypeRequired should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(EnumTypeRequired, errorData, [
         {
           constraints: ['isEnum'],
-          values: canByType(...allTypes()),
+          values: allTypesRequired(),
+        },
+        {
+          constraints: ['isEnum', 'isNotEmpty'],
+          values: emptyTypes(),
         },
       ]);
     });

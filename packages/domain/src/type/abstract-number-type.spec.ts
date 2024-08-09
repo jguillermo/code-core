@@ -2,7 +2,7 @@ import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from 
 import { AddValidate } from '../validator/decorator/type-validator';
 import { AbstractNumberType, NumberTypeOptional, NumberTypeRequired } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
-import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
@@ -12,11 +12,16 @@ describe('AbstractNumberType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeNumber: 'NumberTypeRequired must be a number',
+        isNotEmpty: 'NumberTypeRequired should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
         {
           constraints: ['canBeNumber'],
-          values: skipByType(PrimitivesKeys.NUMBER),
+          values: skipByTypeRequired(PrimitivesKeys.NUMBER),
+        },
+        {
+          constraints: ['canBeNumber', 'isNotEmpty'],
+          values: emptyTypes(),
         },
       ]);
     });

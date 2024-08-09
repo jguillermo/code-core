@@ -1,22 +1,31 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
 import { AbstractStringType, StringTypeOptional, StringTypeRequire } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
-import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 describe('AbstractStringType', () => {
   describe('StringTypeRequire', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(StringTypeRequire, canByType(PrimitivesKeys.STRING), 'string');
+      typeValidValueSpec(StringTypeRequire, excludeItems(canByType(PrimitivesKeys.STRING), ['']), 'string');
     });
     describe('Invalid Values', () => {
       const errorData = {
         canBeString: 'StringTypeRequire must be a string',
+        isNotEmpty: 'StringTypeRequire should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(StringTypeRequire, errorData, [
         {
           constraints: ['canBeString'],
-          values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.UUID, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
+          values: skipByTypeRequired(PrimitivesKeys.STRING, PrimitivesKeys.UUID, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
+        },
+        {
+          constraints: ['canBeString', 'isNotEmpty'],
+          values: [...canByType(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED)],
+        },
+        {
+          constraints: ['isNotEmpty'],
+          values: [''],
         },
       ]);
     });

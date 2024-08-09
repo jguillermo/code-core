@@ -1,6 +1,6 @@
 import { DateTypeOptional, DateTypeRequired } from '@code-core/domain';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 describe('AbstractDateType', () => {
@@ -11,11 +11,16 @@ describe('AbstractDateType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeDate: 'DateTypeRequired must be a Date or a valid ISO 8601 date string',
+        isNotEmpty: 'DateTypeRequired should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(DateTypeRequired, errorData, [
         {
           constraints: ['canBeDate'],
-          values: skipByType(PrimitivesKeys.DATE),
+          values: skipByTypeRequired(PrimitivesKeys.DATE),
+        },
+        {
+          constraints: ['canBeDate', 'isNotEmpty'],
+          values: emptyTypes(),
         },
       ]);
     });

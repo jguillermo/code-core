@@ -1,6 +1,6 @@
 import { AbstractBooleanType } from './abstract-boolean-type';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { canByType, emptyTypes, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { BooleanTypeOptional, BooleanTypeRequired } from '@code-core/domain';
 
@@ -12,11 +12,16 @@ describe('AbstractBooleanType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeBoolean: 'BooleanTypeRequired must be a boolean',
+        isNotEmpty: 'BooleanTypeRequired should not be empty',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(BooleanTypeRequired, errorData, [
         {
           constraints: ['canBeBoolean'],
-          values: excludeItems(skipByType(PrimitivesKeys.BOOLEAN), [1, 0]),
+          values: excludeItems(skipByTypeRequired(PrimitivesKeys.BOOLEAN), [1, 0]),
+        },
+        {
+          constraints: ['canBeBoolean', 'isNotEmpty'],
+          values: emptyTypes(),
         },
       ]);
     });

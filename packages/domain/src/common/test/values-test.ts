@@ -85,8 +85,35 @@ export function skipByType(...primitiveType: PrimitivesKeys[]) {
   return values;
 }
 
+export function skipByTypeRequired(...primitiveType: PrimitivesKeys[]) {
+  const values: any[] = [];
+  primitiveType.push(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED);
+  for (const key in PrimitivesValues) {
+    if (!primitiveType.includes(key as PrimitivesKeys)) {
+      values.push(...PrimitivesValues[key]);
+    }
+  }
+  return excludeItems(values, ['']);
+}
+
+export function emptyTypes(): PrimitivesKeys[] {
+  return [...canByType(PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ''];
+}
+
 export function allTypes(): PrimitivesKeys[] {
   return Object.values(PrimitivesKeys);
+}
+
+export function allTypesRequired(): PrimitivesKeys[] {
+  const keys: any[] = [];
+
+  const itemsToSkip = [PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL];
+  Object.values(PrimitivesKeys).forEach(function (item) {
+    if (!itemsToSkip.includes(item)) {
+      keys.push(item);
+    }
+  });
+  return excludeItems(canByType(...keys), ['']);
 }
 
 export function excludeItems(allItems: any[], excludes: any[]) {
