@@ -14,6 +14,7 @@ export class BooleanTypeOptional extends AbstractBooleanType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class BooleanTypeRequired extends AbstractBooleanType {}
 ```
 
@@ -27,6 +28,7 @@ export class DateTypeOptional extends AbstractDateType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class DateTypeRequired extends AbstractDateType {}
 ```
 
@@ -40,7 +42,7 @@ enum StatusString {
   DOWN = 'down',
 }
 
-@AddValidate([{ validator: 'IsEnum', value: StatusString }])
+@AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsNotEmpty' }])
 export class EnumTypeRequired extends AbstractEnumType<StatusString> {}
 
 @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
@@ -63,6 +65,7 @@ class JsonTypeOptional extends AbstractJsonType<JsonValuesTest, null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 class JsonTypeRequired extends AbstractJsonType<JsonValuesTest> {}
 
 ```
@@ -77,6 +80,7 @@ export class NumberTypeOptional extends AbstractNumberType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class NumberTypeRequired extends AbstractNumberType {}
 ```
 
@@ -90,6 +94,7 @@ export class StringTypeOptional extends AbstractStringType<null> {
   }
 }
 
+@AddValidate([{ validator: 'IsNotEmpty' }])
 export class StringTypeRequire extends AbstractStringType {}
 ```
 
@@ -105,9 +110,6 @@ export class UuidTypeOptional extends AbstractUuidType<null> {
 
 @AddValidate([{ validator: 'IsNotEmpty' }])
 export class UuidTypeRequired extends AbstractUuidType {}
-
-@AddValidate([{ validator: 'IsNotEmpty' }])
-export class IdType extends AbstractUuidType {}
 ```
 
 ## id
