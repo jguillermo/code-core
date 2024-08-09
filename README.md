@@ -118,3 +118,7 @@ export class UuidTypeRequired extends AbstractUuidType {}
 @AddValidate([{ validator: 'IsNotEmpty' }])
 export class IdType extends AbstractUuidType {}
 ```
+
+#Siguientes pasos
+vo validator decorator sustom
+vo array, debator si deberi ahaceroat un null o no

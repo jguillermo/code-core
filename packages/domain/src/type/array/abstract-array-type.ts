@@ -1,6 +1,6 @@
 import { AbstractType } from '../abstract-type';
 
-export abstract class ArrayType<T> extends AbstractType<Array<T>> {
+export abstract class AbstractArrayType<T> extends AbstractType<Array<T>> {
   get toString(): string {
     return this.value ? this.value.toString() : '';
   }
