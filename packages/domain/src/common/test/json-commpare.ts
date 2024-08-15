@@ -53,27 +53,12 @@ export class JsonCompare {
   }
 
   private compareArrays(val1: JsonArray, val2: JsonArray, path: string) {
-    if (this.strict) {
-      if (val1.length !== val2.length) {
-        this._differences.push(`${path}: length of ${JSON.stringify(val1)} is not equal to length of ${JSON.stringify(val2)}`);
-        return;
-      }
-      for (let i = 0; i < val1.length; i++) {
-        this.compareValues(val1[i], val2[i], `${path}[${i}]`);
-      }
-    } else {
-      val1.forEach((item, index) => {
-        if (this.isObject(item)) {
-          const matched = val2.some(
-            (val2Item) => this.isObject(val2Item) && this.compareObjectContent(item as JsonObject, val2Item as JsonObject, `${path}[${index}]`).length === 0,
-          );
-          if (!matched) {
-            this._differences.push(`${path}[${index}]: object not found in ${JSON.stringify(val2)}`);
-          }
-        } else if (!val2.includes(item)) {
-          this._differences.push(`${path}[${index}]: ${JSON.stringify(item)} not found in ${JSON.stringify(val2)}`);
-        }
-      });
+    if (this.strict && val1.length !== val2.length) {
+      this._differences.push(`${path}: length of ${JSON.stringify(val1)} is not equal to length of ${JSON.stringify(val2)}`);
+      return;
+    }
+    for (let i = 0; i < val1.length; i++) {
+      this.compareValues(val1[i], val2[i], `${path}[${i}]`);
     }
   }
 
