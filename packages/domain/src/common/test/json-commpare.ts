@@ -23,36 +23,6 @@ export class JsonCompare {
     this.compareValues(data, reference, '');
   }
 
-  private sortArray(arr: JsonArray): JsonArray {
-    return arr
-      .map((item) => {
-        if (Array.isArray(item)) {
-          return this.sortArray(item as JsonArray);
-        } else if (typeof item === 'object' && item !== null) {
-          return this.sortObject(item as JsonObject);
-        }
-        return item;
-      })
-      .sort();
-  }
-
-  private sortObject(obj: JsonObject): JsonObject {
-    const sortedObj: JsonObject = {};
-    Object.keys(obj)
-      .sort()
-      .forEach((key) => {
-        const value = obj[key];
-        if (Array.isArray(value)) {
-          sortedObj[key] = this.sortArray(value as JsonArray);
-        } else if (typeof value === 'object' && value !== null) {
-          sortedObj[key] = this.sortObject(value as JsonObject);
-        } else {
-          sortedObj[key] = value;
-        }
-      });
-    return sortedObj;
-  }
-
   private compareArrays(data: JsonArray, reference: JsonArray, path: string) {
     if (this.strict && data.length !== reference.length) {
       this._differences.push(`${path}: length of ${JSON.stringify(data)} is not equal to length of ${JSON.stringify(reference)}`);
@@ -68,24 +38,6 @@ export class JsonCompare {
       return afterPath;
     }
     return `${path}.${afterPath}`;
-  }
-
-  private compareObjectContent(data: JsonObject, obj2: JsonObject, path: string): string[] {
-    const differences: string[] = [];
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
-          differences.push(`${this.processPath(path, key)}: key not found`);
-        } else {
-          if (this.isObject(data[key])) {
-            differences.push(...this.compareObjectContent(data[key] as JsonObject, obj2[key] as JsonObject, `${this.processPath(path, key)}`));
-          } else if (data[key] !== obj2[key]) {
-            differences.push(`${this.processPath(path, key)}: ${JSON.stringify(data[key])} !== ${JSON.stringify(obj2[key])}`);
-          }
-        }
-      }
-    }
-    return differences;
   }
 
   private compareObjects(data: JsonObject, reference: JsonObject, path: string) {
@@ -119,7 +71,7 @@ export class JsonCompare {
   private compareValues(data: JsonValue, reference: JsonValue, path: string) {
     if (Array.isArray(data)) {
       if (!Array.isArray(reference)) {
-        this._differences.push(`${path}: ${universalToString(data)} is not an array`);
+        this._differences.push(`${path}: must not be an array; it must be ${universalToString(reference)}`);
       } else {
         this.compareArrays(data, reference, path);
       }
@@ -133,7 +85,7 @@ export class JsonCompare {
       const isEquals = CompareValue.getInstance().compare(data, reference);
       if (!isEquals) {
         path = path === '' ? path : `${path}: `;
-        this._differences.push(`${path}${universalToString(reference)} -> ${universalToString(data)}`);
+        this._differences.push(`${path}${universalToString(data)} -> ${universalToString(reference)}`);
       }
     }
   }

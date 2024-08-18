@@ -26,10 +26,10 @@ describe('JsonCompare', () => {
         s('text', 'text');
       });
       describe('error', () => {
-        s(1, 2, ['2 -> 1']);
-        s(false, true, ['true -> false']);
-        s('1', '2', ['"2" -> "1"']);
-        s('text', 'text2', ['"text2" -> "text"']);
+        s(1, 2, ['1 -> 2']);
+        s(false, true, ['false -> true']);
+        s('1a', '2a', ['1a -> 2a']);
+        s('text', 'text2', ['text -> text2']);
       });
     });
     describe('include', () => {
@@ -40,10 +40,10 @@ describe('JsonCompare', () => {
         _('text', 'text');
       });
       describe('error', () => {
-        _(1, 2, ['2 -> 1']);
-        _(false, true, ['true -> false']);
-        _('1', '2', ['"2" -> "1"']);
-        _('text', 'text2', ['"text2" -> "text"']);
+        _(1, 2, ['1 -> 2']);
+        _(false, true, ['false -> true']);
+        _('1', '2', ['1 -> 2']);
+        _('text', 'text2', ['text -> text2']);
       });
     });
   });
@@ -57,8 +57,8 @@ describe('JsonCompare', () => {
         s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 1 } });
       });
       describe('error', () => {
-        s({ a: 1, b: 1 }, { a: 1, b: 2 }, ['b: 2 -> 1']);
-        s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 2 } }, ['c.cb: 2 -> 1']);
+        s({ a: 1, b: 1 }, { a: 1, b: 2 }, ['b: 1 -> 2']);
+        s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 2 } }, ['c.cb: 1 -> 2']);
         s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1 } }, ['c.cb: extra key found']);
 
         s({ a: '1' }, { a: '1', b: 1 }, ['b: key not found']);
@@ -76,42 +76,54 @@ describe('JsonCompare', () => {
         _({ a: 1 }, { a: 1, b: 1 });
       });
       describe('error', () => {
-        _({ a: 1, b: 1 }, { a: 1, b: 2 }, ['b: 2 -> 1']);
-        _({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 2 } }, ['c.cb: 2 -> 1']);
+        _({ a: 1, b: 1 }, { a: 1, b: 2 }, ['b: 1 -> 2']);
+        _({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 2 } }, ['c.cb: 1 -> 2']);
         _({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: 1 }, ['c: must not be an object; it must be 1']);
         _({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1 } }, ['c.cb: extra key found']);
       });
     });
   });
 
-  // describe('array Objects', () => {
-  //   describe('equals ', () => {
-  //     s([1], [1]);
-  //     s([1, 2], [1, 2]);
-  //     s([1, '2'], [1, '2']);
-  //     s([1, '2', true], [1, '2', true]);
-  //
-  //     _([1], [1]);
-  //     _([1], [1, 2]);
-  //     _([1], [1, '2']);
-  //     _([1, '2'], [1, '2', true]);
-  //
-  //     _([{ a: 1, b: 1 }], [{ a: 1, b: 1 }]);
-  //     _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1, cb: 1 } }]);
-  //     _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }]);
-  //   });
-  //   describe('not equals', () => {
-  //     _([{ a: 1, b: 1 }], [{ a: 1, b: 2 }], ['[0].b: 2 -> 1']);
-  //     _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1, cb: 2 } }], ['[0].c.cb: 2 -> 1']);
-  //     _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1, cb: 2 }] }], ['[0].c[0].cb: 2 -> 1']);
-  //     _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1 } }], ['[0].c.cb: key not found']);
-  //     _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1 }] }], ['[0].c[0].cb: key not found']);
-  //
-  //     s([1], [1, 2], [': length of [1] is not equal to length of [1,2]']);
-  //     s([1], [1, '2'], [': length of [1] is not equal to length of [1,"2"]']);
-  //     s([1, '2'], [1, '2', true], [': length of [1,"2"] is not equal to length of [1,"2",true]']);
-  //   });
-  // });
+  describe('array', () => {
+    describe('strict ', () => {
+      describe('correct', () => {
+        s([1], [1]);
+        s([1, 2], [1, 2]);
+        s([1, 2, [3]], [1, 2, [3]]);
+        s([1, 2, [{ a: 1 }]], [1, 2, [{ a: 1 }]]);
+        s([1, '2'], [1, '2']);
+        s([1, '2', true], [1, '2', true]);
+      });
+      describe('error', () => {
+        s([1], [1, 2], [': length of [1] is not equal to length of [1,2]']);
+        s([1], [1, '2'], [': length of [1] is not equal to length of [1,"2"]']);
+        s([1, '2'], [1, '2', true], [': length of [1,"2"] is not equal to length of [1,"2",true]']);
+        s([1, 2, [3]], [1, 2, 3], ['[2]: must not be an array; it must be 3']);
+        s([1, 2, 3], [1, 2, [3]], ['[2]: 3 -> [3]']);
+        s([1, 2, [{ a: 1, b: 1 }]], [1, 2, [{ a: 1 }]], ['[2][0].b: extra key found']);
+      });
+    });
+    describe('include', () => {
+      describe('correct', () => {
+        _([1], [1]);
+        _([1], [1, 2]);
+        _([1], [1, '2']);
+        _([1, '2'], [1, '2', true]);
+
+        _([{ a: 1, b: 1 }], [{ a: 1, b: 1 }]);
+        _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1, cb: 1 } }]);
+        _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }]);
+      });
+      describe('error', () => {
+        _([{ a: 1, b: 1 }], [{ a: 1, b: 2 }], ['[0].b: 1 -> 2']);
+        _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1, cb: 2 } }], ['[0].c.cb: 1 -> 2']);
+        _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1, cb: 2 }] }], ['[0].c[0].cb: 1 -> 2']);
+        _([{ a: 1, b: 1, c: { ca: 1, cb: 1 } }], [{ a: 1, b: 1, c: { ca: 1 } }], ['[0].c.cb: extra key found']);
+        _([{ a: 1, b: 1, c: [{ ca: 1, cb: 1 }] }], [{ a: 1, b: 1, c: [{ ca: 1 }] }], ['[0].c[0].cb: extra key found']);
+      });
+    });
+  });
+
   //
   // describe('values testing', () => {
   //   _(
