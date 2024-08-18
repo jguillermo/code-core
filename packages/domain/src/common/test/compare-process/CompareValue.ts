@@ -18,17 +18,20 @@ export class CompareValue {
     return CompareValue.instance;
   }
 
-  public compare(type: any, value: any): boolean {
+  public compare(data: any, reference: any): boolean {
+    if (data === reference) {
+      return true;
+    }
     let isCustom = false;
     let compare = false;
     for (const compareValues of this.typeCompare) {
-      if (typeof type === 'string' || type instanceof String) {
-        if (type.search(compareValues.regexp) === 0) {
+      if (typeof data === 'string' || data instanceof String) {
+        if (data.search(compareValues.regexp) === 0) {
           isCustom = true;
-          compare = compareValues.compare(value);
+          compare = compareValues.compare(reference);
         }
       }
     }
-    return isCustom ? compare : type === value;
+    return isCustom ? compare : data === reference;
   }
 }

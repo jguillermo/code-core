@@ -1,4 +1,5 @@
 import { CompareValue } from './compare-process/CompareValue';
+import { universalToString } from '../utils/string/universal-to-string';
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
 
@@ -88,34 +89,43 @@ export class JsonCompare {
   }
 
   private compareObjects(data: JsonObject, reference: JsonObject, path: string) {
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        if (!Object.prototype.hasOwnProperty.call(reference, key)) {
-          this._differences.push(`${this.processPath(path, key)}: key not found`);
-        } else {
-          this.compareValues(data[key], reference[key], `${this.processPath(path, key)}`);
-        }
-      }
-    }
     if (this.strict) {
-      for (const key in reference) {
-        if (Object.prototype.hasOwnProperty.call(reference, key) && !Object.prototype.hasOwnProperty.call(data, key)) {
-          this._differences.push(`${this.processPath(path, key)}: extra key found`);
+      Object.keys(reference).forEach((key) => {
+        const processPath = this.processPath(path, key);
+        if (!Object.prototype.hasOwnProperty.call(data, key)) {
+          this._differences.push(`${processPath}: key not found`);
+        } else {
+          this.compareValues(data[key], reference[key], `${processPath}`);
         }
-      }
+      });
+      Object.keys(data).forEach((key) => {
+        const processPath = this.processPath(path, key);
+        if (!Object.prototype.hasOwnProperty.call(reference, key)) {
+          this._differences.push(`${processPath}: extra key found`);
+        }
+      });
+    } else {
+      Object.keys(data).forEach((key) => {
+        const processPath = this.processPath(path, key);
+        if (Object.prototype.hasOwnProperty.call(reference, key)) {
+          this.compareValues(data[key], reference[key], `${processPath}`);
+        } else {
+          this._differences.push(`${processPath}: extra key found`);
+        }
+      });
     }
   }
 
   private compareValues(data: JsonValue, reference: JsonValue, path: string) {
     if (Array.isArray(data)) {
       if (!Array.isArray(reference)) {
-        this._differences.push(`${path}: ${JSON.stringify(data)} is not an array`);
+        this._differences.push(`${path}: ${universalToString(data)} is not an array`);
       } else {
         this.compareArrays(data, reference, path);
       }
     } else if (this.isObject(data)) {
       if (!this.isObject(reference)) {
-        this._differences.push(`${path}: ${JSON.stringify(data)} is not an object`);
+        this._differences.push(`${path}: must not be an object; it must be ${universalToString(reference)}`);
       } else {
         this.compareObjects(data as JsonObject, reference as JsonObject, path);
       }
@@ -123,7 +133,7 @@ export class JsonCompare {
       const isEquals = CompareValue.getInstance().compare(data, reference);
       if (!isEquals) {
         path = path === '' ? path : `${path}: `;
-        this._differences.push(`${path}${JSON.stringify(reference)} -> ${JSON.stringify(data)}`);
+        this._differences.push(`${path}${universalToString(reference)} -> ${universalToString(data)}`);
       }
     }
   }
