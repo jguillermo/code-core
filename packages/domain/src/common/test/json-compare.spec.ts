@@ -58,6 +58,8 @@ describe('JsonCompare', () => {
       });
       describe('error', () => {
         s({ a: 1, b: 1 }, { a: 1, b: 2 }, ['b: 1 -> 2']);
+        s({ a: 1, b: { ba: 2 } }, { a: 1, b: 1 }, ['b: must not be an object; it must be 1']);
+        s({ a: 1, b: 1 }, { a: 1, b: { ba: 2 } }, ['b: 1 -> {"ba":2}']);
         s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1, cb: 2 } }, ['c.cb: 1 -> 2']);
         s({ a: 1, b: 1, c: { ca: 1, cb: 1 } }, { a: 1, b: 1, c: { ca: 1 } }, ['c.cb: extra key found']);
 

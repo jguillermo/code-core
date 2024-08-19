@@ -25,7 +25,7 @@ export class JsonCompare {
 
   private compareArrays(data: JsonArray, reference: JsonArray, path: string) {
     if (this.strict && data.length !== reference.length) {
-      this._differences.push(`${path}: length of ${JSON.stringify(data)} is not equal to length of ${JSON.stringify(reference)}`);
+      this._differences.push(`${path}: length of ${universalToString(data)} is not equal to length of ${universalToString(reference)}`);
       return;
     }
     for (let i = 0; i < data.length; i++) {
