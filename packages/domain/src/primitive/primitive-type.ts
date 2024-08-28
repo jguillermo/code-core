@@ -27,7 +27,6 @@ export type PrimitiveType<T> =
                         ? string | null
                         : never;
 
-
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T
 //   : T extends { value: infer U }
