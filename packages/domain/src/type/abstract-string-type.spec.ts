@@ -1,20 +1,20 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { AbstractStringType, StringTypeOptional, StringTypeRequire } from '@code-core/domain';
+import { AbstractStringType, StringTypeOptional, StringTypeRequired } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { canByType, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 
 describe('AbstractStringType', () => {
-  describe('StringTypeRequire', () => {
+  describe('StringTypeRequired', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(StringTypeRequire, excludeItems(canByType(PrimitivesKeys.STRING), ['']), 'string');
+      typeValidValueSpec(StringTypeRequired, excludeItems(canByType(PrimitivesKeys.STRING), ['']), 'string');
     });
     describe('Invalid Values', () => {
       const errorData = {
-        canBeString: 'StringTypeRequire must be a string',
-        isNotEmpty: 'StringTypeRequire should not be empty',
+        canBeString: 'StringTypeRequired must be a string',
+        isNotEmpty: 'StringTypeRequired should not be empty',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(StringTypeRequire, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(StringTypeRequired, errorData, [
         {
           constraints: ['canBeString'],
           values: skipByTypeRequired(PrimitivesKeys.STRING, PrimitivesKeys.UUID, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
@@ -30,7 +30,7 @@ describe('AbstractStringType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(StringTypeRequire, {
+      typeValidationSpec(StringTypeRequired, {
         value: [['áéíóú', 'áéíóú']],
         isNull: [['áéíóú', false]],
         toString: [['áéíóú', 'áéíóú']],
@@ -124,10 +124,10 @@ describe('AbstractStringType', () => {
     });
 
     it('number', () => {
-      const instance1 = new StringTypeRequire('abc');
+      const instance1 = new StringTypeRequired('abc');
 
-      expectTypeOf<StringTypeRequire['value']>().toMatchTypeOf<ExpectType>();
-      expectTypeOf<ExpectType>().toMatchTypeOf<StringTypeRequire['value']>();
+      expectTypeOf<StringTypeRequired['value']>().toMatchTypeOf<ExpectType>();
+      expectTypeOf<ExpectType>().toMatchTypeOf<StringTypeRequired['value']>();
       expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
     });
   });

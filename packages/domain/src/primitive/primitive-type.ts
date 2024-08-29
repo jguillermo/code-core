@@ -24,7 +24,10 @@ type JsonType<T> = T extends AbstractJsonType<infer U> ? object : T extends Abst
 
 type IdTypePrimitive<T> = T extends IdType ? string : never;
 
-export type PrimitiveType<T> = BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;
+export type PrimitiveType<T> =
+  T extends Array<infer U>
+    ? PrimitiveType<U>[]
+    : BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;
 
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T

@@ -10,7 +10,7 @@ import {
   NumberTypeOptional,
   NumberTypeRequired,
   StringTypeOptional,
-  StringTypeRequire,
+  StringTypeRequired,
   UuidTypeOptional,
   UuidTypeRequired,
 } from '@code-core/domain';
@@ -21,25 +21,42 @@ describe('Primitive Types', () => {
   it('booleanType', () => {
     expectTypeOf<PrimitiveType<BooleanTypeRequired>>().toEqualTypeOf<boolean>();
     expectTypeOf<PrimitiveType<BooleanTypeOptional>>().toEqualTypeOf<boolean | null>();
+
+    expectTypeOf<PrimitiveType<BooleanTypeRequired[]>>().toEqualTypeOf<boolean[]>();
+    expectTypeOf<PrimitiveType<BooleanTypeOptional[]>>().toEqualTypeOf<Array<boolean | null>>();
   });
   it('dateType', () => {
     expectTypeOf<PrimitiveType<DateTypeRequired>>().toEqualTypeOf<Date>();
     expectTypeOf<PrimitiveType<DateTypeOptional>>().toEqualTypeOf<Date | null>();
+
+    expectTypeOf<PrimitiveType<DateTypeRequired[]>>().toEqualTypeOf<Date[]>();
+    expectTypeOf<PrimitiveType<DateTypeOptional[]>>().toEqualTypeOf<Array<Date | null>>();
   });
   it('numberType', () => {
     expectTypeOf<PrimitiveType<NumberTypeRequired>>().toEqualTypeOf<number>();
     expectTypeOf<PrimitiveType<NumberTypeOptional>>().toEqualTypeOf<number | null>();
+
+    expectTypeOf<PrimitiveType<NumberTypeRequired[]>>().toEqualTypeOf<number[]>();
+    expectTypeOf<PrimitiveType<NumberTypeOptional[]>>().toEqualTypeOf<Array<number | null>>();
   });
   it('stringType', () => {
-    expectTypeOf<PrimitiveType<StringTypeRequire>>().toEqualTypeOf<string>();
+    expectTypeOf<PrimitiveType<StringTypeRequired>>().toEqualTypeOf<string>();
     expectTypeOf<PrimitiveType<StringTypeOptional>>().toEqualTypeOf<string | null>();
+
+    expectTypeOf<PrimitiveType<StringTypeRequired[]>>().toEqualTypeOf<string[]>();
+    expectTypeOf<PrimitiveType<StringTypeOptional[]>>().toEqualTypeOf<Array<string | null>>();
   });
   it('uuidType', () => {
     expectTypeOf<PrimitiveType<UuidTypeRequired>>().toEqualTypeOf<string>();
     expectTypeOf<PrimitiveType<UuidTypeOptional>>().toEqualTypeOf<string | null>();
+
+    expectTypeOf<PrimitiveType<UuidTypeRequired[]>>().toEqualTypeOf<string[]>();
+    expectTypeOf<PrimitiveType<UuidTypeOptional[]>>().toEqualTypeOf<Array<string | null>>();
   });
   it('idType', () => {
     expectTypeOf<PrimitiveType<IdType>>().toEqualTypeOf<string>();
+
+    expectTypeOf<PrimitiveType<IdType[]>>().toEqualTypeOf<string[]>();
   });
   it('enum string', () => {
     enum StatusString {
@@ -55,6 +72,9 @@ describe('Primitive Types', () => {
 
     expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<string>();
     expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<string | null>();
+
+    expectTypeOf<PrimitiveType<EnumTypeRequired[]>>().toEqualTypeOf<string[]>();
+    expectTypeOf<PrimitiveType<EnumTypeOptional[]>>().toEqualTypeOf<Array<string | null>>();
   });
 
   it('enum number', () => {
@@ -71,6 +91,9 @@ describe('Primitive Types', () => {
 
     expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<number>();
     expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<number | null>();
+
+    expectTypeOf<PrimitiveType<EnumTypeRequired[]>>().toEqualTypeOf<number[]>();
+    expectTypeOf<PrimitiveType<EnumTypeOptional[]>>().toEqualTypeOf<Array<number | null>>();
   });
 
   it('object', () => {
@@ -90,5 +113,8 @@ describe('Primitive Types', () => {
 
     expectTypeOf<PrimitiveType<JsonTypeRequired>>().toEqualTypeOf<object>();
     expectTypeOf<PrimitiveType<JsonTypeOptional>>().toEqualTypeOf<object | null>();
+
+    expectTypeOf<PrimitiveType<JsonTypeRequired[]>>().toEqualTypeOf<object[]>();
+    expectTypeOf<PrimitiveType<JsonTypeOptional[]>>().toEqualTypeOf<Array<object | null>>();
   });
 });

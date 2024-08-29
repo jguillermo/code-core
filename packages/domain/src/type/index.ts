@@ -71,4 +71,4 @@ export class StringTypeOptional extends AbstractStringType<null> {
 }
 
 @AddValidate([{ validator: 'IsNotEmpty' }])
-export class StringTypeRequire extends AbstractStringType {}
+export class StringTypeRequired extends AbstractStringType {}
