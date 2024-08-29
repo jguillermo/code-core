@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ValidationStorage } from './validation-storage';
 import { ValidatorMapI, validatorsMap } from './validators-map';
-import { validate, ValidationError } from 'class-validator';
+import { validateSync, ValidationError } from 'class-validator';
 import { ValidatorOptions } from 'class-validator/types/validation/ValidatorOptions';
 
 function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
@@ -71,8 +71,8 @@ function getClassHierarchy(klass: any): any[] {
   return hierarchy;
 }
 
-export async function validateType(object: object, validatorOptions?: ValidatorOptions): Promise<ValidationError[]> {
-  const errors = await validate(object, validatorOptions);
+export function validateType(object: object, validatorOptions?: ValidatorOptions): ValidationError[] {
+  const errors = validateSync(object, validatorOptions);
   if (errors.length === 0) {
     return errors;
   }

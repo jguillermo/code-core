@@ -76,7 +76,7 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
       it(dataInput.title + ' and not error', async () => {
         const type = dataInput.hastTwoValues ? new cls(dataInput.input) : new cls();
         expect(type[property]).toEqual(dataInput.expectValue);
-        const errors = await validateType(type);
+        const errors = validateType(type);
         expect(errors).toEqual([]);
       });
     });
@@ -92,7 +92,7 @@ export function errorTypeValidValueSpec<T>(cls: any, errorData: any, items: Arra
           return acc;
         }, {});
         const type = new cls(value);
-        const errors = await validateType(type);
+        const errors = validateType(type);
         expect(errors[0]).toBeDefined();
         expect(errors[0].constraints).toBeDefined();
         expect(errors[0].constraints).toEqual(constraints);
@@ -105,7 +105,7 @@ export function typeValidValueSpec(cls: any, items: any[], validateTypeOf?: stri
   items.forEach((value) => {
     it(`Valid type: ${classTxt(cls, value)}`, async () => {
       const type = new cls(value);
-      const errors = await validateType(type);
+      const errors = validateType(type);
       expect(errors).toEqual([]);
     });
   });

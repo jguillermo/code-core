@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { BooleanValidator } from '../../boolean.validator';
+import { BooleanValidator } from '../../primitive-validator/boolean.validator';
 
 export function CanBeBooleanValidator(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {

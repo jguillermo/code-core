@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { DateValidator } from '../../date.validator';
+import { DateValidator } from '../../primitive-validator/date.validator';
 
 export function CanBeDate(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {

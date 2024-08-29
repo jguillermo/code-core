@@ -1,6 +1,6 @@
 import { AbstractType } from './abstract-type';
 import { AddValidate } from '../validator/decorator/type-validator';
-import { JsonValidator } from '../validator/json.validator';
+import { JsonValidator } from '../validator/primitive-validator/json.validator';
 import { CanBeJson } from '../validator/decorator/custom/can-be-json';
 
 export type JsonTypeValue = {};

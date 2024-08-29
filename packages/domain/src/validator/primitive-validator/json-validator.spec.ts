@@ -1,4 +1,4 @@
-import { testValidation } from '../common/test/util-test';
+import { testValidation } from '../../common/test/util-test';
 import { JsonValidator } from './json.validator';
 
 describe('JsonValidator', () => {

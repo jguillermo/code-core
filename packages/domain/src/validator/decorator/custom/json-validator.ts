@@ -1,7 +1,7 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 import Ajv from 'ajv';
 
-import { JsonValidator as JsonValidatorCore } from '../../json.validator';
+import { JsonValidator as JsonValidatorCore } from '../../primitive-validator/json.validator';
 import { JSON_FORMAT_VALIDATES } from '../json-fotmat-validate';
 
 export function JsonValidator(jsonSchema: any, validationOptions?: ValidationOptions) {

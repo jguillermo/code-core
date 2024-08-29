@@ -1,5 +1,5 @@
 import { StringValidator } from '@code-core/domain';
-import { testValidation } from '../common/test/util-test';
+import { testValidation } from '../../common/test/util-test';
 
 describe('StringValidator', () => {
   describe('isString', () => {

@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { JsonValidator } from '../../json.validator';
+import { JsonValidator } from '../../primitive-validator/json.validator';
 
 export function CanBeJson(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
