@@ -2,6 +2,7 @@ import { ExceptionCode } from '../exception-code';
 import { AggregateNotFoundException } from './aggregate-not-found.exception';
 import { DomainException } from './domain.exception';
 import { ValidationException } from './validation.exception';
+import { TypePrimitiveException } from './type-primitive.exception';
 
 describe('DomainException', () => {
   describe('AggregateNotFoundException', () => {
@@ -15,6 +16,19 @@ describe('DomainException', () => {
       expect(exception.message).toBe(message);
       expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.AggregateNotFound]);
       expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Aggregate Not Found (DOM002)');
+      expect(exception.timestamp).toBeInstanceOf(Date);
+    });
+  });
+
+  describe('TypePrimitiveException', () => {
+    it('validation exception error', () => {
+      const message = `Instance invalid Type string ([1,2]).`;
+      const exception = new TypePrimitiveException('string', [1, 2]);
+
+      expect(exception).toBeInstanceOf(TypePrimitiveException);
+      expect(exception.message).toBe(message);
+      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.TypePrimitiveFailed]);
+      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Type Primitive Failed (DOM003)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });

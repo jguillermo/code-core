@@ -4,6 +4,7 @@ export enum ExceptionCode {
   DomainException = 'DOM000',
   ValidationFailed = 'DOM001',
   AggregateNotFound = 'DOM002',
+  TypePrimitiveFailed = 'DOM003',
   // BusinessRuleViolation = "DOM003",
   // EntityAlreadyExists = "DOM004",
   // OperationNotAllowed = "DOM005",
