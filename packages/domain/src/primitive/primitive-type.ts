@@ -1,6 +1,6 @@
-import { AbstractBooleanType, AbstractDateType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '@code-core/domain'; // export type PrimitiveTypes = boolean | Date | number | string | undefined | null;
+import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '@code-core/domain';
 
-// export type PrimitiveTypes = boolean | Date | number | string | undefined | null;
+type PrimitiveEnum<T> = T extends string ? string : T extends number ? number : never;
 
 export type PrimitiveType<T> =
   T extends AbstractBooleanType<undefined>
@@ -25,7 +25,11 @@ export type PrimitiveType<T> =
                       ? string
                       : T extends AbstractUuidType<null>
                         ? string | null
-                        : never;
+                        : T extends AbstractEnumType<infer U>
+                          ? PrimitiveEnum<U>
+                          : T extends AbstractEnumType<infer U, null>
+                            ? PrimitiveEnum<U> | null
+                            : never;
 
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T

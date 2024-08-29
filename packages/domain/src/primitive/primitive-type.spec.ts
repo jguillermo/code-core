@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 import { PrimitiveType } from './primitive-type';
 import {
+  AbstractEnumType,
   BooleanTypeOptional,
   BooleanTypeRequired,
   DateTypeOptional,
@@ -13,6 +14,7 @@ import {
   UuidTypeOptional,
   UuidTypeRequired,
 } from '@code-core/domain';
+import { AddValidate } from '../validator/decorator/type-validator';
 
 describe('Primitive Types', () => {
   it('booleanType', () => {
@@ -37,5 +39,36 @@ describe('Primitive Types', () => {
   });
   it('idType', () => {
     expectTypeOf<PrimitiveType<IdType>>().toEqualTypeOf<string>();
+  });
+  it('enum string', () => {
+    enum StatusString {
+      UP = 'up',
+      DOWN = 'down',
+    }
+
+    @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsNotEmpty' }])
+    class EnumTypeRequired extends AbstractEnumType<StatusString> {}
+
+    @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
+    class EnumTypeOptional extends AbstractEnumType<StatusString, null> {}
+
+    expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<string>();
+    expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<string | null>();
+  });
+
+  it('enum number', () => {
+    enum StatusNumber {
+      UP = 1,
+      DOWN = 2,
+    }
+
+    @AddValidate([{ validator: 'IsEnum', value: StatusNumber }, { validator: 'IsNotEmpty' }])
+    class EnumTypeRequired extends AbstractEnumType<StatusNumber> {}
+
+    @AddValidate([{ validator: 'IsEnum', value: StatusNumber }, { validator: 'IsOptional' }])
+    class EnumTypeOptional extends AbstractEnumType<StatusNumber, null> {}
+
+    expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<number>();
+    expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<number | null>();
   });
 });
