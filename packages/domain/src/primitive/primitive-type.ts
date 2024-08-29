@@ -1,4 +1,5 @@
 import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '@code-core/domain';
+import { AbstractJsonType } from '../type/abstract-json-type';
 
 type PrimitiveEnum<T> = T extends string ? string : T extends number ? number : never;
 
@@ -29,7 +30,11 @@ export type PrimitiveType<T> =
                           ? PrimitiveEnum<U>
                           : T extends AbstractEnumType<infer U, null>
                             ? PrimitiveEnum<U> | null
-                            : never;
+                            : T extends AbstractJsonType<infer U>
+                              ? object
+                              : T extends AbstractJsonType<infer U, null>
+                                ? object | null
+                                : never;
 
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T

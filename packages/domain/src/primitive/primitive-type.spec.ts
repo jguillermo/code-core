@@ -15,6 +15,7 @@ import {
   UuidTypeRequired,
 } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
+import { AbstractJsonType } from '../type/abstract-json-type';
 
 describe('Primitive Types', () => {
   it('booleanType', () => {
@@ -70,5 +71,24 @@ describe('Primitive Types', () => {
 
     expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<number>();
     expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<number | null>();
+  });
+
+  it('object', () => {
+    interface JsonValuesTest {
+      a: number;
+    }
+
+    @AddValidate([{ validator: 'IsOptional' }])
+    class JsonTypeOptional extends AbstractJsonType<JsonValuesTest, null> {
+      constructor(value: JsonValuesTest | null = null) {
+        super(value);
+      }
+    }
+
+    @AddValidate([{ validator: 'IsNotEmpty' }])
+    class JsonTypeRequired extends AbstractJsonType<JsonValuesTest> {}
+
+    expectTypeOf<PrimitiveType<JsonTypeRequired>>().toEqualTypeOf<object>();
+    expectTypeOf<PrimitiveType<JsonTypeOptional>>().toEqualTypeOf<object | null>();
   });
 });
