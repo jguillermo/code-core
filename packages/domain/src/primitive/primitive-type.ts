@@ -26,7 +26,6 @@ type IdTypePrimitive<T> = T extends IdType ? string : never;
 
 export type PrimitiveType<T> = BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;
 
-
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T
 //   : T extends { value: infer U }
