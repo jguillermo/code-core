@@ -16,19 +16,18 @@ describe('Exceptions', () => {
 
       expect(exception).toBeInstanceOf(AbstractException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException]);
-      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000)');
+      expect(exception.code).toEqual(ExceptionCode.DomainException);
+      expect(exception.description).toEqual('Domain Exception (DOM000)');
       expect(exception.timestamp).toBeInstanceOf(Date);
       expect(exception.toJSON()).toEqual({
-        exceptionCodess: ['DOM000'],
-        exceptionMessages: 'Domain Exception (DOM000)',
+        code: 'DOM000',
+        description: 'Domain Exception (DOM000)',
         message: 'Test message',
         name: 'TestException',
         timestamp: exception.timestamp.toISOString(),
       });
-      exception.logDetails();
       const expectedLog = `[Domain Exception (DOM000)]: ${message}, ${exception.timestamp}`;
-      expect(consoleSpy).toHaveBeenCalledWith(expectedLog);
+      expect(expectedLog).toEqual(exception.print());
     });
   });
 });

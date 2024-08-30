@@ -14,8 +14,8 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(AggregateNotFoundException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.AggregateNotFound]);
-      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Aggregate Not Found (DOM002)');
+      expect(exception.code).toEqual(ExceptionCode.AggregateNotFound);
+      expect(exception.description).toEqual('Domain Exception (DOM000), Aggregate Not Found (DOM002)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });
@@ -27,8 +27,8 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(TypePrimitiveException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.TypePrimitiveFailed]);
-      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Type Primitive Failed (DOM003)');
+      expect(exception.code).toEqual(ExceptionCode.TypePrimitiveFailed);
+      expect(exception.description).toEqual('Domain Exception (DOM000), Type Primitive Failed (DOM003)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });
@@ -41,8 +41,8 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(ValidationException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException, ExceptionCode.ValidationFailed]);
-      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000), Validation Failed (DOM001)');
+      expect(exception.code).toEqual(ExceptionCode.ValidationFailed);
+      expect(exception.description).toEqual('Domain Exception (DOM000), Validation Failed (DOM001)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });
@@ -53,8 +53,8 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(DomainException);
       expect(exception.message).toBe(message);
-      expect(exception.exceptionCodes).toEqual([ExceptionCode.DomainException]);
-      expect(exception.exceptionMessage).toEqual('Domain Exception (DOM000)');
+      expect(exception.code).toEqual(ExceptionCode.DomainException);
+      expect(exception.description).toEqual('Domain Exception (DOM000)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
   });

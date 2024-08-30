@@ -1,13 +1,15 @@
 import { ExceptionCode } from './exception-code';
 
 export abstract class AbstractException extends Error {
-  public readonly exceptionCodes: ExceptionCode[];
+  private readonly exceptionCodes: ExceptionCode[];
+  public readonly code: ExceptionCode;
   public readonly timestamp: Date;
 
-  constructor(message: string, exceptionCodess: ExceptionCode[]) {
+  constructor(message: string, exceptionCodes: ExceptionCode[]) {
     super(message);
     this.name = this.constructor.name;
-    this.exceptionCodes = exceptionCodess;
+    this.exceptionCodes = exceptionCodes;
+    this.code = exceptionCodes.length > 0 ? exceptionCodes[exceptionCodes.length - 1] : ExceptionCode.ErrorException;
     this.timestamp = new Date();
     Error.captureStackTrace(this, this.constructor);
   }
@@ -23,26 +25,26 @@ export abstract class AbstractException extends Error {
       {} as Record<ExceptionCode, string>,
     );
 
-  public get exceptionMessage(): string {
+  public get description(): string {
     return this.exceptionCodes.map((code) => `${AbstractException.ExceptionCodeStrings[code]} (${code})`).join(', ');
   }
 
-  logDetails(): void {
-    console.error(`[${this.exceptionMessage}]: ${this.message}, ${this.timestamp}`);
+  print(): string {
+    return `[${this.description}]: ${this.message}, ${this.timestamp}`;
   }
 
   toJSON(): {
     name: string;
     message: string;
-    exceptionCodess: string[];
-    exceptionMessages: string;
+    code: string;
+    description: string;
     timestamp: string;
   } {
     return {
       name: this.name,
       message: this.message,
-      exceptionCodess: this.exceptionCodes,
-      exceptionMessages: this.exceptionMessage,
+      code: this.code,
+      description: this.description,
       timestamp: this.timestamp.toISOString(),
     };
   }

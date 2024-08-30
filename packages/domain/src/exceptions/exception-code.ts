@@ -26,4 +26,9 @@ export enum ExceptionCode {
   // SecurityException = "SEC000",
   // AuthenticationFailed = "SEC001",
   // AuthorizationFailed = "SEC002"
+
+  // Errores por defecto
+  ErrorException = 'E000',
+  // AuthenticationFailed = "SEC001",
+  // AuthorizationFailed = "SEC002"
 }

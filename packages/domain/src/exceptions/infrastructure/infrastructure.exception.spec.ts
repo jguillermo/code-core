@@ -11,8 +11,8 @@ describe('Exceptions', () => {
 
         expect(exception).toBeInstanceOf(InfrastructureException);
         expect(exception.message).toBe(message);
-        expect(exception.exceptionCodes).toEqual([ExceptionCode.InfrastructureException]);
-        expect(exception.exceptionMessage).toEqual('Infrastructure Exception (INF000)');
+        expect(exception.code).toEqual(ExceptionCode.InfrastructureException);
+        expect(exception.description).toEqual('Infrastructure Exception (INF000)');
         expect(exception.timestamp).toBeInstanceOf(Date);
       });
     });
@@ -24,8 +24,8 @@ describe('Exceptions', () => {
 
         expect(exception).toBeInstanceOf(InternalErrorException);
         expect(exception.message).toBe(`Failed, internal error: ${message}`);
-        expect(exception.exceptionCodes).toEqual([ExceptionCode.InfrastructureException, ExceptionCode.InternalError]);
-        expect(exception.exceptionMessage).toEqual('Infrastructure Exception (INF000), Internal Error (INF001)');
+        expect(exception.code).toEqual(ExceptionCode.InternalError);
+        expect(exception.description).toEqual('Infrastructure Exception (INF000), Internal Error (INF001)');
         expect(exception.timestamp).toBeInstanceOf(Date);
       });
     });
