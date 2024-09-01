@@ -1,6 +1,7 @@
-import { isString } from 'class-validator';
+import { isString, ValidationError } from 'class-validator';
 import { universalToString } from '../utils/string/universal-to-string';
 import { validateType } from '../../validator/decorator/type-validator';
+import { TypePrimitiveException } from '../../exceptions/domain/type-primitive.exception';
 
 interface ITestValidation {
   hastTwoValues: boolean;
@@ -91,8 +92,26 @@ export function errorTypeValidValueSpec<T>(cls: any, errorData: any, items: Arra
           acc[String(key)] = errorData[key];
           return acc;
         }, {});
-        const type = new cls(value);
-        const errors = validateType(type);
+
+        let type;
+        let errors: ValidationError[] = [];
+        try {
+          type = new cls(value);
+          errors = validateType(type);
+        } catch (e) {
+          if (!(e instanceof TypePrimitiveException)) {
+            throw e;
+          }
+          errors = [
+            {
+              property: 'value',
+              constraints: {
+                typePrimitive: e.message,
+              },
+            },
+          ];
+        }
+
         expect(errors[0]).toBeDefined();
         expect(errors[0].constraints).toBeDefined();
         expect(errors[0].constraints).toEqual(constraints);

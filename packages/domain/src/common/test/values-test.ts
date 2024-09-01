@@ -100,6 +100,10 @@ export function emptyTypes(): PrimitivesKeys[] {
   return [...canByType(PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ''];
 }
 
+export function nullables(): PrimitivesKeys[] {
+  return [...canByType(PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL)];
+}
+
 export function allTypes(): PrimitivesKeys[] {
   return Object.values(PrimitivesKeys);
 }
