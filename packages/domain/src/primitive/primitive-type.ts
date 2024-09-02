@@ -18,7 +18,7 @@ type StringType<T> = T extends AbstractStringType<undefined> ? string : T extend
 
 type UuidType<T> = T extends AbstractUuidType<undefined> ? string : T extends AbstractUuidType<null> ? Nullable<string> : never;
 
-type EnumType<T> = T extends AbstractEnumType<infer U> ? PrimitiveEnum<U> : T extends AbstractEnumType<infer U, null> ? Nullable<PrimitiveEnum<U>> : never;
+type EnumType<T> = T extends AbstractEnumType<infer U, undefined> ? PrimitiveEnum<U> : T extends AbstractEnumType<infer U, null> ? Nullable<PrimitiveEnum<U>> : never;
 
 type JsonType<T> = T extends AbstractJsonType<infer U> ? object : T extends AbstractJsonType<infer U, null> ? Nullable<object> : never;
 

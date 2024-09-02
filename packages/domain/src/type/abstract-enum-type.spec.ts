@@ -1,8 +1,9 @@
 import { AbstractEnumType } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { allTypesRequired, canByType, emptyTypes, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { allTypesRequired, canByType, nullables, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 enum StatusString {
   UP = 'up',
@@ -10,10 +11,18 @@ enum StatusString {
 }
 
 @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsNotEmpty' }])
-export class EnumTypeRequired extends AbstractEnumType<StatusString> {}
+export class EnumTypeRequired extends AbstractEnumType<StatusString> {
+  protected getEnum(): Record<string, StatusString> {
+    return StatusString;
+  }
+}
 
 @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
-export class EnumTypeOptional extends AbstractEnumType<StatusString, null> {}
+export class EnumTypeOptional extends AbstractEnumType<StatusString, null> {
+  protected getEnum(): Record<string, StatusString> {
+    return StatusString;
+  }
+}
 
 describe('AbstractEnumType', () => {
   describe('EnumTypeRequired', () => {
@@ -24,15 +33,17 @@ describe('AbstractEnumType', () => {
       const errorData = {
         isEnum: 'EnumTypeRequired must be one of the following values: up, down',
         isNotEmpty: 'EnumTypeRequired should not be empty',
+        typePrimitive: 'Validation Error: Expected one of [up, down], but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(EnumTypeRequired, errorData, [
         {
-          constraints: ['isEnum'],
+          constraints: ['typePrimitive'],
           values: allTypesRequired(),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['isEnum', 'isNotEmpty'],
-          values: emptyTypes(),
+          values: nullables(),
         },
       ]);
     });
@@ -59,11 +70,13 @@ describe('AbstractEnumType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         isEnum: 'EnumTypeOptional must be one of the following values: up, down',
+        typePrimitive: 'Validation Error: Expected one of [up, down], but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(EnumTypeOptional, errorData, [
         {
-          constraints: ['isEnum'],
+          constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
       ]);
     });

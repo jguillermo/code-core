@@ -1,29 +1,18 @@
 import { AbstractType } from './abstract-type';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 export abstract class AbstractEnumType<T, R extends null | undefined = undefined> extends AbstractType<T, R> {
-  // constructor(value: T | null) {
-  //   // @ts-ignore
-  //   super(value);
-  // }
+  protected abstract getEnum(): Record<string, T>;
 
-  // get toString(): string {
-  //   if (this.isNull) {
-  //     return '';
-  //   }
-  //   return `${this.value}`;
-  // }
-  // todo: add throw eerro type if value is not valid
   protected filter(value: T | null): T | null {
-    return value;
-  }
+    if (value === null) {
+      return null;
+    }
+    const enumValues = Object.values(this.getEnum());
+    if (!enumValues.includes(value)) {
+      throw new TypePrimitiveException(`Expected one of [${enumValues.join(', ')}]`, value, '');
+    }
 
-  // static create<PT>(value: PrimitiveTypes | PT, entries: PrimitiveTypes[]): PT | null {
-  //   if (value === null) {
-  //     return null;
-  //   }
-  //   if (entries.filter((v) => v === value).length === 0) {
-  //     throw new Error(`value ${value} is not in Enum.`);
-  //   }
-  //   return value as PT;
-  // }
+    return value as T;
+  }
 }
