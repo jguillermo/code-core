@@ -12,7 +12,7 @@ export abstract class AbstractEnumType<T, R extends null | undefined = undefined
   //   }
   //   return `${this.value}`;
   // }
-
+  // todo: add throw eerro type if value is not valid
   protected filter(value: T | null): T | null {
     return value;
   }

@@ -1,7 +1,7 @@
 import { AbstractType } from './abstract-type';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { CanBeDate } from '../validator/decorator/custom/can-be-date';
-import { DateValidator } from '../validator/primitive-validator/date.validator';
+import { DateValidator } from '../validator';
 import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 @AddValidate([{ validator: CanBeDate }])

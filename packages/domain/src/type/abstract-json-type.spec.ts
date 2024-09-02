@@ -2,8 +2,9 @@ import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from 
 import { AbstractJsonType } from './abstract-json-type';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { JsonValidator } from '../validator/decorator/custom/json-validator';
-import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 interface JsonValuesTest {
   a: number;
@@ -28,15 +29,17 @@ describe('AbstractJsonType', () => {
       const errorData = {
         canBeJson: 'JsonTypeRequired must be a object or a valid JSON string.',
         isNotEmpty: 'JsonTypeRequired should not be empty',
+        typePrimitive: 'Validation Error: Expected a valid Json, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(JsonTypeRequired, errorData, [
         {
-          constraints: ['canBeJson'],
+          constraints: ['typePrimitive'],
           values: [...skipByTypeRequired(PrimitivesKeys.OBJECT), {}],
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['canBeJson', 'isNotEmpty'],
-          values: emptyTypes(),
+          values: nullables(),
         },
       ]);
     });
@@ -55,11 +58,13 @@ describe('AbstractJsonType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeJson: 'JsonTypeOptional must be a object or a valid JSON string.',
+        typePrimitive: 'Validation Error: Expected a valid Json, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(JsonTypeOptional, errorData, [
         {
-          constraints: ['canBeJson'],
+          constraints: ['typePrimitive'],
           values: [...skipByType(PrimitivesKeys.OBJECT, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), {}],
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
       ]);
     });
