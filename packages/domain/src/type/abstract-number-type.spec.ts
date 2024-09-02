@@ -2,7 +2,8 @@ import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from 
 import { AddValidate } from '../validator/decorator/type-validator';
 import { AbstractNumberType, NumberTypeOptional, NumberTypeRequired } from '@code-core/domain';
 import { expectTypeOf } from 'expect-type';
-import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
@@ -13,15 +14,17 @@ describe('AbstractNumberType', () => {
       const errorData = {
         canBeNumber: 'NumberTypeRequired must be a number',
         isNotEmpty: 'NumberTypeRequired should not be empty',
+        typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
         {
-          constraints: ['canBeNumber'],
+          constraints: ['typePrimitive'],
           values: skipByTypeRequired(PrimitivesKeys.NUMBER),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['canBeNumber', 'isNotEmpty'],
-          values: emptyTypes(),
+          values: nullables(),
         },
       ]);
     });
@@ -40,11 +43,13 @@ describe('AbstractNumberType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeNumber: 'NumberTypeOptional must be a number',
+        typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeOptional, errorData, [
         {
-          constraints: ['canBeNumber'],
+          constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
       ]);
     });
@@ -83,11 +88,13 @@ describe('AbstractNumberType', () => {
         isInt: 'ValueObjectNumber must be an integer number',
         max: 'ValueObjectNumber must not be greater than 20',
         min: 'ValueObjectNumber must not be less than 10',
+        typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(ValueObjectNumber, errorData, [
         {
-          constraints: ['max', 'min', 'isInt', 'canBeNumber'],
+          constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['isInt'],

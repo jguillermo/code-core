@@ -2,17 +2,21 @@ import { AbstractType } from './abstract-type';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { CanBeStringValidator } from '../validator/decorator/custom/can-be-string';
 import { StringValidator } from '@code-core/domain';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 @AddValidate([{ validator: CanBeStringValidator }])
 export class AbstractStringType<R extends null | undefined = undefined> extends AbstractType<string, R> {
   protected filter(value: any): any {
-    if (StringValidator.canBeString(value)) {
-      if (typeof value === 'boolean') {
-        return value ? 'true' : 'false';
-      } else {
-        return `${value}`;
-      }
+    if (value === null) {
+      return null;
     }
-    return value;
+
+    if (!StringValidator.canBeString(value)) {
+      throw new TypePrimitiveException('String', value);
+    }
+    if (typeof value === 'boolean') {
+      return value ? 'true' : 'false';
+    }
+    return `${value}`;
   }
 }

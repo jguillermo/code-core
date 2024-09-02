@@ -14,6 +14,7 @@ export class AbstractUuidType<R extends null | undefined = undefined> extends Ab
     return uuidv5(value, namespace);
   }
 
+  //todo is uud valid exception validator
   protected filter(value: any): any {
     return value;
   }
