@@ -11,7 +11,7 @@ export class AbstractBooleanType<R extends null | undefined = undefined> extends
       return null;
     }
     if (!BooleanValidator.canBeBoolean(value)) {
-      throw new TypePrimitiveException('Boolean', 'Value is not a boolean');
+      throw new TypePrimitiveException('Boolean', value);
     }
     if (typeof value === 'string') {
       value = value.toLowerCase().trim();

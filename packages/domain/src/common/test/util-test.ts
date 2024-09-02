@@ -84,7 +84,16 @@ export function typeValidationSpec(cls: any, objectList: { [P: string]: any[] })
   }
 }
 
-export function errorTypeValidValueSpec<T>(cls: any, errorData: any, items: Array<{ constraints: T[]; values: any[] }>) {
+//valuesTxt: { typePrimitive: ['$1', universalToString] },
+export function errorTypeValidValueSpec<T>(
+  cls: any,
+  errorData: any,
+  items: Array<{
+    constraints: T[];
+    values: any[];
+    valuesTxt?: { [k: string]: { [key: string]: Function } };
+  }>,
+) {
   items.forEach((item) => {
     item.values.forEach((value) => {
       it(`type error validate (${item.constraints.join(', ')}) : ${classTxt(cls, value)}`, async () => {
@@ -114,7 +123,23 @@ export function errorTypeValidValueSpec<T>(cls: any, errorData: any, items: Arra
 
         expect(errors[0]).toBeDefined();
         expect(errors[0].constraints).toBeDefined();
-        expect(errors[0].constraints).toEqual(constraints);
+
+        if (item.valuesTxt) {
+          Object.keys(item.valuesTxt).forEach((errorKey) => {
+            let txtTransform = constraints?.[errorKey];
+
+            Object.keys(item.valuesTxt?.[errorKey] ?? {}).forEach((txtReplace) => {
+              if (typeof value === 'string') {
+                value = `"${value}"`;
+              }
+              txtTransform = txtTransform?.replace(txtReplace, item.valuesTxt?.[errorKey]?.[txtReplace](value));
+            });
+
+            expect(errors[0]?.constraints?.[errorKey]).toEqual(txtTransform);
+          });
+        } else {
+          expect(errors[0].constraints).toEqual(constraints);
+        }
       });
     });
   });

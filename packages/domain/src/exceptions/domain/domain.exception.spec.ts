@@ -27,7 +27,7 @@ describe('DomainException', () => {
 
       expect(exception).toBeInstanceOf(TypePrimitiveException);
       expect(exception.message).toBe(message);
-      expect(exception.code).toEqual(ExceptionCode.TypePrimitiveFailed);
+      expect(exception.code).toEqual(ExceptionCode.TypeFailed);
       expect(exception.description).toEqual('Domain Exception (DOM000), Type Primitive Failed (DOM003)');
       expect(exception.timestamp).toBeInstanceOf(Date);
     });
