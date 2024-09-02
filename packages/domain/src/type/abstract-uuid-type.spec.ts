@@ -1,7 +1,8 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, emptyTypes, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { canByType, excludeItems, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-import { IdType, UuidTypeOptional, UuidTypeRequired } from '@code-core/domain';
+import { AbstractUuidType, IdType, UuidTypeOptional, UuidTypeRequired } from '@code-core/domain';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 const UUID_4_VALUE = 'df9ef000-21fc-4e06-b8f7-103c3a133d10';
 
@@ -14,15 +15,17 @@ describe('AbstractUuidType', () => {
       const errorData = {
         isUuid: 'IdType must be a UUID',
         isNotEmpty: 'IdType should not be empty',
+        typePrimitive: 'Validation Error: Expected a valid UUID, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(IdType, errorData, [
         {
-          constraints: ['isUuid'],
+          constraints: ['typePrimitive'],
           values: skipByTypeRequired(PrimitivesKeys.UUID),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['isUuid', 'isNotEmpty'],
-          values: emptyTypes(),
+          values: nullables(),
         },
       ]);
     });
@@ -37,26 +40,33 @@ describe('AbstractUuidType', () => {
   describe('UuidTypeRequired', () => {
     describe('Valid Values', () => {
       typeValidValueSpec(UuidTypeRequired, canByType(PrimitivesKeys.UUID), 'string');
+      typeValidValueSpec(UuidTypeRequired, [AbstractUuidType.random(), AbstractUuidType.fromValue('123'), UuidTypeRequired.random(), UuidTypeRequired.fromValue('123')]);
     });
     describe('Invalid Values', () => {
       const errorData = {
         isUuid: 'UuidTypeRequired must be a UUID',
         isNotEmpty: 'UuidTypeRequired should not be empty',
+        typePrimitive: 'Validation Error: Expected a valid UUID, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(UuidTypeRequired, errorData, [
         {
-          constraints: ['isUuid'],
+          constraints: ['typePrimitive'],
           values: excludeItems(skipByType(PrimitivesKeys.UUID, PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ['']),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['isUuid', 'isNotEmpty'],
-          values: [...canByType(PrimitivesKeys.UNDEFINED, PrimitivesKeys.NULL), ''],
+          values: nullables(),
         },
       ]);
     });
     describe('Compare values', () => {
       typeValidationSpec(UuidTypeRequired, {
-        value: [[UUID_4_VALUE, UUID_4_VALUE]],
+        value: [
+          [UUID_4_VALUE, UUID_4_VALUE],
+          [AbstractUuidType.fromValue('123'), '37813542-0dca-5a8a-b2a2-b69c2d45583f'],
+          [UuidTypeRequired.fromValue('123'), '37813542-0dca-5a8a-b2a2-b69c2d45583f'],
+        ],
         isNull: [[UUID_4_VALUE, false]],
         toString: [[UUID_4_VALUE, 'df9ef000-21fc-4e06-b8f7-103c3a133d10']],
       });
@@ -65,15 +75,18 @@ describe('AbstractUuidType', () => {
   describe('UuidTypeOptional', () => {
     describe('Valid Values', () => {
       typeValidValueSpec(UuidTypeOptional, canByType(PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'string');
+      typeValidValueSpec(UuidTypeOptional, [AbstractUuidType.random(), AbstractUuidType.fromValue('123'), UuidTypeOptional.random(), UuidTypeOptional.fromValue('123')]);
     });
     describe('Invalid Values', () => {
       const errorData = {
         isUuid: 'UuidTypeOptional must be a UUID',
+        typePrimitive: 'Validation Error: Expected a valid UUID, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(UuidTypeOptional, errorData, [
         {
-          constraints: ['isUuid'],
+          constraints: ['typePrimitive'],
           values: excludeItems(skipByType(PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), [0, 1]),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
       ]);
     });
@@ -81,6 +94,8 @@ describe('AbstractUuidType', () => {
       typeValidationSpec(UuidTypeOptional, {
         value: [
           [UUID_4_VALUE, 'df9ef000-21fc-4e06-b8f7-103c3a133d10'],
+          [AbstractUuidType.fromValue('123'), '37813542-0dca-5a8a-b2a2-b69c2d45583f'],
+          [UuidTypeRequired.fromValue('123'), '37813542-0dca-5a8a-b2a2-b69c2d45583f'],
           [null, null],
           [undefined, null],
         ],
