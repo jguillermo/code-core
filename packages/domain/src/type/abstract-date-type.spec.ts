@@ -1,7 +1,8 @@
 import { DateTypeOptional, DateTypeRequired } from '@code-core/domain';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, emptyTypes, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
+import { universalToString } from '../common/utils/string/universal-to-string';
 
 describe('AbstractDateType', () => {
   describe('DateTypeRequired', () => {
@@ -12,15 +13,17 @@ describe('AbstractDateType', () => {
       const errorData = {
         canBeDate: 'DateTypeRequired must be a Date or a valid ISO 8601 date string',
         isNotEmpty: 'DateTypeRequired should not be empty',
+        typePrimitive: 'Validation Error: Expected a valid Date, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(DateTypeRequired, errorData, [
         {
-          constraints: ['canBeDate'],
+          constraints: ['typePrimitive'],
           values: skipByTypeRequired(PrimitivesKeys.DATE),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
         {
           constraints: ['canBeDate', 'isNotEmpty'],
-          values: emptyTypes(),
+          values: nullables(),
         },
       ]);
     });
@@ -42,11 +45,13 @@ describe('AbstractDateType', () => {
     describe('Invalid Values', () => {
       const errorData = {
         canBeDate: 'DateTypeOptional must be a Date or a valid ISO 8601 date string',
+        typePrimitive: 'Validation Error: Expected a valid Date, but received {{$1}}.',
       };
       errorTypeValidValueSpec<keyof typeof errorData>(DateTypeOptional, errorData, [
         {
-          constraints: ['canBeDate'],
+          constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.DATE, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
+          valuesTxt: { typePrimitive: { '{{$1}}': universalToString } },
         },
       ]);
     });

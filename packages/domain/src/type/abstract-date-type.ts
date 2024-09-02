@@ -2,14 +2,18 @@ import { AbstractType } from './abstract-type';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { CanBeDate } from '../validator/decorator/custom/can-be-date';
 import { DateValidator } from '../validator/primitive-validator/date.validator';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 @AddValidate([{ validator: CanBeDate }])
 export class AbstractDateType<R extends null | undefined = undefined> extends AbstractType<Date, R> {
   protected filter(value: any): any {
-    if (DateValidator.canBeDate(value)) {
-      return typeof value === 'string' ? new Date(value) : value;
+    if (value === null) {
+      return null;
     }
-    return value;
+    if (!DateValidator.canBeDate(value)) {
+      throw new TypePrimitiveException('Date', value);
+    }
+    return typeof value === 'string' ? new Date(value) : value;
   }
 
   get toString(): string {
