@@ -1,5 +1,5 @@
 import { CompareValue } from './compare-process/CompareValue';
-import { universalToString } from '../utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
 

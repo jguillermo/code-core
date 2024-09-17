@@ -1,4 +1,4 @@
-import { universalToString } from '../utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 export enum PrimitivesKeys {
   STRING = 'string',

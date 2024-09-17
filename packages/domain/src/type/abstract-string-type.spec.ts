@@ -3,7 +3,7 @@ import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from 
 import { AddValidate } from '../validator/decorator/type-validator';
 import { canByType, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-import { universalToString } from '../common/utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 import { AbstractStringType, StringTypeOptional, StringTypeRequired } from './index';
 
 describe('AbstractStringType', () => {

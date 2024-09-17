@@ -1,4 +1,4 @@
-import { universalToString } from '../common/utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 import { ValidatorInterface } from '../validator';
 
 export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {

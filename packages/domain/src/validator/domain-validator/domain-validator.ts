@@ -1,6 +1,6 @@
 import { ValidationArguments, ValidationError, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import { validateType } from '../decorator/type-validator';
-import { universalToString } from '../../common/utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 @ValidatorConstraint({ name: 'domainValidator', async: false })
 export class DomainValidator implements ValidatorConstraintInterface {

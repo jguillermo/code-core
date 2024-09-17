@@ -1,5 +1,5 @@
 import { isString, ValidationError } from 'class-validator';
-import { universalToString } from '../utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 import { validateType } from '../../validator/decorator/type-validator';
 import { TypePrimitiveException } from '../../exceptions/domain/type-primitive.exception';
 

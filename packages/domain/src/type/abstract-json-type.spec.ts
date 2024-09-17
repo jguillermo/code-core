@@ -4,7 +4,7 @@ import { AddValidate } from '../validator/decorator/type-validator';
 import { JsonValidator } from '../validator/decorator/custom/json-validator';
 import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-import { universalToString } from '../common/utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 interface JsonValuesTest {
   a: number;

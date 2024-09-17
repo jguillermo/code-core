@@ -1,6 +1,6 @@
 import { DomainException } from './domain.exception';
 import { ExceptionCode } from '../exception-code';
-import { universalToString } from '../../common/utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 export class TypePrimitiveException extends DomainException {
   constructor(expectedType: string, receivedValue: any, template: string = 'Expected a valid ') {

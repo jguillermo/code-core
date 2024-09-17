@@ -1,5 +1,5 @@
 import { functionTestSpec } from '../../test/util-test';
-import { universalToString } from './universal-to-string';
+import { universalToString } from '@code-core/common';
 
 describe('universalToString', () => {
   interface CircularObject {

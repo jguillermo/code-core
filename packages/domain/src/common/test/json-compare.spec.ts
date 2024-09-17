@@ -1,5 +1,5 @@
 import { JsonCompare } from './json-commpare';
-import { universalToString } from '../utils/string/universal-to-string';
+import { universalToString } from '@code-core/common';
 
 function compareValues(data: any, reference: any, strict: boolean, errors: string[]): void {
   const jsonCompare = new JsonCompare(data, reference, strict);
