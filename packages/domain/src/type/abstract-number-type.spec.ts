@@ -1,14 +1,14 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { AddValidate } from '../validator/decorator/type-validator';
+import { canByType, errorTypeValidValueSpec, nullables, PrimitivesKeys, skipByType, skipByTypeRequired, typeValidationSpec, typeValidValueSpec } from '@code-core/test';
+import { AddValidate, validateType } from '../validator/decorator/type-validator';
 import { expectTypeOf } from 'expect-type';
-import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { universalToString } from '@code-core/common';
 import { AbstractNumberType, NumberTypeOptional, NumberTypeRequired } from './index';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(NumberTypeRequired, canByType(PrimitivesKeys.NUMBER), 'number');
+      typeValidValueSpec(validateType, NumberTypeRequired, canByType(PrimitivesKeys.NUMBER), 'number');
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -16,7 +16,7 @@ describe('AbstractNumberType', () => {
         isNotEmpty: 'NumberTypeRequired should not be empty',
         typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeRequired, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, NumberTypeRequired, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByTypeRequired(PrimitivesKeys.NUMBER),
@@ -29,7 +29,7 @@ describe('AbstractNumberType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(NumberTypeRequired, {
+      typeValidationSpec(validateType, NumberTypeRequired, {
         value: [[1, 1]],
         isNull: [[1, false]],
         toString: [[1, '1']],
@@ -38,14 +38,14 @@ describe('AbstractNumberType', () => {
   });
   describe('NumberTypeOptional', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(NumberTypeOptional, canByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'number');
+      typeValidValueSpec(validateType, NumberTypeOptional, canByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'number');
     });
     describe('Invalid Values', () => {
       const errorData = {
         canBeNumber: 'NumberTypeOptional must be a number',
         typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(NumberTypeOptional, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, NumberTypeOptional, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -54,7 +54,7 @@ describe('AbstractNumberType', () => {
       ]);
     });
     describe('compare values', () => {
-      typeValidationSpec(NumberTypeOptional, {
+      typeValidationSpec(validateType, NumberTypeOptional, {
         value: [
           [1, 1],
           [null, null],
@@ -80,7 +80,7 @@ describe('AbstractNumberType', () => {
     class ValueObjectNumber extends AbstractNumberType {}
 
     describe('Valid Values', () => {
-      typeValidValueSpec(ValueObjectNumber, [10, 15, 20], 'number');
+      typeValidValueSpec(validateType, ValueObjectNumber, [10, 15, 20], 'number');
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -90,7 +90,7 @@ describe('AbstractNumberType', () => {
         min: 'ValueObjectNumber must not be less than 10',
         typePrimitive: 'Validation Error: Expected a valid Number, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(ValueObjectNumber, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, ValueObjectNumber, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NUMBER, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -120,7 +120,7 @@ describe('AbstractNumberType', () => {
     });
 
     describe('Compare values', () => {
-      typeValidationSpec(ValueObjectNumber, {
+      typeValidationSpec(validateType, ValueObjectNumber, {
         value: [
           [10, 10],
           [15, 15],

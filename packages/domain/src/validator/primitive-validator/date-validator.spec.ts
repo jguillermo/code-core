@@ -1,6 +1,5 @@
-import { testValidation } from '../../common/test/util-test';
+import { canByType, PrimitivesKeys, skipByType, testValidation } from '@code-core/test';
 import { DateValidator } from './date.validator';
-import { canByType, PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 describe('DateValidator', () => {
   describe('canBeDate', () => {

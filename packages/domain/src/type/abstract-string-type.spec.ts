@@ -1,15 +1,14 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-
-import { AddValidate } from '../validator/decorator/type-validator';
-import { canByType, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
+import { canByType, errorTypeValidValueSpec, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired, typeValidationSpec, typeValidValueSpec } from '@code-core/test';
+import { AddValidate, validateType } from '../validator/decorator/type-validator';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '@code-core/common';
 import { AbstractStringType, StringTypeOptional, StringTypeRequired } from './index';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 describe('AbstractStringType', () => {
   describe('StringTypeRequired', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(StringTypeRequired, excludeItems(canByType(PrimitivesKeys.STRING), ['']), 'string');
+      typeValidValueSpec(validateType, StringTypeRequired, excludeItems(canByType(PrimitivesKeys.STRING), ['']), 'string');
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -17,7 +16,7 @@ describe('AbstractStringType', () => {
         isNotEmpty: 'StringTypeRequired should not be empty',
         typePrimitive: 'Validation Error: Expected a valid String, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(StringTypeRequired, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, StringTypeRequired, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByTypeRequired(PrimitivesKeys.STRING, PrimitivesKeys.UUID, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN),
@@ -34,7 +33,7 @@ describe('AbstractStringType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(StringTypeRequired, {
+      typeValidationSpec(validateType, StringTypeRequired, {
         value: [['áéíóú', 'áéíóú']],
         isNull: [['áéíóú', false]],
         toString: [['áéíóú', 'áéíóú']],
@@ -43,14 +42,14 @@ describe('AbstractStringType', () => {
   });
   describe('StringTypeOptional', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(StringTypeOptional, canByType(PrimitivesKeys.STRING, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'string');
+      typeValidValueSpec(validateType, StringTypeOptional, canByType(PrimitivesKeys.STRING, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'string');
     });
     describe('Invalid Values', () => {
       const errorData = {
         canBeString: 'StringTypeOptional must be a string',
         typePrimitive: 'Validation Error: Expected a valid String, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(StringTypeOptional, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, StringTypeOptional, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -59,7 +58,7 @@ describe('AbstractStringType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(StringTypeOptional, {
+      typeValidationSpec(validateType, StringTypeOptional, {
         value: [
           ['áéíóú', 'áéíóú'],
           [null, null],
@@ -82,7 +81,7 @@ describe('AbstractStringType', () => {
     class ValueObjectString extends AbstractStringType {}
 
     describe('Valid Values', () => {
-      typeValidValueSpec(ValueObjectString, ['abc', 'áéíóú'], 'string');
+      typeValidValueSpec(validateType, ValueObjectString, ['abc', 'áéíóú'], 'string');
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -91,7 +90,7 @@ describe('AbstractStringType', () => {
         minLength: 'ValueObjectString must be longer than or equal to 2 characters',
         typePrimitive: 'Validation Error: Expected a valid String, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(ValueObjectString, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, ValueObjectString, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.STRING, PrimitivesKeys.NUMBER, PrimitivesKeys.BOOLEAN, PrimitivesKeys.UUID, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -109,7 +108,7 @@ describe('AbstractStringType', () => {
     });
 
     describe('Compare values', () => {
-      typeValidationSpec(ValueObjectString, {
+      typeValidationSpec(validateType, ValueObjectString, {
         value: [
           ['abc', 'abc'],
           ['áéíóú', 'áéíóú'],

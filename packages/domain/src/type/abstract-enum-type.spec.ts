@@ -1,9 +1,9 @@
-import { AddValidate } from '../validator/decorator/type-validator';
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { allTypesRequired, canByType, nullables, PrimitivesKeys, skipByType } from '../common/test/values-test';
+import { AddValidate, validateType } from '../validator/decorator/type-validator';
+import { allTypesRequired, canByType, errorTypeValidValueSpec, nullables, PrimitivesKeys, skipByType, typeValidationSpec, typeValidValueSpec } from '@code-core/test';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '@code-core/common';
 import { AbstractEnumType } from './abstract-enum-type';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 enum StatusString {
   UP = 'up',
@@ -27,7 +27,7 @@ export class EnumTypeOptional extends AbstractEnumType<StatusString, null> {
 describe('AbstractEnumType', () => {
   describe('EnumTypeRequired', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(EnumTypeRequired, [StatusString.UP, StatusString.DOWN, 'up', 'down']);
+      typeValidValueSpec(validateType, EnumTypeRequired, [StatusString.UP, StatusString.DOWN, 'up', 'down']);
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -35,7 +35,7 @@ describe('AbstractEnumType', () => {
         isNotEmpty: 'EnumTypeRequired should not be empty',
         typePrimitive: 'Validation Error: Expected one of [up, down], but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(EnumTypeRequired, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, EnumTypeRequired, errorData, [
         {
           constraints: ['typePrimitive'],
           values: allTypesRequired(),
@@ -48,7 +48,7 @@ describe('AbstractEnumType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(EnumTypeRequired, {
+      typeValidationSpec(validateType, EnumTypeRequired, {
         value: [
           [StatusString.UP, 'up'],
           [StatusString.DOWN, 'down'],
@@ -65,14 +65,14 @@ describe('AbstractEnumType', () => {
   });
   describe('EnumTypeOptional', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(EnumTypeOptional, [StatusString.UP, StatusString.DOWN, 'up', 'down', ...canByType(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED)]);
+      typeValidValueSpec(validateType, EnumTypeOptional, [StatusString.UP, StatusString.DOWN, 'up', 'down', ...canByType(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED)]);
     });
     describe('Invalid Values', () => {
       const errorData = {
         isEnum: 'EnumTypeOptional must be one of the following values: up, down',
         typePrimitive: 'Validation Error: Expected one of [up, down], but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(EnumTypeOptional, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, EnumTypeOptional, errorData, [
         {
           constraints: ['typePrimitive'],
           values: skipByType(PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED),
@@ -81,7 +81,7 @@ describe('AbstractEnumType', () => {
       ]);
     });
     describe('compare values', () => {
-      typeValidationSpec(EnumTypeOptional, {
+      typeValidationSpec(validateType, EnumTypeOptional, {
         value: [
           [StatusString.UP, 'up'],
           [StatusString.DOWN, 'down'],

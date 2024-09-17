@@ -1,6 +1,5 @@
-import { testValidation } from '../../common/test/util-test';
+import { canByType, excludeItems, PrimitivesKeys, skipByType, testValidation } from '@code-core/test';
 import { BooleanValidator } from './boolean.validator';
-import { canByType, excludeItems, PrimitivesKeys, skipByType } from '../../common/test/values-test';
 
 describe('BooleanValidator', () => {
   describe('canBeBoolean', () => {

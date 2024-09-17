@@ -1,13 +1,24 @@
-import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { canByType, excludeItems, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '@code-core/common';
 import { BooleanTypeOptional, BooleanTypeRequired } from './index';
+import {
+  canByType,
+  errorTypeValidValueSpec,
+  excludeItems,
+  nullables,
+  PrimitivesKeys,
+  skipByType,
+  skipByTypeRequired,
+  typeValidationSpec,
+  typeValidValueSpec,
+} from '@code-core/test';
+import { validateType } from '../validator/decorator/type-validator';
+import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
 
 describe('AbstractBooleanType', () => {
   describe('BooleanTypeRequired', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(BooleanTypeRequired, canByType(PrimitivesKeys.BOOLEAN), 'boolean');
+      typeValidValueSpec(validateType, BooleanTypeRequired, canByType(PrimitivesKeys.BOOLEAN), 'boolean');
     });
     describe('Invalid Values', () => {
       const errorData = {
@@ -15,7 +26,7 @@ describe('AbstractBooleanType', () => {
         isNotEmpty: 'BooleanTypeRequired should not be empty',
         typePrimitive: 'Validation Error: Expected a valid Boolean, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(BooleanTypeRequired, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, BooleanTypeRequired, errorData, [
         {
           constraints: ['typePrimitive'],
           values: excludeItems(skipByTypeRequired(PrimitivesKeys.BOOLEAN), [1, 0]),
@@ -28,7 +39,7 @@ describe('AbstractBooleanType', () => {
       ]);
     });
     describe('Compare values', () => {
-      typeValidationSpec(BooleanTypeRequired, {
+      typeValidationSpec(validateType, BooleanTypeRequired, {
         value: [
           [true, true],
           ['true', true],
@@ -45,14 +56,14 @@ describe('AbstractBooleanType', () => {
   });
   describe('BooleanTypeOptional', () => {
     describe('Valid Values', () => {
-      typeValidValueSpec(BooleanTypeOptional, canByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'boolean');
+      typeValidValueSpec(validateType, BooleanTypeOptional, canByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'boolean');
     });
     describe('Invalid Values', () => {
       const errorData = {
         canBeBoolean: 'BooleanTypeOptional must be a boolean',
         typePrimitive: 'Validation Error: Expected a valid Boolean, but received {{$1}}.',
       };
-      errorTypeValidValueSpec<keyof typeof errorData>(BooleanTypeOptional, errorData, [
+      errorTypeValidValueSpec<keyof typeof errorData>(validateType, TypePrimitiveException, BooleanTypeOptional, errorData, [
         {
           constraints: ['typePrimitive'],
           values: excludeItems(skipByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), [0, 1]),
@@ -61,7 +72,7 @@ describe('AbstractBooleanType', () => {
       ]);
     });
     describe('compare values', () => {
-      typeValidationSpec(BooleanTypeOptional, {
+      typeValidationSpec(validateType, BooleanTypeOptional, {
         value: [
           [true, true],
           [null, null],
