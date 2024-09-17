@@ -58,7 +58,7 @@
       }
     }
   },
-  "gitHead": "d10519d79e053b0e4b6ae9ba3a8e6cd0da8d4356",
+  "gitHead": "ec24f58d7c943a184f815076751029df7294f689",
   "dependencies": {
     "@code-core/common": "^0.0.6",
     "ajv": "^8.16.0",
