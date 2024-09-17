@@ -14,6 +14,9 @@ test:
 build:
 	npm run build
 
+version:
+	npx lerna version
+
 publish:
 	npx lerna publish from-package --yes
 
