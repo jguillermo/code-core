@@ -1,6 +1,6 @@
 {
   "name": "@code-core/domain",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "keywords": [
     "DDD",
     "node",
@@ -60,11 +60,11 @@
   },
   "gitHead": "be6fd777c043365c7134ce950db5e2f5d70ef4bc",
   "dependencies": {
+    "@code-core/common": "file:../common",
     "ajv": "^8.16.0",
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
-    "uuid": "^9.0.1",
-    "@code-core/common": "file:../common"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@code-core/test": "file:../test"
