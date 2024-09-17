@@ -1,6 +1,6 @@
 {
   "name": "@code-core/test",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "keywords": [
     "DDD",
     "node",
@@ -60,6 +60,6 @@
   },
   "gitHead": "d10519d79e053b0e4b6ae9ba3a8e6cd0da8d4356",
   "dependencies": {
-    "@code-core/common": "^0.0.5"
+    "@code-core/common": "^0.0.6"
   }
 }
