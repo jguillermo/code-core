@@ -46,9 +46,6 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "moduleNameMapper": {
-      "^@code-core/(.*)": "<rootDir>/../../$1/src/index.ts"
-    },
     "coverageDirectory": "./../coverage",
     "testEnvironment": "node",
     "collectCoverage": false,
