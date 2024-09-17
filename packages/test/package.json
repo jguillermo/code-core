@@ -58,8 +58,8 @@
       }
     }
   },
-  "gitHead": "be6fd777c043365c7134ce950db5e2f5d70ef4bc",
+  "gitHead": "d10519d79e053b0e4b6ae9ba3a8e6cd0da8d4356",
   "dependencies": {
-    "@code-core/common": "file:../common"
+    "@code-core/common": "^0.0.5"
   }
 }
