@@ -71,12 +71,12 @@ describe('Primitive Types', () => {
       }
     }
 
-    @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
-    class EnumTypeOptional extends AbstractEnumType<StatusString, null> {
-      protected getEnum(): Record<string, StatusString> {
-        return StatusString;
-      }
-    }
+    // @AddValidate([{ validator: 'IsEnum', value: StatusString }, { validator: 'IsOptional' }])
+    // class EnumTypeOptional extends AbstractEnumType<StatusString, null> {
+    //   protected getEnum(): Record<string, StatusString> {
+    //     return StatusString;
+    //   }
+    // }
 
     expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<string>();
     //todo, queda pendiente mostar el tipo corectamente, cuando sea enum optional
@@ -100,12 +100,12 @@ describe('Primitive Types', () => {
       }
     }
 
-    @AddValidate([{ validator: 'IsEnum', value: StatusNumber }, { validator: 'IsOptional' }])
-    class EnumTypeOptional extends AbstractEnumType<StatusNumber, null> {
-      protected getEnum(): any {
-        return StatusNumber;
-      }
-    }
+    // @AddValidate([{ validator: 'IsEnum', value: StatusNumber }, { validator: 'IsOptional' }])
+    // class EnumTypeOptional extends AbstractEnumType<StatusNumber, null> {
+    //   protected getEnum(): any {
+    //     return StatusNumber;
+    //   }
+    // }
 
     expectTypeOf<PrimitiveType<EnumTypeRequired>>().toEqualTypeOf<number>();
     // expectTypeOf<PrimitiveType<EnumTypeOptional>>().toEqualTypeOf<number | null>();

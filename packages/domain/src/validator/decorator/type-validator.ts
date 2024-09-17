@@ -49,7 +49,7 @@ function replacePropertyWithClassName(errors: ValidationError[]): ValidationErro
       const property = error.property;
       if (error.constraints) {
         Object.keys(error.constraints).forEach((key) => {
-          // @ts-ignore
+          // @ts-expect-error: dynamic modify in runtime
           error.constraints[key] = error.constraints[key].replace(new RegExp(property, 'g'), className);
         });
       }
@@ -63,7 +63,7 @@ function getClassHierarchy(klass: any): any[] {
   let currentClass = klass;
 
   while (currentClass && currentClass !== Function.prototype) {
-    // @ts-ignore
+    // @ts-expect-error: dynamic modify in runtime
     hierarchy.push(currentClass);
     currentClass = Object.getPrototypeOf(currentClass);
   }

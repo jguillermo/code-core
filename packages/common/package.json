@@ -28,8 +28,8 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write ."
   },
   "jest": {

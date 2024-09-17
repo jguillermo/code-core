@@ -10,7 +10,7 @@ export class TestException extends AbstractException {
 describe('Exceptions', () => {
   describe('AbstractException', () => {
     it('should create an instance with correct properties', () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      //const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const message = 'Test message';
       const exception = new TestException(message, [ExceptionCode.DomainException]);
 
