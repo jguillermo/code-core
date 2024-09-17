@@ -1,6 +1,6 @@
 # **Archi Code**
 
-# types
+# types2
 
 ## boolean
 
