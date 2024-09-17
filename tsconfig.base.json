@@ -19,8 +19,5 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "baseUrl": "."
-  },
-  "include": [
-    "packages/**/*"
-  ]
+  }
 }
