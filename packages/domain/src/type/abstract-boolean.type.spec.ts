@@ -1,8 +1,8 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
 import { canByType, excludeItems, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
-import { BooleanTypeOptional, BooleanTypeRequired } from '@code-core/domain';
 import { universalToString } from '../common/utils/string/universal-to-string';
+import { BooleanTypeOptional, BooleanTypeRequired } from './index';
 
 describe('AbstractBooleanType', () => {
   describe('BooleanTypeRequired', () => {

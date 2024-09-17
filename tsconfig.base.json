@@ -18,12 +18,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "baseUrl": ".",
-    "paths": {
-      "@code-core/domain": [
-        "packages/domain/src/index.ts"
-      ]
-    }
+    "baseUrl": "."
   },
   "include": [
     "packages/**/*"

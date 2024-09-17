@@ -1,9 +1,10 @@
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
-import { AbstractStringType, StringTypeOptional, StringTypeRequired } from '@code-core/domain';
+
 import { AddValidate } from '../validator/decorator/type-validator';
 import { canByType, excludeItems, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '../common/utils/string/universal-to-string';
+import { AbstractStringType, StringTypeOptional, StringTypeRequired } from './index';
 
 describe('AbstractStringType', () => {
   describe('StringTypeRequired', () => {

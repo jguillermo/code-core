@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { StringValidator } from '@code-core/domain';
+import { StringValidator } from '../../primitive-validator/string.validator';
 
 export function CanBeStringValidator(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {

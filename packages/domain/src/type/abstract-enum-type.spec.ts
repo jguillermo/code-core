@@ -1,9 +1,9 @@
-import { AbstractEnumType } from '@code-core/domain';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
 import { allTypesRequired, canByType, nullables, PrimitivesKeys, skipByType } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '../common/utils/string/universal-to-string';
+import { AbstractEnumType } from './abstract-enum-type';
 
 enum StatusString {
   UP = 'up',

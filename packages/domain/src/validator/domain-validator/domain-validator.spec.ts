@@ -1,8 +1,8 @@
 import { validate, Validate } from 'class-validator';
 
 import { DomainValidator } from './domain-validator';
-import { StringTypeRequired } from '@code-core/domain';
 import { AddValidate } from '../decorator/type-validator';
+import { StringTypeRequired } from '../../type';
 
 @AddValidate([{ validator: 'MinLength', value: 5 }])
 class PropertiesValidateTest extends StringTypeRequired {}

@@ -1,5 +1,5 @@
-import { ValidatorInterface } from '@code-core/domain';
 import { universalToString } from '../common/utils/string/universal-to-string';
+import { ValidatorInterface } from '../validator';
 
 export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
   protected _value: R extends null ? T | null : T;

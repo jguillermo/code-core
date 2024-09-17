@@ -1,5 +1,7 @@
 import { expectTypeOf } from 'expect-type';
 import { PrimitiveType } from './primitive-type';
+import { AddValidate } from '../validator/decorator/type-validator';
+import { AbstractJsonType } from '../type/abstract-json-type';
 import {
   AbstractEnumType,
   BooleanTypeOptional,
@@ -13,9 +15,7 @@ import {
   StringTypeRequired,
   UuidTypeOptional,
   UuidTypeRequired,
-} from '@code-core/domain';
-import { AddValidate } from '../validator/decorator/type-validator';
-import { AbstractJsonType } from '../type/abstract-json-type';
+} from '../type';
 
 describe('Primitive Types', () => {
   it('booleanType', () => {

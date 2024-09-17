@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
-import { NumberValidator } from '@code-core/domain';
+import { NumberValidator } from '../../primitive-validator/number.validator';
 
 export function CanBeNumberValidator(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {

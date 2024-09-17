@@ -1,6 +1,7 @@
-import { AggregateRoot, IdType, NumberTypeOptional, StringTypeRequired } from '@code-core/domain';
 import { PrimitiveAggregate } from './primitive-aggregate';
 import { expectTypeOf } from 'expect-type';
+import { AggregateRoot } from '../aggregate/aggregate-root';
+import { IdType, NumberTypeOptional, StringTypeRequired } from '../type';
 
 describe('Primitive aggregate', () => {
   it('id readonly', () => {

@@ -1,6 +1,6 @@
-import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '@code-core/domain';
 import { AbstractJsonType } from '../type/abstract-json-type';
 import { AbstractType } from '../type/abstract-type';
+import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '../type';
 
 type Nullable<T> = T | null;
 
@@ -28,15 +28,3 @@ export type PrimitiveType<T> =
   T extends Array<infer U>
     ? PrimitiveType<U>[]
     : BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;
-
-// export type PrimitiveType<T> = T extends PrimitiveTypes
-//   ? T
-//   : T extends { value: infer U }
-//     ? PrimitiveType<U>
-//     : T extends Array<{ value: infer U }>
-//       ? U[]
-//       : T extends Array<infer U>
-//         ? Array<PrimitiveType<U>>
-//         : T extends { [K in keyof Properties<T>]: infer U }
-//           ? { [K in keyof Properties<T>]: PrimitiveType<U> }
-//           : never;

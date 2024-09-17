@@ -1,8 +1,8 @@
-import { DateTypeOptional, DateTypeRequired } from '@code-core/domain';
 import { errorTypeValidValueSpec, typeValidationSpec, typeValidValueSpec } from '../common/test/util-test';
 import { canByType, nullables, PrimitivesKeys, skipByType, skipByTypeRequired } from '../common/test/values-test';
 import { expectTypeOf } from 'expect-type';
 import { universalToString } from '../common/utils/string/universal-to-string';
+import { DateTypeOptional, DateTypeRequired } from './index';
 
 describe('AbstractDateType', () => {
   describe('DateTypeRequired', () => {

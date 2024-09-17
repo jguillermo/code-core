@@ -1,4 +1,4 @@
-import { EventBase } from '@code-core/domain';
+import { EventBase } from '../event/event-base';
 
 export abstract class AggregateRoot {
   private domainEvents: EventBase[] = [];

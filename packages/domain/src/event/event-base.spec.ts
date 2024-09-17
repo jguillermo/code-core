@@ -1,4 +1,4 @@
-import { EventBase } from '@code-core/domain';
+import { EventBase } from './event-base';
 
 class TestEventBase extends EventBase {
   eventName(): string {
