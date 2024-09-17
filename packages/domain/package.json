@@ -41,7 +41,7 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
@@ -64,7 +64,9 @@
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
     "uuid": "^9.0.1",
-    "@code-core/common": "file:../common",
+    "@code-core/common": "file:../common"
+  },
+  "devDependencies": {
     "@code-core/test": "file:../test"
   }
 }
