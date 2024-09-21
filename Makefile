@@ -6,6 +6,7 @@ main-script:
 	npm run format
 	npm run lint:fix
 	npm run lint
+	npm run build
 	make test
 
 test:
