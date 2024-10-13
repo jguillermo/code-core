@@ -152,4 +152,16 @@ describe('AbstractNumberType', () => {
       expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
     });
   });
+
+  describe('Type Validation', () => {
+    it('enum validation', () => {
+      @AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'Min', value: 100 }, { validator: 'Max', value: 200 }, { validator: 'IsPositive' }])
+      class TestNumberTypeRequired extends AbstractNumberType {}
+
+      const instance = new TestNumberTypeRequired(-4200);
+      expect(instance.isValid()).toEqual(false);
+      expect(instance.validatorMessage()).toEqual('must not be less than 100, must be a positive number');
+      expect(instance.validatorMessage('|')).toEqual('must not be less than 100| must be a positive number');
+    });
+  });
 });

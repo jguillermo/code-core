@@ -1,5 +1,6 @@
 import { universalToString } from '@code-core/common';
 import { ValidatorInterface } from '../validator';
+import { validateSync } from 'class-validator';
 
 export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
   protected _value: R extends null ? T | null : T;
@@ -21,11 +22,23 @@ export abstract class AbstractType<T, R extends null | undefined = undefined> im
   }
 
   isValid(): boolean {
-    return true;
+    return validateSync(this).length === 0;
   }
 
-  validatorMessage(): string {
-    return 'value ($value) is not valid.';
+  validatorMessage(separate: string = ','): string {
+    const errors = validateSync(this);
+    return errors
+      .map((error) => {
+        if (error.constraints) {
+          return Object.values(error.constraints)
+            .map((message) => {
+              return message.replace(`${error.property} `, '');
+            })
+            .join(`${separate} `);
+        }
+        return '';
+      })
+      .join(', ');
   }
 
   get toString(): string {
