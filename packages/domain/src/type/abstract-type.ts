@@ -1,8 +1,8 @@
 import { universalToString } from '@code-core/common';
-import { ValidatorInterface } from '../validator';
+import { TypeValidatorInterface } from '../validator';
 import { validateSync } from 'class-validator';
 
-export abstract class AbstractType<T, R extends null | undefined = undefined> implements ValidatorInterface {
+export abstract class AbstractType<T, R extends null | undefined = undefined> implements TypeValidatorInterface {
   protected _value: R extends null ? T | null : T;
 
   constructor(value: R extends null ? T | null : T) {
@@ -25,20 +25,23 @@ export abstract class AbstractType<T, R extends null | undefined = undefined> im
     return validateSync(this).length === 0;
   }
 
-  validatorMessage(separate: string = ','): string {
+  validatorMessageObj(customReplacement: string = ''): object {
     const errors = validateSync(this);
-    return errors
-      .map((error) => {
-        if (error.constraints) {
-          return Object.values(error.constraints)
-            .map((message) => {
-              return message.replace(`${error.property} `, '');
-            })
-            .join(`${separate} `);
-        }
-        return '';
-      })
-      .join(', ');
+    const data = errors.map((error) => {
+      if (error.constraints) {
+        return Object.entries(error.constraints)
+          .map(([key, message]) => {
+            return { [key]: message.replace('_value ', customReplacement ? `${customReplacement} ` : '') };
+          })
+          .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+      }
+      return {};
+    });
+    return data.length > 0 ? data[0] : {};
+  }
+
+  validatorMessageStr(separator: string = ',', customReplacement: string = ''): string {
+    return Object.values(this.validatorMessageObj(customReplacement)).join(`${separator} `);
   }
 
   get toString(): string {

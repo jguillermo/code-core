@@ -1,6 +1,6 @@
 import { ValidationArguments, ValidationError, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 import { validateType } from '../decorator/type-validator';
-import { universalToString } from '@code-core/common';
+import { TypeValidatorInterface } from '../primitive-validator/type-validator-interface';
 
 @ValidatorConstraint({ name: 'domainValidator', async: false })
 export class DomainValidator implements ValidatorConstraintInterface {
@@ -11,8 +11,8 @@ export class DomainValidator implements ValidatorConstraintInterface {
 
   validate(value: any, args: ValidationArguments): boolean {
     try {
-      const errors = DomainValidator.factoryType(value, args.constraints[0]);
-      return errors.length === 0;
+      const type: TypeValidatorInterface = new args.constraints[0](value);
+      return type.isValid();
     } catch (e) {
       return false;
     }
@@ -20,8 +20,8 @@ export class DomainValidator implements ValidatorConstraintInterface {
 
   defaultMessage(args: ValidationArguments): string {
     try {
-      const errors = DomainValidator.factoryType(args.value, args.constraints[0]);
-      return errors.map((error) => universalToString(error.constraints)).join(', ');
+      const type: TypeValidatorInterface = new args.constraints[0](args.value);
+      return type.validatorMessageStr();
     } catch (e) {
       return 'Validation error';
     }

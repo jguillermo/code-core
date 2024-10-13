@@ -5,22 +5,21 @@ import { AddValidate } from '../decorator/type-validator';
 import { StringTypeRequired } from '../../type';
 
 @AddValidate([{ validator: 'MinLength', value: 5 }])
-class PropertiesValidateTest extends StringTypeRequired {}
+class CourseTitle extends StringTypeRequired {}
 
 class EntityValidateTest {
-  @Validate(DomainValidator, [PropertiesValidateTest])
+  @Validate(DomainValidator, [CourseTitle])
   public name?: string;
 }
 
-describe('validate DomainValidator PropertiesValidateTest', () => {
+describe('validate DomainValidator CourseTitle', () => {
   describe('primitive properties', () => {
     it('null', async () => {
       const object = new EntityValidateTest();
       const errors = await validate(object);
       expect(errors.length).toEqual(1);
       expect(errors[0].constraints).toEqual({
-        domainValidator:
-          '{"canBeString":"PropertiesValidateTest must be a string","isNotEmpty":"PropertiesValidateTest should not be empty","minLength":"PropertiesValidateTest must be longer than or equal to 5 characters"}',
+        domainValidator: 'must be a string, should not be empty, must be longer than or equal to 5 characters',
       });
     });
     it('invalid value 123', async () => {
@@ -29,7 +28,7 @@ describe('validate DomainValidator PropertiesValidateTest', () => {
       const errors = await validate(object);
       expect(errors.length).toEqual(1);
       expect(errors[0].constraints).toEqual({
-        domainValidator: '{"minLength":"PropertiesValidateTest must be longer than or equal to 5 characters"}',
+        domainValidator: 'must be longer than or equal to 5 characters',
       });
     });
     it('valid value', async () => {

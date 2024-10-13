@@ -121,7 +121,7 @@ describe('Abstract Type', () => {
 
     it('valid default message', () => {
       const object = new TestBaseType();
-      expect(object.validatorMessage()).toEqual('');
+      expect(object.validatorMessageStr()).toEqual('');
     });
   });
 });

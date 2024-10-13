@@ -160,8 +160,8 @@ describe('AbstractNumberType', () => {
 
       const instance = new TestNumberTypeRequired(-4200);
       expect(instance.isValid()).toEqual(false);
-      expect(instance.validatorMessage()).toEqual('must not be less than 100, must be a positive number');
-      expect(instance.validatorMessage('|')).toEqual('must not be less than 100| must be a positive number');
+      expect(instance.validatorMessageStr()).toEqual('must not be less than 100, must be a positive number');
+      expect(instance.validatorMessageStr('|')).toEqual('must not be less than 100| must be a positive number');
     });
   });
 });
