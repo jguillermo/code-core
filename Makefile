@@ -46,6 +46,8 @@ combine:
 	fi; \
 	echo "Copying $$OUTPUT_FILE to Desktop"; \
 	mv $$OUTPUT_FILE $$DESTINATION;
+
+
 help:
 	@printf "\033[31m%-16s %-59s %s\033[0m\n" "Target" "Help" "Usage"; \
 	printf "\033[31m%-16s %-59s %s\033[0m\n" "------" "----" "-----"; \
