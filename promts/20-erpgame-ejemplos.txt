@@ -1,0 +1,477 @@
+Ejemplo de Código (Contexto de Gestión de Usuarios):
+
+```typescript
+// Bounded Context: UserManagement
+// Aggregate: User
+
+export class User {
+    // Identificador único del usuario
+  userId: string;
+
+  // Nivel 1: Nombre completo del usuario
+  fullName: string;
+
+  // Nivel 1: Fecha de creación del usuario
+  creationDate: Date;
+
+  // Nivel 1: Identificador del administrador que creó al usuario
+  creatorAdminId: string;
+
+  // Nivel 2: Correo electrónico del usuario
+  email: string;
+
+  // Nivel 3: Fecha de última actualización del usuario
+  lastUpdatedDate: Date;
+
+  constructor(
+    userId: string,
+    fullName: string,
+    creationDate: Date,
+    creatorAdminId: string,
+    email?: string, // Nivel 2
+    lastUpdatedDate?: Date // Nivel 3
+  ) {
+    this.userId = userId;
+    this.fullName = fullName;
+    this.creationDate = creationDate;
+    this.creatorAdminId = creatorAdminId;
+    if (email) this.email = email; // Nivel 2
+    if (lastUpdatedDate) this.lastUpdatedDate = lastUpdatedDate; // Nivel 3
+  }
+  // Métodos de negocio relacionados con el usuario pueden ir aquí
+}
+
+// Repositorio abstracto: UserRepository
+// Descripción: Maneja la persistencia del Aggregate "User" sin implementar detalles de infraestructura.
+export abstract class UserRepository {
+  // Método para persistir un usuario
+  abstract persist(user: User): void;
+
+  // Método para recuperar un usuario por su ID
+  abstract findById(userId: string): User | null;
+
+  // Nivel 2: Método para buscar un usuario por su correo electrónico
+  abstract findByEmail(email: string): User | null;
+}
+// Caso de Uso: RegisterNewEmployee
+// Descripción: Registra a un nuevo empleado en el sistema, coordinando las operaciones necesarias.
+export class RegisterNewEmployee {
+  constructor(private userRepository: UserRepository) {}
+
+  execute(command: RegisterNewEmployeeCommand): void {
+    const { userId, fullName, creatorAdminId, email } = command;
+    // Crear un nuevo usuario
+    const creationDate = new Date();
+    const user = new User(userId, fullName, creationDate, creatorAdminId, email);
+    // Guardar el usuario utilizando el repositorio
+    this.userRepository.persist(user);
+  }
+}
+// DTO para el caso de uso RegisterNewEmployee
+export interface RegisterNewEmployeeCommand {
+  userId: string;
+  fullName: string;
+  creatorAdminId: string;
+  email?: string; // Nivel 2
+}
+```
+Código de test para el Aggregate `Asset`:
+
+```typescript
+import { Asset } from './Asset';
+
+describe('Asset', () => {
+    it('should create a new asset with basic information', () => {
+        const asset = new Asset(
+            'asset-001',
+            'Camión de reparto',
+            new Date('2023-01-01'),
+            40000
+        );
+
+        expect(asset.assetId).toBe('asset-001');
+        expect(asset.name).toBe('Camión de reparto');
+        expect(asset.acquisitionDate).toEqual(new Date('2023-01-01'));
+        expect(asset.value).toBe(40000);
+    });
+
+    it('should create an asset with depreciation and associated costs at level 2', () => {
+        const asset = new Asset(
+            'asset-002',
+            'Equipo de oficina',
+            new Date('2022-06-15'),
+            15000,
+            'lineal',
+            10,
+            [1000, 500]
+        );
+
+        expect(asset.assetId).toBe('asset-002');
+        expect(asset.depreciationMethod).toBe('lineal');
+        expect(asset.depreciationRate).toBe(10);
+        expect(asset.associatedCosts).toContain(1000);
+        expect(asset.associatedCosts).toContain(500);
+    });
+});
+```
+
+---
+
+Ejemplo adicional de contexto (Contexto de Gestión Financiera):
+
+```typescript
+// Bounded Context: FinancialManagement
+// Aggregate: Account
+
+export class Account {
+  // Nivel 1: Identificador único de la cuenta
+  accountId: string;
+
+  // Nivel 1: Nombre descriptivo de la cuenta
+  accountName: string;
+
+  // Nivel 1: Tipo de cuenta (Real o Virtual)
+  accountType: 'Real' | 'Virtual';
+
+  // Nivel 1: Moneda en la que opera la cuenta
+  currency: string;
+
+  // Nivel 1: Saldo de la cuenta (Solo para cuentas reales)
+  balance: number;
+
+  // Nivel 2: Entidad financiera asociada (solo para cuentas bancarias o tarjetas de crédito)
+  financialEntity?: string;
+
+  // Nivel 2: Número de cuenta (solo para cuentas reales)
+  accountNumber?: string;
+
+  // Nivel 2: Fecha de creación de la cuenta
+  creationDate: Date;
+
+  // Nivel 2: Última fecha de actualización de la cuenta
+  lastUpdatedDate?: Date;
+
+  // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
+  tags?: string[];
+
+  constructor(
+    accountId: string,
+    accountName: string,
+    accountType: 'Real' | 'Virtual',
+    currency: string,
+    balance: number = 0,
+    financialEntity?: string, // Nivel 2
+    accountNumber?: string, // Nivel 2
+    creationDate?: Date, // Nivel 2
+    lastUpdatedDate?: Date, // Nivel 2
+    tags?: string[] // Nivel 3
+  ) {
+    this.accountId = accountId;
+    this.accountName = accountName;
+    this.accountType = accountType;
+    this.currency = currency;
+    this.balance = balance;
+    this.financialEntity = financialEntity;
+    this.accountNumber = accountNumber;
+    this.creationDate = creationDate || new Date();
+    this.lastUpdatedDate = lastUpdatedDate;
+    this.tags = tags || [];
+  }
+
+  // Método de negocio para agregar fondos a la cuenta (para cuentas reales)
+  addFunds(amount: number): void {
+    if (this.accountType === 'Real') {
+      this.balance += amount;
+      this.updateLastUpdatedDate();
+    } else {
+      throw new Error('Cannot add funds to a virtual account');
+    }
+  }
+
+  // Método de negocio para retirar fondos de la cuenta (para cuentas reales)
+  withdrawFunds(amount: number): void {
+    if (this.accountType === 'Real') {
+      if (this.balance >= amount) {
+        this.balance -= amount;
+        this.updateLastUpdatedDate();
+      } else {
+        throw new Error('Insufficient funds');
+      }
+    } else {
+      throw new Error('Cannot withdraw funds from a virtual account');
+    }
+  }
+
+  // Nivel 2: Actualizar la fecha de la última modificación
+  private updateLastUpdatedDate(): void {
+    this.lastUpdatedDate = new Date();
+  }
+
+  // Nivel 3: Agregar etiquetas a la cuenta para facilitar el análisis
+  addTag(tag: string): void {
+    if (!this.tags.includes(tag)) {
+      this.tags.push(tag);
+    }
+  }
+
+  // Nivel 3: Eliminar etiquetas de la cuenta
+  removeTag(tag: string): void {
+    this.tags = this.tags.filter(t => t !== tag);
+  }
+}
+```
+
+Aggregate `Asset` en el contexto de gestión financiera:
+
+```typescript
+// Bounded Context: FinancialManagement
+// Aggregate: Asset
+
+export class Asset {
+  // Nivel 1: Identificador único del activo
+  assetId: string;
+
+  // Nivel 1: Nombre descriptivo del activo
+  assetName: string;
+
+  // Nivel 1: Fecha de adquisición del activo
+  acquisitionDate: Date;
+
+  // Nivel 1: Valor de adquisición del activo
+  acquisitionValue: number;
+
+  // Nivel 2: Vida útil estimada del activo (en años)
+  usefulLife: number;
+
+  // Nivel 2: Método de depreciación
+  depreciationMethod: 'lineal' | 'saldoDecreciente';
+
+  // Nivel 2: Valor residual del activo
+  residualValue: number;
+
+  // Nivel 2: Depreciación anual calculada
+  annualDepreciation: number;
+
+  // Nivel 2: Gastos asociados (como seguros y mantenimiento)
+  associatedCosts: number[];
+
+  // Nivel 3: Fecha de la última depreciación calculada
+  lastDepreciationDate: Date;
+
+  constructor(
+    assetId: string,
+    assetName: string,
+    acquisitionDate: Date,
+    acquisitionValue: number,
+    usefulLife: number = 0,
+    depreciationMethod: 'lineal' | 'saldoDecreciente' = 'lineal',
+    residualValue: number = 0,
+    associatedCosts: number[] = [],
+    lastDepreciationDate: Date = new Date() // Nivel 3
+  ) {
+    this.assetId = assetId;
+    this.assetName = assetName;
+    this.acquisitionDate = acquisitionDate;
+    this.acquisitionValue = acquisitionValue;
+    this.usefulLife = usefulLife;
+    this.depreciationMethod = depreciationMethod;
+    this.residualValue = residualValue;
+    this.associatedCosts = associatedCosts;
+    this.annualDepreciation = this.calculateDepreciation(); // Cálculo inicial
+    this.lastDepreciationDate = lastDepreciationDate; // Nivel 3
+  }
+
+  // Nivel 2: Método para calcular la depreciación anual
+  calculateDepreciation(): number {
+    if (this.depreciationMethod === 'lineal') {
+      return (this.acquisitionValue - this.residualValue) / this.usefulLife;
+    }
+    // Otras fórmulas de depreciación pueden agregarse aquí
+    return 0;
+  }
+
+  // Nivel 3: Registrar una nueva depreciación, actualizando la fecha de la última depreciación
+  registerDepreciation(): void {
+    this.lastDepreciationDate = new Date();
+  }
+
+  // Nivel 2: Método para agregar gastos asociados al activo
+  addAssociatedCost(cost: number): void {
+    this.associatedCosts.push(cost);
+  }
+}
+```
+
+Aggregate `Transaction` para el contexto de gestión financiera:
+
+```typescript
+// Aggregate: Transaction
+
+export class Transaction {
+  // Nivel 1: Identificador único de la transacción
+  transactionId: string;
+
+  // Nivel 1: Fecha de la transacción
+  transactionDate: Date;
+
+  // Nivel 1: Cuenta de origen (solo identificador para no acoplar con el aggregate Account)
+  fromAccountId: string;
+
+  // Nivel 1: Cuenta de destino (solo identificador para no acoplar con el aggregate Account)
+  toAccountId: string;
+
+  // Nivel 1: Monto de la transacción
+  amount: number;
+
+  // Nivel 1: Descripción de la transacción
+  description: string;
+
+  // Nivel 2: Categoría de la transacción (ej. "Ventas", "Mantenimiento", "Nómina")
+  category: string;
+
+  // Nivel 3: Etiquetas adicionales para filtrar las transacciones
+  tags?: string[];
+
+  constructor(
+    transactionId: string,
+    transactionDate: Date,
+    fromAccountId: string,
+    toAccountId: string,
+    amount: number,
+    description: string,
+    category: string, // Nivel 2
+    tags?: string[] // Nivel 3
+  ) {
+    this.transactionId = transactionId;
+    this.transactionDate = transactionDate;
+    this.fromAccountId = fromAccountId;
+    this.toAccountId = toAccountId;
+    this.amount = amount;
+    this.description = description;
+    this.category = category;
+    this.tags = tags || [];
+  }
+}
+```
+
+Caso de Uso `TransferMoney`:
+
+```typescript
+// Caso de uso: TransferMoney
+// Descripción: Transfiere dinero entre dos cuentas, coordinando la lógica de negocio.
+
+export class TransferMoney {
+  constructor(private accountRepository: AccountRepository) {}
+
+  execute(command: TransferMoneyCommand): void {
+    const { fromAccountId, to
+
+AccountId, amount, category, description } = command;
+    const fromAccount = this.accountRepository.findById(fromAccountId);
+    const toAccount = this.accountRepository.findById(toAccountId);
+
+    if (!fromAccount || !toAccount) {
+      throw new Error('One or both accounts not found');
+    }
+
+    fromAccount.withdrawFunds(amount);
+    toAccount.addFunds(amount);
+
+    // Persistir los cambios en ambas cuentas
+    this.accountRepository.persist(fromAccount);
+    this.accountRepository.persist(toAccount);
+
+    // Crear una transacción de registro
+    const transaction = new Transaction(
+      generateTransactionId(),
+      new Date(),
+      fromAccountId,
+      toAccountId,
+      amount,
+      description,
+      category
+    );
+    // Guardar la transacción en el sistema (ej. usar repositorio de transacciones)
+  }
+}
+
+// DTO para el caso de uso TransferMoney
+export interface TransferMoneyCommand {
+  fromAccountId: string;
+  toAccountId: string;
+  amount: number;
+  description: string;
+  category: string;
+}
+```
+
+Servicio de Reportes Financieros:
+
+```typescript
+export class FinancialReportService {
+  constructor(private accountRepository: AccountRepository, private assetRepository: AssetRepository) {}
+
+  generateBalanceReport(): BalanceReport {
+    const assets = this.assetRepository.findAll();
+    const liabilities = this.accountRepository.findLiabilities();
+
+    const totalAssets = assets.reduce((acc, asset) => acc + asset.acquisitionValue, 0);
+    const totalLiabilities = liabilities.reduce((acc, liability) => acc + liability.balance, 0);
+
+    const equity = totalAssets - totalLiabilities;
+
+    return {
+      totalAssets,
+      totalLiabilities,
+      equity
+    };
+  }
+}
+
+export interface BalanceReport {
+  totalAssets: number;
+  totalLiabilities: number;
+  equity: number;
+}
+```
+
+---
+
+Ejemplo de tests unitarios para `Account` y `Asset`:
+
+```typescript
+import { Account } from './Account';
+
+describe('Account', () => {
+  it('should add funds to a real account', () => {
+    const account = new Account('acc-001', 'Bank Account', 'Real', 'USD', 1000);
+    account.addFunds(500);
+    expect(account.balance).toBe(1500);
+  });
+
+  it('should throw an error when adding funds to a virtual account', () => {
+    const account = new Account('acc-002', 'Virtual Income Source', 'Virtual', 'USD');
+    expect(() => account.addFunds(500)).toThrowError('Cannot add funds to a virtual account');
+  });
+
+  it('should withdraw funds from a real account', () => {
+    const account = new Account('acc-003', 'Savings Account', 'Real', 'USD', 2000);
+    account.withdrawFunds(500);
+    expect(account.balance).toBe(1500);
+  });
+
+  it('should calculate depreciation for an asset', () => {
+    const asset = new Asset(
+      'asset-002',
+      'Equipo de oficina',
+      new Date('2022-01-01'),
+      15000,
+      10,
+      'lineal',
+      2000
+    );
+
+    expect(asset.annualDepreciation).toBe(1300);
+  });
+});
+```
