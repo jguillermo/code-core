@@ -24,6 +24,9 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write ."
   },
+  "dependencies": {
+    "@code-core/domain": "workspace:*"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
