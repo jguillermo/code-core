@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "project/*"
+    "project/*",
+    "bounded-context/*"
   ],
   "scripts": {
     "build": "lerna run build --stream",
