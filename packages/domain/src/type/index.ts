@@ -11,6 +11,7 @@ export { AbstractDateType } from './abstract-date-type';
 export { AbstractEnumType } from './abstract-enum-type';
 export { AbstractNumberType } from './abstract-number-type';
 export { AbstractUuidType } from './abstract-uuid-type';
+export { AddValidate } from '../validator/decorator/type-validator';
 
 //AbstractBooleanType
 @AddValidate([{ validator: 'IsOptional' }])

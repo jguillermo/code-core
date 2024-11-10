@@ -8,6 +8,8 @@ export type MethodsAndProperties<T> = { [key in keyof T]: T[key] };
 
 export type Properties<T> = Omit<MethodsAndProperties<T>, Methods<T>>;
 
+export type PropertiesData<T> = Required<Properties<T>>;
+
 type RemoveUnderscore<S extends string> = S extends `_${infer R}` ? R : S;
 
 type Mutable<T> = {

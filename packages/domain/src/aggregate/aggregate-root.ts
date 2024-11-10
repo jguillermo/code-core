@@ -13,5 +13,5 @@ export abstract class AggregateRoot {
     return events;
   }
 
-  //abstract get id<T extends IdType = IdType>(): T;
+  // abstract get id<T extends IdType>(): T;
 }
