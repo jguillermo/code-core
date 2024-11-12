@@ -1,4 +1,4 @@
-import { PrimitiveAggregate } from './primitive-aggregate';
+import { PrimitiveTypes } from './primitive-types';
 import { expectTypeOf } from 'expect-type';
 import { AggregateRoot } from '../aggregate/aggregate-root';
 import { IdType, NumberTypeOptional, StringTypeRequired } from '../type';
@@ -31,9 +31,9 @@ describe('Primitive aggregate', () => {
       id: string;
     };
 
-    expectTypeOf<PrimitiveAggregate<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
-    expectTypeOf<PrimitiveAggregate<AggregateB>>().toEqualTypeOf<expectedPrimitives>();
-    expectTypeOf<PrimitiveAggregate<AggregateC>>().toEqualTypeOf<expectedPrimitives>();
+    expectTypeOf<PrimitiveTypes<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
+    expectTypeOf<PrimitiveTypes<AggregateB>>().toEqualTypeOf<expectedPrimitives>();
+    expectTypeOf<PrimitiveTypes<AggregateC>>().toEqualTypeOf<expectedPrimitives>();
   });
 
   it('id stringREquired and number optional', () => {
@@ -65,7 +65,7 @@ describe('Primitive aggregate', () => {
       age: number | null;
     };
 
-    expectTypeOf<PrimitiveAggregate<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
+    expectTypeOf<PrimitiveTypes<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
   });
 
   it('id array', () => {
@@ -91,6 +91,6 @@ describe('Primitive aggregate', () => {
       tags: string[];
     };
 
-    expectTypeOf<PrimitiveAggregate<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
+    expectTypeOf<PrimitiveTypes<Aggregate>>().toEqualTypeOf<expectedPrimitives>();
   });
 });

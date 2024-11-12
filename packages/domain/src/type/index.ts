@@ -4,6 +4,7 @@ import { AbstractDateType } from './abstract-date-type';
 import { AbstractNumberType } from './abstract-number-type';
 import { AbstractStringType } from './abstract-string-type';
 import { AbstractUuidType } from './abstract-uuid-type';
+import { AbstractType } from './abstract-type';
 
 export { AbstractBooleanType } from './abstract-boolean-type';
 export { AbstractStringType } from './abstract-string-type';
@@ -35,6 +36,18 @@ export class DateTypeOptional extends AbstractDateType<null> {
 
 @AddValidate([{ validator: 'IsNotEmpty' }])
 export class DateTypeRequired extends AbstractDateType {}
+
+export class CreatedAt extends DateTypeRequired {
+  static now(): CreatedAt {
+    return new CreatedAt(new Date());
+  }
+}
+
+export class UpdatedAt extends DateTypeRequired {
+  static now(): CreatedAt {
+    return new UpdatedAt(new Date());
+  }
+}
 
 //AbstractUuidType
 
@@ -72,3 +85,8 @@ export class StringTypeOptional extends AbstractStringType<null> {
 
 @AddValidate([{ validator: 'IsNotEmpty' }])
 export class StringTypeRequired extends AbstractStringType {}
+
+//array utils
+export function arrayHasValue<T extends AbstractType<any>>(data: T[], value: T): boolean {
+  return data.some((item) => item.value === value.value);
+}
