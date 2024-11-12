@@ -1,5 +1,5 @@
 import { AccountId } from './types/account-id';
-import { AggregateRoot, CreatedAt, DomainException, MutablePropertiesData, PrimitiveTypes, PropertiesData } from '@code-core/domain';
+import { AggregateRoot, ArrayType, CreatedAt, DomainException, MutablePropertiesData, PrimitiveTypes, PropertiesData } from '@code-core/domain';
 import { AccountName } from './types/account-name';
 import { AccountType } from './types/account-type';
 import { AccountData } from './account.data';
@@ -18,7 +18,7 @@ export class Account extends AggregateRoot {
   private balance: AccountBalance; // Nivel 1: Saldo de la cuenta (Solo para cuentas reales)
   private readonly financialEntity: AccountFinantialEntity; // Nivel 2: Entidad financiera asociada (solo para cuentas bancarias o tarjetas de crédito)
   private readonly number: AccountAccountNumber; // Nivel 2: Número de cuenta (solo para cuentas reales)
-  private readonly tags: AccountTag[]; // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
+  private tags: AccountTag[]; // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
   private readonly creationDate: CreatedAt;
 
   constructor(data: PropertiesData<AccountData>) {
@@ -95,14 +95,11 @@ export class Account extends AggregateRoot {
     }
   }
 
-  // addTag(tag: string): void {
-  //   this.tags.push(new AccountTag(tag));
-  //   // if (!this.tags?.includes(tag)) {
-  //   //   this.tags?.push(tag);
-  //   // }
-  // }
+  addTag(tag: string): void {
+    ArrayType.addValue<AccountTag>(this.tags, new AccountTag(tag));
+  }
 
-  // removeTag(tag: string): void {
-  //   this.tags = this.tags?.filter((t) => t !== tag);
-  // }
+  removeTag(tag: string): void {
+    this.tags = ArrayType.removeValue<AccountTag>(this.tags, new AccountTag(tag));
+  }
 }

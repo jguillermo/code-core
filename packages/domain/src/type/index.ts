@@ -87,6 +87,19 @@ export class StringTypeOptional extends AbstractStringType<null> {
 export class StringTypeRequired extends AbstractStringType {}
 
 //array utils
-export function arrayHasValue<T extends AbstractType<any>>(data: T[], value: T): boolean {
-  return data.some((item) => item.value === value.value);
+export class ArrayType {
+  static hasValue<T extends AbstractType<any>>(data: T[], value: T): boolean {
+    return data.some((item) => item.value === value.value);
+  }
+
+  static addValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
+    if (!ArrayType.hasValue(data, value)) {
+      data.push(value);
+    }
+    return data;
+  }
+
+  static removeValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
+    return data.filter((item) => item.value !== value.value);
+  }
 }
