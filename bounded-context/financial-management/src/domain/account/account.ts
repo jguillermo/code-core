@@ -34,7 +34,7 @@ export class Account extends AggregateRoot {
       data.requireBalance(),
       level >= 2 ? data.requireFinancialEntity() : (data.financialEntity ?? AccountFinantialEntity.empty()),
       level >= 2 ? data.requireNumber() : (data.number ?? AccountAccountNumber.empty()),
-      level >= 3 ? (data.tags ? data.tags : []) : [],
+      level >= 3 ? data.requireTags() : (data.tags ?? []),
       CreatedAt.now(),
     );
     aggregate.record(new AccountCreatedEvent(aggregate.toJson()));

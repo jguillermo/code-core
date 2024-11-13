@@ -36,15 +36,8 @@ export class AccountData {
     return this.ensureProperty(this.id, 'Account Id is required');
   }
 
-  private ensureProperty<T>(property: T | undefined, errorMessage: string): T {
-    if (!property) {
-      throw new DomainException(errorMessage);
-    }
-    return property;
-  }
-
   requireName() {
-    return this.ensureProperty(this.name, 'Account Name is required');
+    return this.ensureProperty(this.name, `Account Name is required`);
   }
 
   requireType() {
@@ -63,15 +56,18 @@ export class AccountData {
     return this.ensureProperty(this.financialEntity, 'Account Financial Entity is required');
   }
 
-  defaultOrEmptyFinancialEntity() {
-    return this.ensureProperty(this.financialEntity, 'Account Financial Entity is required');
-  }
-
   requireNumber() {
     return this.ensureProperty(this.number, 'Account Number is required');
   }
 
   requireTags() {
     return this.ensureProperty(this.tags, 'Account Tags is required');
+  }
+
+  private ensureProperty<T>(property: T | undefined, errorMessage: string): T {
+    if (!property) {
+      throw new DomainException(errorMessage);
+    }
+    return property;
   }
 }
