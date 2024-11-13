@@ -29,7 +29,6 @@ export class AccountData {
     this.financialEntity = params.financialEntity ? new AccountFinantialEntity(params.financialEntity) : undefined;
     this.number = params.number ? new AccountAccountNumber(params.number) : undefined;
     this.tags = params.tags ? params.tags.map((tag) => new AccountTag(tag)) : undefined;
-
     this.creationDate = params.creationDate ? new CreatedAt(params.creationDate) : undefined;
   }
 
@@ -61,6 +60,10 @@ export class AccountData {
   }
 
   requireFinancialEntity() {
+    return this.ensureProperty(this.financialEntity, 'Account Financial Entity is required');
+  }
+
+  defaultOrEmptyFinancialEntity() {
     return this.ensureProperty(this.financialEntity, 'Account Financial Entity is required');
   }
 
