@@ -4,6 +4,7 @@ import { expectTypeOf } from 'expect-type';
 import { universalToString } from '@code-core/common';
 import { AbstractNumberType, NumberTypeOptional, NumberTypeRequired } from './index';
 import { TypePrimitiveException } from '../exceptions/domain/type-primitive.exception';
+import { getLevel, Level } from '../level/level.decorator';
 
 describe('AbstractNumberType', () => {
   describe('NumberTypeRequired', () => {
@@ -162,6 +163,17 @@ describe('AbstractNumberType', () => {
       expect(instance.isValid()).toEqual(false);
       expect(instance.validatorMessageStr()).toEqual('must not be less than 100, must be a positive number');
       expect(instance.validatorMessageStr('|')).toEqual('must not be less than 100| must be a positive number');
+    });
+  });
+
+  describe('level validator', () => {
+    it('get correct level', () => {
+      @Level(2)
+      @AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'Min', value: 100 }, { validator: 'Max', value: 200 }, { validator: 'IsPositive' }])
+      class TestNumberTypeRequired extends AbstractNumberType {}
+
+      const level = getLevel(TestNumberTypeRequired);
+      expect(level).toBe(2);
     });
   });
 });
