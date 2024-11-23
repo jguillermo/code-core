@@ -1,10 +1,10 @@
 import { getLevel, Level, normalizeLevel } from './level.decorator';
 import { AddValidate } from '../validator/decorator/type-validator';
 import { IdType, StringTypeRequired } from '../type';
-import { validate, Validate } from 'class-validator';
+import { Validate } from 'class-validator';
 import { DomainValidator } from '../validator/domain-validator/domain-validator';
 import { AggregateRoot } from '../aggregate/aggregate-root';
-import { PrimitiveTypes } from '../primitive/primitive-types';
+import { DataTypes, PrimitiveTypes } from '../primitive/primitive-types';
 import { DomainException } from '../exceptions';
 
 class CompanyId extends IdType {}
@@ -15,15 +15,27 @@ class CompanyName extends StringTypeRequired {}
 
 @Level(2)
 @AddValidate([{ validator: 'MinLength', value: 10 }])
-class CompanyDescription extends StringTypeRequired {}
+class CompanyDescription extends StringTypeRequired {
+  static empty(): CompanyDescription {
+    return new CompanyDescription('');
+  }
+}
 
 @Level(2)
 @AddValidate([{ validator: 'MinLength', value: 15 }])
-class CompanyAddress extends StringTypeRequired {}
+class CompanyAddress extends StringTypeRequired {
+  static empty(): CompanyAddress {
+    return new CompanyAddress('');
+  }
+}
 
 @Level(3)
 @AddValidate([{ validator: 'MinLength', value: 20 }])
-class CompanySlug extends StringTypeRequired {}
+class CompanySlug extends StringTypeRequired {
+  static empty(): CompanySlug {
+    return new CompanySlug('');
+  }
+}
 
 class CompanyDto {
   @Validate(DomainValidator, [CompanyId])
@@ -51,11 +63,11 @@ class CompanyData {
   public readonly address: CompanyAddress;
   public readonly slug: CompanySlug;
 
-  constructor(level: number, params: PrimitiveTypes<CompanyData>) {
+  constructor(level: number, params: DataTypes<CompanyData>) {
     this.id = this.requireId(level, params.id);
-    this.name = new CompanyName(params.name);
-    this.description = new CompanyDescription(params.description);
-    this.address = new CompanyAddress(params.address);
+    this.name = new CompanyName(params.name ?? '');
+    this.description = new CompanyDescription(params.description ?? '');
+    this.address = new CompanyAddress(params.address ?? '');
     this.slug = this.requireSlug(level, params.slug);
   }
 
@@ -65,9 +77,23 @@ class CompanyData {
   }
 
   private requireSlug(level: number, data): CompanySlug {
-    this.requireProperty(CompanySlug, level, data, 'Company Id is required');
-    return new CompanySlug(data);
+    this.requireProperty(CompanySlug, level, data, 'Company slug is required');
+    if (!data) {
+      return CompanySlug.empty();
+    }
+    const vo = new CompanySlug(data);
+    if (!vo.isValid()) {
+      throw new DomainException(`Company slug: ${vo.validatorMessageStr()}`);
+    }
+    return vo;
   }
+
+  /*
+  considerar, si vienen una data, no borrrar, solo validarlo, esto debe ser validado en el doto de validation
+  considerar hacer la validacion en la clase data, construyecdo l aclase y hacendo la validacion,
+  si el valor es de un nivel alto, y no viene un valor, crear un clas estatica de retorna un emprty, puede ser null o '', dependiendo del vo, pero simepre debe retornar un valor
+  nunca se debe guardar un valor que no pase por la validacion del tipo, nuna debe ver un valor que se guarde y n ocumplecon la validadicon del tipo
+  * */
 
   private requireProperty<T>(type: any, level: number, property: T | undefined, errorMessage: string): void {
     const typeLevel = getLevel(type);
@@ -92,7 +118,7 @@ class Company extends AggregateRoot {
     super();
   }
 
-  static create(level: number, data: CompanyData): Company {
+  static create(data: CompanyData): Company {
     const aggregate = new Company(data.id, data.name, data.description, data.address, data.slug);
     return aggregate;
   }
@@ -110,25 +136,18 @@ class Company extends AggregateRoot {
 
 describe('validate level DomainValidator', () => {
   it('validate level 1 by default', async () => {
-    const obj = new CompanyDto();
-    obj.levelValidation = 1;
+    expect(() => {
+      const obj = new CompanyDto();
+      obj.levelValidation = 1;
 
-    const data = new CompanyData(1, {
-      id: 'ddeddd9f-8fa7-4aea-815f-594a634d4f40',
-      name: 'name',
-      description: 'description',
-      address: 'address',
-      slug: 'slug',
-    });
-    const aggregate = Company.create(1, data);
-    const errors = await validate(obj);
-    expect(aggregate.toJson()).toEqual({
-      id: 'ddeddd9f-8fa7-4aea-815f-594a634d4f40',
-      name: 'name',
-      description: 'description',
-      address: 'address',
-      slug: 'slug',
-    });
-    expect(errors.length).toEqual(2);
+      const data = new CompanyData(1, {
+        id: 'ddeddd9f-8fa7-4aea-815f-594a634d4f40',
+        name: 'name',
+        description: 'description',
+        address: 'address',
+        slug: 'slug',
+      });
+      Company.create(data);
+    }).toThrowError('Company slug: must be longer than or equal to 20 characters');
   });
 });

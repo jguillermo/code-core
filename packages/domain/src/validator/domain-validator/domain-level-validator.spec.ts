@@ -11,15 +11,27 @@ class CourseLevelTitle extends StringTypeRequired {}
 
 @Level(2)
 @AddValidate([{ validator: 'MinLength', value: 5 }])
-class CourseLevelDescription extends StringTypeRequired {}
+class CourseLevelDescription extends StringTypeRequired {
+  static empty() {
+    return new CourseLevelDescription('');
+  }
+}
 
 @Level(2)
 @AddValidate([{ validator: 'MinLength', value: 5 }])
-class CourseLevelAddress extends StringTypeRequired {}
+class CourseLevelAddress extends StringTypeRequired {
+  static empty() {
+    return new CourseLevelAddress('');
+  }
+}
 
 @Level(3)
 @AddValidate([{ validator: 'MinLength', value: 5 }])
-class CourseLevelSlug extends StringTypeRequired {}
+class CourseLevelSlug extends StringTypeRequired {
+  static empty() {
+    return new CourseLevelSlug('');
+  }
+}
 
 class EntityValidateLevelTest {
   @Validate(DomainValidator, [CourseLevelTitle])

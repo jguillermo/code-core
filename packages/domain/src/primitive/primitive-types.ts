@@ -20,6 +20,8 @@ export type PrimitiveTypes<T> = {
   [key in keyof Mutable<Properties<T>> as RemoveUnderscore<string & key>]: PrimitiveType<T[key]>;
 };
 
+export type DataTypes<T> = Partial<PrimitiveTypes<T>>;
+
 // export type PrimitiveType<T> = T extends PrimitiveTypes
 //   ? T
 //   : T extends { value: infer U }

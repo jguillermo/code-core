@@ -15,7 +15,11 @@ describe('Level Decorator empty class', () => {
   it('should override existing level metadata if applied multiple times', () => {
     @Level(2)
     @Level(3) // Este es el decorador final aplicado
-    class ExampleClass {}
+    class ExampleClass {
+      static empty() {
+        return new ExampleClass();
+      }
+    }
 
     const level = getLevel(ExampleClass);
 
@@ -35,7 +39,11 @@ describe('Level Decorator empty class', () => {
     class ClassOne {}
 
     @Level(2)
-    class ClassTwo {}
+    class ClassTwo {
+      static empty() {
+        return new ClassTwo();
+      }
+    }
 
     class ClassThree {}
 
@@ -159,5 +167,61 @@ describe('normalizeLevel', () => {
     expect(normalizeLevel(1e-10)).toBe(1);
     expect(normalizeLevel('1e10')).toBe(10000000000);
     expect(normalizeLevel('1e-10')).toBe(1);
+  });
+});
+
+describe('Level Decorator', () => {
+  it('should allow a class with level 1 to skip the static "empty" method', () => {
+    @Level(1)
+    class Level1Class {}
+
+    expect(() => new Level1Class()).not.toThrow();
+    expect(getLevel(Level1Class)).toBe(1);
+  });
+
+  it('should throw an error if a class with level > 1 does not implement a static "empty" method', () => {
+    expect(() => {
+      @Level(2)
+      class Level2ClassWithoutEmpty {}
+
+      new Level2ClassWithoutEmpty();
+    }).toThrowError("Class Level2ClassWithoutEmpty with level 2 must implement a static 'empty()' method as a function.");
+  });
+
+  it('should throw an error if the static "empty" method does not return an instance of the class', () => {
+    expect(() => {
+      @Level(2)
+      class Level2ClassWithInvalidEmpty {
+        static empty() {
+          return {}; // Does not return a valid instance of the class
+        }
+      }
+
+      new Level2ClassWithInvalidEmpty();
+    }).toThrowError("The static 'empty()' method of class Level2ClassWithInvalidEmpty must return a valid instance of the class.");
+  });
+
+  it('should allow a class with level > 1 to implement a valid static "empty" method', () => {
+    @Level(2)
+    class ValidLevel2Class {
+      static empty() {
+        return new ValidLevel2Class();
+      }
+    }
+
+    expect(() => new ValidLevel2Class()).not.toThrow();
+    expect(ValidLevel2Class.empty()).toBeInstanceOf(ValidLevel2Class);
+    expect(getLevel(ValidLevel2Class)).toBe(2);
+  });
+
+  it('should store and retrieve the level metadata correctly', () => {
+    @Level(3)
+    class Level3Class {
+      static empty() {
+        return new Level3Class();
+      }
+    }
+
+    expect(getLevel(Level3Class)).toBe(3);
   });
 });

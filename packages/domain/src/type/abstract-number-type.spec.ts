@@ -170,7 +170,11 @@ describe('AbstractNumberType', () => {
     it('get correct level', () => {
       @Level(2)
       @AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'Min', value: 100 }, { validator: 'Max', value: 200 }, { validator: 'IsPositive' }])
-      class TestNumberTypeRequired extends AbstractNumberType {}
+      class TestNumberTypeRequired extends AbstractNumberType {
+        static empty(): TestNumberTypeRequired {
+          return new TestNumberTypeRequired(0);
+        }
+      }
 
       const level = getLevel(TestNumberTypeRequired);
       expect(level).toBe(2);

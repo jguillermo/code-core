@@ -4,7 +4,22 @@ const LEVEL = 'level';
 
 export function Level(level: number): ClassDecorator {
   return (target: Function) => {
-    Reflect.defineMetadata(LEVEL, level, target);
+    Reflect.defineMetadata(LEVEL, normalizeLevel(level), target);
+
+    if (level > 1) {
+      const staticEmpty = target['empty'];
+
+      // Check if `empty` is a function
+      if (typeof staticEmpty !== 'function') {
+        throw new Error(`Class ${target.name} with level ${level} must implement a static 'empty()' method as a function.`);
+      }
+
+      // Check if `empty()` returns a valid instance of the class
+      const instance = staticEmpty();
+      if (!(instance instanceof target)) {
+        throw new Error(`The static 'empty()' method of class ${target.name} must return a valid instance of the class.`);
+      }
+    }
   };
 }
 
