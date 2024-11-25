@@ -10,7 +10,7 @@ import { Level } from '../../level/level.decorator';
 class CourseLevelTitle extends StringTypeRequired {}
 
 @Level(2)
-@AddValidate([{ validator: 'MinLength', value: 5 }])
+@AddValidate([{ validator: 'MinLength', value: 10 }])
 class CourseLevelDescription extends StringTypeRequired {
   static empty() {
     return new CourseLevelDescription('');
@@ -18,7 +18,7 @@ class CourseLevelDescription extends StringTypeRequired {
 }
 
 @Level(2)
-@AddValidate([{ validator: 'MinLength', value: 5 }])
+@AddValidate([{ validator: 'MinLength', value: 15 }])
 class CourseLevelAddress extends StringTypeRequired {
   static empty() {
     return new CourseLevelAddress('');
@@ -26,7 +26,7 @@ class CourseLevelAddress extends StringTypeRequired {
 }
 
 @Level(3)
-@AddValidate([{ validator: 'MinLength', value: 5 }])
+@AddValidate([{ validator: 'MinLength', value: 20 }])
 class CourseLevelSlug extends StringTypeRequired {
   static empty() {
     return new CourseLevelSlug('');

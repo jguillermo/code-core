@@ -23,7 +23,7 @@ export function Level(level: number): ClassDecorator {
   };
 }
 
-export function getLevel(target: Function): number {
+export function getLevel(target: any): number {
   return Reflect.getMetadata(LEVEL, target) ?? 1;
 }
 
