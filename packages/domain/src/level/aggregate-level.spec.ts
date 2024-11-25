@@ -76,16 +76,13 @@ class CompanyData {
     const voLevel = getLevel(typeClass);
     const currentLevelNormalized = normalizeLevel(currentLevel);
     const isEmpty = data === null || data === undefined;
-
     if (voLevel > currentLevelNormalized && isEmpty) {
       if (typeClass.empty) {
         return typeClass.empty();
       }
-      throw new DomainException(`${typeClass.name} cannot be empty() at this level`);
+      throw new DomainException(`${typeClass.name} cannot be static empty()`);
     }
-
     const typeInstance: T = new typeClass(data);
-
     if (!typeInstance.isValid()) {
       throw new DomainException(`${(typeClass as any).name}: ${typeInstance.validatorMessageStr()}`);
     }
