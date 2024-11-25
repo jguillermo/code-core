@@ -3,11 +3,16 @@ import { getLevel, normalizeLevel } from '../level/level.decorator';
 import { DomainException } from '../exceptions';
 
 export class AggregateData {
-  protected initializeType<T extends AbstractType<any>>(typeClass: { new (data: any): T; empty?: () => T }, currentLevel: number, data): T {
+  private readonly currentLevelNormalized: number;
+
+  constructor(currentLevel: number) {
+    this.currentLevelNormalized = normalizeLevel(currentLevel);
+  }
+
+  protected initializeType<T extends AbstractType<any>>(typeClass: { new (data: any): T; empty?: () => T }, data): T {
     const voLevel = getLevel(typeClass);
-    const currentLevelNormalized = normalizeLevel(currentLevel);
     const isEmpty = data === null || data === undefined;
-    if (voLevel > currentLevelNormalized && isEmpty) {
+    if (voLevel > this.currentLevelNormalized && isEmpty) {
       if (typeClass.empty) {
         return typeClass.empty();
       }

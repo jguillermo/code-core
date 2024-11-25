@@ -64,12 +64,12 @@ class CompanyData extends AggregateData {
   public readonly slug: CompanySlug;
 
   constructor(currentLevel: number, params: DataTypes<CompanyData>) {
-    super();
-    this.id = this.initializeType(CompanyId, currentLevel, params.id);
-    this.name = this.initializeType(CompanyName, currentLevel, params.name);
-    this.description = this.initializeType(CompanyDescription, currentLevel, params.description);
-    this.address = this.initializeType(CompanyAddress, currentLevel, params.address);
-    this.slug = this.initializeType(CompanySlug, currentLevel, params.slug);
+    super(currentLevel);
+    this.id = this.initializeType(CompanyId, params.id);
+    this.name = this.initializeType(CompanyName, params.name);
+    this.description = this.initializeType(CompanyDescription, params.description);
+    this.address = this.initializeType(CompanyAddress, params.address);
+    this.slug = this.initializeType(CompanySlug, params.slug);
   }
 }
 

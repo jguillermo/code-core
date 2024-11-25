@@ -25,23 +25,13 @@ export class Account extends AggregateRoot {
     super();
   }
 
-  static create(level: number, data: AccountData): Account {
-    const aggregate = new Account(
-      data.requireId(),
-      data.requireName(),
-      data.requireType(),
-      data.requireCurrency(),
-      data.requireBalance(),
-      level >= 2 ? data.requireFinancialEntity() : (data.financialEntity ?? AccountFinantialEntity.empty()),
-      level >= 2 ? data.requireNumber() : (data.number ?? AccountAccountNumber.empty()),
-      level >= 3 ? data.requireTags() : (data.tags ?? []),
-      CreatedAt.now(),
-    );
+  static create(data: AccountData): Account {
+    const aggregate = new Account(data.id, data.name, data.type, data.currency, data.balance, data.financialEntity, data.number, data.tags, data.creationDate);
     aggregate.record(new AccountCreatedEvent(aggregate.toJson()));
     return aggregate;
   }
 
-  toJson(): Required<PrimitiveTypes<AccountData>> {
+  toJson(): PrimitiveTypes<AccountData> {
     return {
       id: this.id.value,
       name: this.name.value,
