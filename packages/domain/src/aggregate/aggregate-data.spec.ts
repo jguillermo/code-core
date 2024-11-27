@@ -37,6 +37,14 @@ class CompanySlug extends StringTypeRequired {
   }
 }
 
+@Level(4)
+@AddValidate([{ validator: 'MinLength', value: 3 }])
+class CompanyTag extends StringTypeRequired {
+  static empty(): CompanyTag {
+    return new CompanyTag('');
+  }
+}
+
 class CompanyDto {
   @Validate(DomainValidator, [CompanyId])
   public id?: string;
@@ -52,6 +60,9 @@ class CompanyDto {
 
   @Validate(DomainValidator, [CompanySlug])
   public slug?: string;
+
+  @Validate(DomainValidator, [CompanyTag])
+  public tags?: string[];
 
   public levelValidation?: number;
 }
