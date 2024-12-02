@@ -30,13 +30,16 @@ export abstract class AbstractArrayType<T extends AbstractType<any>, R extends n
     }
     let str = super.validatorMessageStr(separator, customReplacement);
 
-    const strItems = this.value?.map((item) => this.getItemClass(item).validatorMessageStr(separator, customReplacement));
+    const strItems = this.value?.map((item, index: number) => {
+      const txtItemMsg = this.getItemClass(item).validatorMessageStr(separator, customReplacement);
+      return txtItemMsg === '' ? '' : `Item ${index + 1}: ${txtItemMsg}`;
+    });
     const filters = strItems?.filter((item) => item !== '');
     if (filters && filters.length > 0) {
       if (str === '') {
-        str = filters.join(separator);
+        str = filters.join(`${separator} `);
       } else {
-        str += separator + filters.join(separator);
+        str += separator + filters.join(`${separator} `);
       }
     }
     return str;

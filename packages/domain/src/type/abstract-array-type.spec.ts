@@ -38,11 +38,9 @@ describe('AbstractArrayType', () => {
     });
     describe('Invalid Values', () => {
       [
-        [[101], 'must not be greater than 100'],
-        // [[101, 105], 'item 1: must not be greater than 100, item 2: must not be greater than 100'],
-        // [[1, 105], 'item 2: must not be greater than 100'],
-        [[101, 105], 'must not be greater than 100,must not be greater than 100'],
-        [[1, 105], 'must not be greater than 100'],
+        [[101], 'Item 1: must not be greater than 100'],
+        [[101, 105], 'Item 1: must not be greater than 100, Item 2: must not be greater than 100'],
+        [[1, 105], 'Item 2: must not be greater than 100'],
         [[], 'must contain at least 1 elements'],
         [null, 'Value mas be to array'],
         [undefined, 'Value mas be to array'],
