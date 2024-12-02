@@ -83,7 +83,40 @@ describe('AbstractArrayType', () => {
         });
       });
     });
+
+    describe('Compare items', () => {
+      [
+        [[1], [new Age(1)]],
+        [['1'], [new Age(1)]],
+        [
+          [1, 2],
+          [new Age(1), new Age(2)],
+        ],
+      ].forEach((value) => {
+        it(`compare vales`, async () => {
+          const type = new ArrayTypeRequired(value[0] as any);
+          expect(type.items).toEqual(value[1]);
+        });
+      });
+    });
+
+    describe('Array add item', () => {
+      [
+        [[1], [new Age(1)]],
+        [['1'], [new Age(1)]],
+        [
+          [1, 2],
+          [new Age(1), new Age(2)],
+        ],
+      ].forEach((value) => {
+        it(`compare vales`, async () => {
+          const type = new ArrayTypeRequired(value[0] as any);
+          expect(type.items).toEqual(value[1]);
+        });
+      });
+    });
   });
+
   // describe('ArrayTypeOptional', () => {
   //   describe('Valid Values', () => {
   //     typeValidValueSpec(validateType, ArrayTypeOptional, canByType(PrimitivesKeys.BOOLEAN, PrimitivesKeys.NULL, PrimitivesKeys.UNDEFINED), 'boolean');
@@ -148,6 +181,76 @@ describe('AbstractArrayType', () => {
       expectTypeOf<ArrayTypeRequired['value']>().toMatchTypeOf<ExpectType>();
       expectTypeOf<ExpectType>().toMatchTypeOf<ArrayTypeRequired['value']>();
       expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
+    });
+  });
+  describe('Array management item', () => {
+    describe('ArrayRequired', () => {
+      it('add', () => {
+        const type = new ArrayTypeRequired([]);
+        type.addItem(1);
+        expect(type.items).toEqual([new Age(1)]);
+        type.addItem(2);
+        expect(type.items).toEqual([new Age(1), new Age(2)]);
+      });
+      it('add string ', () => {
+        const type = new ArrayTypeRequired([]);
+        type.addItem('1' as any);
+        expect(type.items).toEqual([new Age(1)]);
+        type.addItem('2' as any);
+        expect(type.items).toEqual([new Age(1), new Age(2)]);
+      });
+      it('add exception ', () => {
+        const type = new ArrayTypeRequired([]);
+        expect(() => type.addItem('a' as any)).toThrowError('Validation Error: Expected a valid Number, but received "a".');
+      });
+      it('hasItem', () => {
+        const type = new ArrayTypeRequired([1, 2]);
+        expect(type.hasItem(1)).toEqual(true);
+        expect(type.hasItem(2)).toEqual(true);
+        expect(type.hasItem(1.0)).toEqual(true);
+        expect(type.hasItem(3)).toEqual(false);
+        expect(type.hasItem(1.1)).toEqual(false);
+        expect(type.hasItem('1' as any)).toEqual(true);
+      });
+
+      it('hasItem exception ', () => {
+        const type = new ArrayTypeRequired([1]);
+        expect(() => type.addItem('a' as any)).toThrowError('Validation Error: Expected a valid Number, but received "a".');
+      });
+
+      it('remove item', () => {
+        const type = new ArrayTypeRequired([1, 2]);
+        type.removeItem(1);
+        expect(type.items).toEqual([new Age(2)]);
+        type.removeItem(2);
+        expect(type.items).toEqual([]);
+        type.removeItem(3);
+        expect(type.items).toEqual([]);
+      });
+      it('remove item', () => {
+        const type = new ArrayTypeRequired([3]);
+        type.removeItem(1);
+        expect(type.items).toEqual([new Age(3)]);
+      });
+
+      it('remove item string', () => {
+        const type = new ArrayTypeRequired([1]);
+        type.removeItem('1' as any);
+        expect(type.items).toEqual([]);
+      });
+
+      it('remove exception ', () => {
+        const type = new ArrayTypeRequired([1]);
+        expect(() => type.addItem('a' as any)).toThrowError('Validation Error: Expected a valid Number, but received "a".');
+      });
+
+      it('set item', () => {
+        const type = new ArrayTypeRequired([1]);
+        type.setItem(1);
+        expect(type.items).toEqual([new Age(1)]);
+        type.setItem(2);
+        expect(type.items).toEqual([new Age(1), new Age(2)]);
+      });
     });
   });
 });

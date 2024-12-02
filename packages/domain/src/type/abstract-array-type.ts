@@ -18,11 +18,7 @@ export abstract class AbstractArrayType<T extends AbstractType<any>, R extends n
   }
 
   isValid(): boolean {
-    return (
-      super.isValid() && //data 1
-      Array.isArray(this.value) && // dat 2
-      this.value.every((item) => this.getItemClass(item).isValid())
-    );
+    return super.isValid() && Array.isArray(this.value) && this.value.every((item) => this.getItemClass(item).isValid());
   }
 
   validatorMessageStr(separator: string = ',', customReplacement: string = ''): string {
@@ -38,5 +34,39 @@ export abstract class AbstractArrayType<T extends AbstractType<any>, R extends n
 
   get toString(): string {
     return !this.value ? '' : this.value.map((item) => this.getItemClass(item).toString).join(', ');
+  }
+
+  get items(): T[] | null {
+    if (this.value === null) {
+      return null;
+    }
+    return this.value?.map((item) => this.getItemClass(item));
+  }
+
+  addItem(value: PrimitiveType<T>): void {
+    if (this.value === null) {
+      this._value = [];
+    }
+    this.value?.push(this.getItemClass(value).value);
+  }
+
+  hasItem(value: PrimitiveType<T>): boolean {
+    const item = this.getItemClass(value);
+    return this.value?.some((itemValue) => itemValue === item.value) ?? false;
+  }
+
+  removeItem(value: PrimitiveType<T>): void {
+    if (this.value === null) {
+      return;
+    }
+    const item = this.getItemClass(value);
+    this._value = this.value?.filter((itemValue) => itemValue !== item.value) ?? [];
+  }
+
+  setItem(value: PrimitiveType<T>): void {
+    if (this.hasItem(value)) {
+      return;
+    }
+    this.addItem(value);
   }
 }
