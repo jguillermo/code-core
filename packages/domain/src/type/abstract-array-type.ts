@@ -18,16 +18,26 @@ export abstract class AbstractArrayType<T extends AbstractType<any>, R extends n
   }
 
   isValid(): boolean {
+    if (this.isNull) {
+      return false;
+    }
     return super.isValid() && Array.isArray(this.value) && this.value.every((item) => this.getItemClass(item).isValid());
   }
 
   validatorMessageStr(separator: string = ',', customReplacement: string = ''): string {
+    if (this.isNull) {
+      return 'Value mas be to array';
+    }
     let str = super.validatorMessageStr(separator, customReplacement);
 
     const strItems = this.value?.map((item) => this.getItemClass(item).validatorMessageStr(separator, customReplacement));
     const filters = strItems?.filter((item) => item !== '');
     if (filters && filters.length > 0) {
-      str += separator + filters.join(separator);
+      if (str === '') {
+        str = filters.join(separator);
+      } else {
+        str += separator + filters.join(separator);
+      }
     }
     return str;
   }
