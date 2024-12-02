@@ -16,7 +16,7 @@ class Age extends NumberTypeRequired {}
 //   }
 // }
 
-@AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'MinLength', value: 1 }])
+@AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'ArrayMinSize', value: 1 }])
 export class ArrayTypeRequired extends AbstractArrayType<Age> {
   getItemClass(value: PrimitiveType<Age>): Age {
     return new Age(value);
@@ -36,9 +36,9 @@ describe('AbstractArrayType', () => {
     });
     describe('Invalid Values', () => {
       [
-        [[], 'must be longer than or equal to 1 characters'],
-        [undefined, 'must be an array, should not be empty, must be longer than or equal to 1 characters'],
-        [null, 'must be an array, should not be empty, must be longer than or equal to 1 characters'],
+        [[], 'must contain at least 1 elements'],
+        [undefined, 'must be an array, should not be empty, must contain at least 1 elements'],
+        [null, 'must be an array, should not be empty, must contain at least 1 elements'],
       ].forEach((value) => {
         it(`Valid type: AbstractArrayType`, async () => {
           const type = new ArrayTypeRequired(value[0] as any);

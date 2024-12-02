@@ -18,7 +18,11 @@ export abstract class AbstractArrayType<T extends AbstractType<any>, R extends n
   }
 
   isValid(): boolean {
-    return super.isValid() && Array.isArray(this.value) && this.value.every((item) => this.getItemClass(item).isValid());
+    return (
+      super.isValid() && //data 1
+      Array.isArray(this.value) && // dat 2
+      this.value.every((item) => this.getItemClass(item).isValid())
+    );
   }
 
   validatorMessageStr(separator: string = ',', customReplacement: string = ''): string {
