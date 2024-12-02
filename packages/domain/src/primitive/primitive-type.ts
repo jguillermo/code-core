@@ -1,5 +1,5 @@
 import { AbstractJsonType } from '../type/abstract-json-type';
-import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '../type';
+import { AbstractArrayType, AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '../type';
 
 type Nullable<T> = T | null;
 
@@ -24,7 +24,9 @@ type JsonType<T> = T extends AbstractJsonType<infer U> ? object : T extends Abst
 
 type IdTypePrimitive<T> = T extends IdType ? string : never;
 
+type arrayType<T> = T extends AbstractArrayType<infer U, undefined> ? U : T extends AbstractArrayType<infer U, null> ? Nullable<U> : never;
+
 export type PrimitiveType<T> =
   T extends Array<infer U>
     ? PrimitiveType<U>[]
-    : BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;
+    : arrayType<T> | BooleanType<T> | DateType<T> | NumberType<T> | StringType<T> | UuidType<T> | EnumType<T> | JsonType<T> | IdTypePrimitive<T> | never;

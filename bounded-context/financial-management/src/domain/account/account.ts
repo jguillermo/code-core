@@ -1,5 +1,5 @@
 import { AccountId } from './types/account-id';
-import { AggregateRoot, ArrayType, CreatedAt, DomainException, PrimitiveTypes } from '@code-core/domain';
+import { AggregateRoot, CreatedAt, DomainException, PrimitiveTypes } from '@code-core/domain';
 import { AccountName } from './types/account-name';
 import { AccountType } from './types/account-type';
 import { AccountData } from './account.data';
@@ -7,7 +7,7 @@ import { AccountCurrency } from './types/account-currency';
 import { AccountBalance } from './types/account-balance';
 import { AccountFinantialEntity } from './types/account-finantial-entity';
 import { AccountAccountNumber } from './types/account-account-number';
-import { AccountTag } from './types/account-tag';
+import { AccountListTag } from './types/account-list-tag';
 import { AccountCreatedEvent } from './events/account-created.event';
 
 export class Account extends AggregateRoot {
@@ -19,7 +19,7 @@ export class Account extends AggregateRoot {
     private balance: AccountBalance, // Nivel 1: Saldo de la cuenta (Solo para cuentas reales)
     private readonly financialEntity: AccountFinantialEntity, // Nivel 2: Entidad financiera asociada (solo para cuentas bancarias o tarjetas de crédito)
     private readonly number: AccountAccountNumber, // Nivel 2: Número de cuenta (solo para cuentas reales)
-    private tags: AccountTag[], // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
+    private readonly tags: AccountListTag, // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
     private readonly creationDate: CreatedAt, // nivel 1: Fecha de creación de la cuenta
   ) {
     super();
@@ -40,7 +40,7 @@ export class Account extends AggregateRoot {
       balance: this.balance.value,
       financialEntity: this.financialEntity.value,
       number: this.number.value,
-      tags: this.tags.map((tag) => tag.value),
+      tags: this.tags.value, // agregar la correcta validacion del tipo array, necesitamso mejorar la form ade hacer el primiti types, acualmente saca never, que l aofrma en que no encuentra nungunca conidencia
       creationDate: this.creationDate.value,
     };
   }
@@ -65,10 +65,10 @@ export class Account extends AggregateRoot {
   }
 
   addTag(tag: string): void {
-    ArrayType.addValue<AccountTag>(this.tags, new AccountTag(tag));
+    this.tags.addItem(tag);
   }
 
   removeTag(tag: string): void {
-    this.tags = ArrayType.removeValue<AccountTag>(this.tags, new AccountTag(tag));
+    this.tags.removeItem(tag);
   }
 }

@@ -6,6 +6,7 @@ import { AbstractStringType } from './abstract-string-type';
 import { AbstractUuidType } from './abstract-uuid-type';
 import { AbstractType } from './abstract-type';
 
+export { AbstractArrayType } from './abstract-array-type';
 export { AbstractBooleanType } from './abstract-boolean-type';
 export { AbstractStringType } from './abstract-string-type';
 export { AbstractDateType } from './abstract-date-type';

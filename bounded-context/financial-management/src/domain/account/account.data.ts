@@ -5,8 +5,8 @@ import { AccountCurrency } from './types/account-currency';
 import { AccountBalance } from './types/account-balance';
 import { AccountFinantialEntity } from './types/account-finantial-entity';
 import { AccountAccountNumber } from './types/account-account-number';
-import { AccountTag } from './types/account-tag';
 import { AggregateData, CreatedAt, DataTypes } from '@code-core/domain';
+import { AccountListTag } from './types/account-list-tag';
 
 export class AccountData extends AggregateData {
   public readonly id: AccountId;
@@ -16,7 +16,7 @@ export class AccountData extends AggregateData {
   public readonly balance: AccountBalance;
   public readonly financialEntity: AccountFinantialEntity;
   public readonly number: AccountAccountNumber;
-  public readonly tags: AccountTag[];
+  public readonly tags: AccountListTag;
   public readonly creationDate: CreatedAt;
 
   constructor(currentLevel: number, params: DataTypes<AccountData>) {
@@ -28,7 +28,7 @@ export class AccountData extends AggregateData {
     this.balance = this.initializeType(AccountBalance, params.balance);
     this.financialEntity = this.initializeType(AccountFinantialEntity, params.financialEntity);
     this.number = this.initializeType(AccountAccountNumber, params.number);
-    this.tags = [this.initializeType(AccountTag, params.tags)];
+    this.tags = this.initializeType(AccountListTag, params.tags);
     this.creationDate = this.initializeType(CreatedAt, params.creationDate);
   }
 }
