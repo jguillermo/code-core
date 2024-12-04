@@ -1,11 +1,12 @@
 import { Level } from '../level/level.decorator';
 import { AddValidate } from '../validator/decorator/type-validator';
-import { IdType, StringTypeRequired } from '../type';
+import { AbstractArrayType, IdType, StringTypeRequired } from '../type';
 import { Validate } from 'class-validator';
 import { DomainValidator } from '../validator/domain-validator/domain-validator';
 import { AggregateRoot } from './aggregate-root';
 import { DataTypes } from '../primitive/primitive-types';
 import { AggregateData } from './aggregate-data';
+import { PrimitiveType } from '../primitive/primitive-type';
 
 class CompanyId extends IdType {}
 
@@ -37,11 +38,18 @@ class CompanySlug extends StringTypeRequired {
   }
 }
 
-@Level(4)
 @AddValidate([{ validator: 'MinLength', value: 3 }])
-class CompanyTag extends StringTypeRequired {
-  static empty(): CompanyTag {
-    return new CompanyTag('');
+class CompanyTag extends StringTypeRequired {}
+
+@Level(4)
+@AddValidate([{ validator: 'ArrayMinSize', value: 1 }])
+class CompanyTags extends AbstractArrayType<CompanyTag> {
+  getItemClass(value: PrimitiveType<CompanyTag>): CompanyTag {
+    return new CompanyTag(value);
+  }
+
+  static empty(): CompanyTags {
+    return new CompanyTags([]);
   }
 }
 
@@ -61,7 +69,7 @@ class CompanyDto {
   @Validate(DomainValidator, [CompanySlug])
   public slug?: string;
 
-  @Validate(DomainValidator, [CompanyTag])
+  @Validate(DomainValidator, [CompanyTags])
   public tags?: string[];
 
   public levelValidation?: number;
@@ -73,6 +81,7 @@ class CompanyData extends AggregateData {
   public readonly description: CompanyDescription;
   public readonly address: CompanyAddress;
   public readonly slug: CompanySlug;
+  public readonly tags: CompanyTags;
 
   constructor(currentLevel: number, params: DataTypes<CompanyData>) {
     super(currentLevel);
@@ -81,6 +90,7 @@ class CompanyData extends AggregateData {
     this.description = this.initializeType(CompanyDescription, params.description);
     this.address = this.initializeType(CompanyAddress, params.address);
     this.slug = this.initializeType(CompanySlug, params.slug);
+    this.tags = this.initializeType(CompanyTags, params.tags);
   }
 }
 
@@ -91,12 +101,13 @@ class Company extends AggregateRoot {
     private readonly description: CompanyDescription,
     private readonly address: CompanyAddress,
     private readonly slug: CompanySlug,
+    private readonly tags: CompanyTags,
   ) {
     super();
   }
 
   static create(data: CompanyData): Company {
-    return new Company(data.id, data.name, data.description, data.address, data.slug);
+    return new Company(data.id, data.name, data.description, data.address, data.slug, data.tags);
   }
 }
 
@@ -119,6 +130,7 @@ describe('AggregateData Tests', () => {
       expect(data.description).toBeInstanceOf(CompanyDescription);
       expect(data.address).toBeInstanceOf(CompanyAddress);
       expect(data.slug).toBeInstanceOf(CompanySlug);
+      expect(data.tags).toBeInstanceOf(CompanyTags);
     });
 
     it('should throw an error if id is invalid', () => {
@@ -141,6 +153,7 @@ describe('AggregateData Tests', () => {
           description: 'ValidDescription',
           address: 'ValidAddress',
           slug: 'ValidSlug',
+          tags: ['ValidTag'],
         });
       }).toThrowError('CompanyName: should not be empty, must be longer than or equal to 1 characters');
     });
@@ -153,6 +166,7 @@ describe('AggregateData Tests', () => {
           description: 'A',
           address: 'ValidAddress',
           slug: 'ValidSlug',
+          tags: ['ValidTag'],
         });
       }).toThrowError('CompanyDescription: must be longer than or equal to 2 characters');
     });
@@ -165,6 +179,7 @@ describe('AggregateData Tests', () => {
           description: 'ValidDescription',
           address: 'AB',
           slug: 'ValidSlug',
+          tags: ['ValidTag'],
         });
       }).toThrowError('CompanyAddress: must be longer than or equal to 3 characters');
     });
@@ -177,8 +192,44 @@ describe('AggregateData Tests', () => {
           description: 'ValidDescription',
           address: 'ValidAddress',
           slug: 'ABC',
+          tags: ['ValidTag'],
         });
       }).toThrowError('CompanySlug: must be longer than or equal to 4 characters');
+    });
+    it('should throw an error if slug does not meet validation rules', () => {
+      expect(() => {
+        new CompanyData(3, {
+          id: companyIdString,
+          name: 'ValidName',
+          description: 'ValidDescription',
+          address: 'ValidAddress',
+          slug: 'ValidSlug',
+          tags: ['s'],
+        });
+      }).toThrowError('CompanyTags: Item 1: must be longer than or equal to 3 characters');
+    });
+    it('should throw an error if slug does not meet validation rules', () => {
+      expect(() => {
+        new CompanyData(4, {
+          id: companyIdString,
+          name: 'ValidName',
+          description: 'ValidDescription',
+          address: 'ValidAddress',
+          slug: 'ValidSlug',
+        });
+      }).toThrowError('CompanyTags: Value mas be to array');
+    });
+    it('should throw an error if slug does not meet validation rules', () => {
+      expect(() => {
+        new CompanyData(4, {
+          id: companyIdString,
+          name: 'ValidName',
+          description: 'ValidDescription',
+          address: 'ValidAddress',
+          slug: 'ValidSlug',
+          tags: [],
+        });
+      }).toThrowError('CompanyTags: must contain at least 1 elements');
     });
   });
 
@@ -190,6 +241,7 @@ describe('AggregateData Tests', () => {
         description: undefined, // Below level
         address: undefined, // Below level
         slug: undefined, // Below level
+        tags: undefined, // Below level
       });
 
       expect(data.description.value).toBe('');
@@ -205,6 +257,7 @@ describe('AggregateData Tests', () => {
           description: undefined, // Level 2 requires description
           address: 'ValidAddress',
           slug: undefined,
+          tags: undefined,
         });
       }).toThrowError('CompanyDescription: must be a string, should not be empty, must be longer than or equal to 2 characters');
     });
@@ -216,7 +269,8 @@ describe('AggregateData Tests', () => {
           name: 'ValidName',
           description: 'ValidDescription',
           address: undefined, // Level 2 requires address
-          slug: 'ValidSlug',
+          slug: undefined,
+          tags: undefined,
         });
       }).toThrowError('CompanyAddress: must be a string, should not be empty, must be longer than or equal to 3 characters');
     });
@@ -228,9 +282,11 @@ describe('AggregateData Tests', () => {
         description: 'ValidDescription',
         address: 'ValidAddress',
         slug: undefined, // Below level
+        tags: undefined,
       });
 
       expect(data.slug.value).toBe('');
+      expect(data.tags.value).toEqual([]);
     });
 
     it('should throw an error if slug is required but empty due to level 3', () => {
@@ -241,6 +297,7 @@ describe('AggregateData Tests', () => {
           description: 'ValidDescription',
           address: 'ValidAddress',
           slug: undefined, // Level 3 requires slug
+          tags: undefined,
         });
       }).toThrowError('CompanySlug: must be a string, should not be empty, must be longer than or equal to 4 characters');
     });
@@ -255,6 +312,7 @@ describe('AggregateData Tests', () => {
           description: 'ValidDescription',
           address: 'AB', // Invalid address
           slug: 'ValidSlug',
+          tags: undefined,
         });
       }).toThrowError('CompanyAddress: must be longer than or equal to 3 characters');
     });
@@ -299,6 +357,33 @@ describe('AggregateData Tests', () => {
         });
         Company.create(data);
       }).toThrowError('CompanySlug: must be longer than or equal to 4 characters');
+    });
+  });
+
+  describe('Valid values', () => {
+    const voMother = (params: DataTypes<CompanyData>) => {
+      return new CompanyData(4, {
+        id: params.id ?? companyIdString,
+        name: params.name ?? 'ValidName',
+        description: params.description ?? 'ValidDescription',
+        address: params.address ?? 'ValidAddress',
+        slug: params.slug ?? 'ValidSlug',
+        tags: params.tags ?? ['ValidTag'],
+      });
+    };
+
+    it('valid items', () => {
+      const data = voMother({});
+      expect(data.id).toBeInstanceOf(CompanyId);
+      expect(data.name).toBeInstanceOf(CompanyName);
+      expect(data.description).toBeInstanceOf(CompanyDescription);
+      expect(data.address).toBeInstanceOf(CompanyAddress);
+      expect(data.slug).toBeInstanceOf(CompanySlug);
+      expect(data.tags).toBeInstanceOf(CompanyTags);
+    });
+    it('should valid array', () => {
+      const data = voMother({ tags: ['ValidTag', 'ValidTag2'] });
+      expect(data.tags.value).toEqual(['ValidTag', 'ValidTag2']);
     });
   });
 });
