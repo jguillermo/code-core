@@ -1,6 +1,5 @@
 import { AbstractJsonType } from '../type/abstract-json-type';
-import { AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '../type';
-import { AbstractArrayType } from '../type/abstract-array-type';
+import { AbstractArrayType, AbstractBooleanType, AbstractDateType, AbstractEnumType, AbstractNumberType, AbstractStringType, AbstractUuidType, IdType } from '../type';
 
 type Nullable<T> = T | null;
 

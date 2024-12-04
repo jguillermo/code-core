@@ -40,7 +40,7 @@ export class Account extends AggregateRoot {
       balance: this.balance.value,
       financialEntity: this.financialEntity.value,
       number: this.number.value,
-      tags: this.tags.value, // agregar la correcta validacion del tipo array, necesitamso mejorar la form ade hacer el primiti types, acualmente saca never, que l aofrma en que no encuentra nungunca conidencia
+      tags: this.tags.value,
       creationDate: this.creationDate.value,
     };
   }
