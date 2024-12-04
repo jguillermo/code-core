@@ -16,6 +16,7 @@ import {
   UuidTypeOptional,
   UuidTypeRequired,
 } from '../type';
+import { AbstractArrayType } from '../type/abstract-array-type';
 
 describe('Primitive Types', () => {
   it('booleanType', () => {
@@ -134,5 +135,31 @@ describe('Primitive Types', () => {
 
     expectTypeOf<PrimitiveType<JsonTypeRequired[]>>().toEqualTypeOf<object[]>();
     expectTypeOf<PrimitiveType<JsonTypeOptional[]>>().toEqualTypeOf<Array<object | null>>();
+  });
+
+  it('array number', () => {
+    @AddValidate([{ validator: 'Max', value: 100 }])
+    class Age extends NumberTypeRequired {}
+
+    @AddValidate([{ validator: 'IsOptional' }, { validator: 'ArrayMinSize', value: 1 }])
+    class ArrayTypeOptional extends AbstractArrayType<Age, null> {
+      constructor(value: number[] | null = null) {
+        super(value);
+      }
+
+      getItemClass(value: PrimitiveType<Age>): Age {
+        return new Age(value);
+      }
+    }
+
+    @AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'ArrayMinSize', value: 1 }])
+    class ArrayTypeRequired extends AbstractArrayType<Age> {
+      getItemClass(value: PrimitiveType<Age>): Age {
+        return new Age(value);
+      }
+    }
+
+    expectTypeOf<PrimitiveType<ArrayTypeRequired>>().toEqualTypeOf<number[]>();
+    expectTypeOf<PrimitiveType<ArrayTypeOptional>>().toEqualTypeOf<number[] | null>();
   });
 });

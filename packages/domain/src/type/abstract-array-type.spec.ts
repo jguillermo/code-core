@@ -8,7 +8,7 @@ import { expectTypeOf } from 'expect-type';
 class Age extends NumberTypeRequired {}
 
 @AddValidate([{ validator: 'IsOptional' }, { validator: 'ArrayMinSize', value: 1 }])
-export class ArrayTypeOptional extends AbstractArrayType<Age, null> {
+class ArrayTypeOptional extends AbstractArrayType<Age, null> {
   constructor(value: number[] | null = null) {
     super(value);
   }
@@ -19,7 +19,7 @@ export class ArrayTypeOptional extends AbstractArrayType<Age, null> {
 }
 
 @AddValidate([{ validator: 'IsNotEmpty' }, { validator: 'ArrayMinSize', value: 1 }])
-export class ArrayTypeRequired extends AbstractArrayType<Age> {
+class ArrayTypeRequired extends AbstractArrayType<Age> {
   getItemClass(value: PrimitiveType<Age>): Age {
     return new Age(value);
   }
