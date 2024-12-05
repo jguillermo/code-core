@@ -24,7 +24,7 @@ version:
 publish:
 	npx lerna publish from-package --yes
 
-#make make list-files | grep 'packages/domain/src/validator/decorator' | grep -Ev "\.spec\.ts$$"
+#@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' | grep -Ev "\.spec\.ts$$" ); \
 list-files:
 	@IGNORE_LIST="\.gitignore$$|Makefile$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
 	FILES_CMD="git ls-files"; \
@@ -33,7 +33,7 @@ list-files:
 
 
 files-financial-management-domain:
-	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src/domain/account' ); \
+	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' ); \
 	echo "$$FILE_LIST"; \
 	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
 
