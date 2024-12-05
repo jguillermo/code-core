@@ -5,7 +5,7 @@ import { Validate } from 'class-validator';
 import { DomainValidator } from '../validator/domain-validator/domain-validator';
 import { AggregateRoot } from './aggregate-root';
 import { DataTypes } from '../primitive/primitive-types';
-import { AggregateData } from './aggregate-data';
+import { AggregateTypes } from './aggregate-types';
 import { PrimitiveType } from '../primitive/primitive-type';
 
 class CompanyId extends IdType {}
@@ -75,7 +75,7 @@ class CompanyDto {
   public levelValidation?: number;
 }
 
-class CompanyData extends AggregateData {
+class CompanyData extends AggregateTypes {
   public readonly id: CompanyId;
   public readonly name: CompanyName;
   public readonly description: CompanyDescription;

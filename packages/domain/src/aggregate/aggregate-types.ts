@@ -2,7 +2,7 @@ import { AbstractType } from '../type/abstract-type';
 import { getLevel, normalizeLevel } from '../level/level.decorator';
 import { DomainException } from '../exceptions';
 
-export class AggregateData {
+export class AggregateTypes {
   private readonly currentLevelNormalized: number;
 
   constructor(currentLevel: number) {

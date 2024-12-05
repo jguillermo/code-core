@@ -1,10 +1,10 @@
 import { EventBase, PrimitiveTypes } from '@code-core/domain';
-import { AccountData } from '../account.data';
+import { AccountTypes } from '../account.types';
 
 export class AccountCreatedEvent extends EventBase {
   public readonly id: string;
 
-  constructor(data: Required<PrimitiveTypes<AccountData>>) {
+  constructor(data: Required<PrimitiveTypes<AccountTypes>>) {
     super();
     this.id = data.id;
   }

@@ -5,10 +5,10 @@ import { AccountCurrency } from './types/account-currency';
 import { AccountBalance } from './types/account-balance';
 import { AccountFinantialEntity } from './types/account-finantial-entity';
 import { AccountAccountNumber } from './types/account-account-number';
-import { AggregateData, CreatedAt, DataTypes } from '@code-core/domain';
+import { AggregateTypes, CreatedAt, DataTypes } from '@code-core/domain';
 import { AccountListTag } from './types/account-list-tag';
 
-export class AccountData extends AggregateData {
+export class AccountTypes extends AggregateTypes {
   public readonly id: AccountId;
   public readonly name: AccountName;
   public readonly type: AccountType;
@@ -19,7 +19,7 @@ export class AccountData extends AggregateData {
   public readonly tags: AccountListTag;
   public readonly creationDate: CreatedAt;
 
-  constructor(currentLevel: number, params: DataTypes<AccountData>) {
+  constructor(currentLevel: number, params: DataTypes<AccountTypes>) {
     super(currentLevel);
     this.id = this.initializeType(AccountId, params.id);
     this.name = this.initializeType(AccountName, params.name);

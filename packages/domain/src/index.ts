@@ -1,6 +1,6 @@
 export * from './event/event-base';
 export * from './aggregate/aggregate-root';
-export * from './aggregate/aggregate-data';
+export * from './aggregate/aggregate-types';
 export * from './type';
 export * from './validator';
 export * from './primitive/primitive-types';

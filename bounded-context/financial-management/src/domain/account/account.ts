@@ -2,7 +2,7 @@ import { AccountId } from './types/account-id';
 import { AggregateRoot, CreatedAt, DomainException, PrimitiveTypes } from '@code-core/domain';
 import { AccountName } from './types/account-name';
 import { AccountType } from './types/account-type';
-import { AccountData } from './account.data';
+import { AccountTypes } from './account.types';
 import { AccountCurrency } from './types/account-currency';
 import { AccountBalance } from './types/account-balance';
 import { AccountFinantialEntity } from './types/account-finantial-entity';
@@ -25,13 +25,13 @@ export class Account extends AggregateRoot {
     super();
   }
 
-  static create(data: AccountData): Account {
+  static create(data: AccountTypes): Account {
     const aggregate = new Account(data.id, data.name, data.type, data.currency, data.balance, data.financialEntity, data.number, data.tags, data.creationDate);
     aggregate.record(new AccountCreatedEvent(aggregate.toJson()));
     return aggregate;
   }
 
-  toJson(): PrimitiveTypes<AccountData> {
+  toJson(): PrimitiveTypes<AccountTypes> {
     return {
       id: this.id.value,
       name: this.name.value,
