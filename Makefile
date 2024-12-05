@@ -22,68 +22,25 @@ version:
 publish:
 	npx lerna publish from-package --yes
 
-
-#	@IGNORE_LIST="\.gitignore$|Makefile$|README.md$|package-lock.json$|tsconfig$|husky$|lerna.json$|ci.yml$|prettier$|eslintrc$|ia$|.zip$\"; \
-
-
+#make make list-files | grep 'packages/domain/src/validator/decorator' | grep -Ev "\.spec\.ts$$"
 list-files:
-	@IGNORE_LIST="\.gitignore$$|Makefile$$|lerna\.md$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
-	if [ -z "$(DIR_PATH)" ]; then \
-		FILES_CMD="git ls-files"; \
-	else \
-		FILES_CMD="git ls-files $(DIR_PATH)"; \
-	fi; \
-	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters.";
+	@IGNORE_LIST="\.gitignore$$|Makefile$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
+	FILES_CMD="git ls-files"; \
+	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters"
 	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
 
 
+files-financial-management-domain:
+	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src/domain/account' ); \
+	echo "$$FILE_LIST"; \
+	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
 
-
-
-
-process-files:
+process-content:
 	@OUTPUT_FILE=temp_combined.txt; \
-	if [ -f $$OUTPUT_FILE ]; then \
-		echo "Removing existing $$OUTPUT_FILE"; \
-		rm -f $$OUTPUT_FILE; \
+	if [ -z "$$FILE_LIST" ]; then \
+		echo "Error: FILE_LIST is empty. No files found for bounded context."; \
+		exit 1; \
 	fi; \
-	echo "Creating $$OUTPUT_FILE"; \
-	touch $$OUTPUT_FILE; \
-	[ -f promts/ia ] && cat promts/ia >> $$OUTPUT_FILE; \
-	while read -r file; do \
-		echo "===== $$file =====" >> $$OUTPUT_FILE; \
-		echo "" >> $$OUTPUT_FILE; \
-		cat "$$file" >> $$OUTPUT_FILE; \
-		echo -e "\n\n" >> $$OUTPUT_FILE; \
-	done; \
-	echo "File processing completed. Output saved to $$OUTPUT_FILE."
-
-#e# make combine DIR_PATH=src
-#e# make combine IGNORE_EXTRA="test.txt config.yml"
-#e# make combine DIR_PATH=src IGNORE_EXTRA="test.txt config.yml"
-combine:
-	@make list-files DIR_PATH=$(DIR_PATH) | make process-files
-	@DESTINATION=$(HOME)/Desktop/combined_output.txt; \
-	echo "Checking if $$DESTINATION exists"; \
-	if [ -f $$DESTINATION ]; then \
-		echo "Removing existing file on Desktop"; \
-		rm -f $$DESTINATION; \
-	fi; \
-	echo "Copying $$OUTPUT_FILE content to clipboard"; \
-	cat temp_combined.txt | pbcopy; \
-	echo "Copying $$OUTPUT_FILE to Desktop"; \
-	mv temp_combined.txt $$DESTINATION; \
-	echo "Process completed. Combined file moved to Desktop as combined_output.txt."
-
-
-combine3:
-	@OUTPUT_FILE=temp_combined.txt; \
-	DESTINATION=$(HOME)/Desktop/combined_output.txt; \
-	IGNORE_FILES=".gitignore Makefile README.md package-lock.json tsconfig husky lerna.json ci.yml prettier eslintrc ia"; \
-	if [ -n "$(IGNORE_EXTRA)" ]; then \
-		IGNORE_FILES="$$IGNORE_FILES $$IGNORE_EXTRA"; \
-	fi; \
-	DIRECTORY=${DIR:-.}; \
 	echo "Checking if $$OUTPUT_FILE exists"; \
 	if [ -f $$OUTPUT_FILE ]; then \
 		echo "Removing existing $$OUTPUT_FILE"; \
@@ -91,20 +48,17 @@ combine3:
 	fi; \
 	echo "Creating and combining files from $$DIRECTORY into $$OUTPUT_FILE"; \
 	> $$OUTPUT_FILE; \
-	cat promts/ia >> $$OUTPUT_FILE; \
-	find $$DIRECTORY -type f | grep -vE "($$(echo $$IGNORE_FILES | tr ' ' '|'))" | while read file; do \
-		echo "===== $$file =====" >> $$OUTPUT_FILE; \
-		echo "" >> $$OUTPUT_FILE; \
-		cat "$$file" >> $$OUTPUT_FILE; \
-		echo -e "\n\n" >> $$OUTPUT_FILE; \
+	cat promts/bounded.txt >> $$OUTPUT_FILE; \
+	echo "$$FILE_LIST" | tr ' ' '\n' | while read -r file; do \
+		if [ -f "$$file" ]; then \
+			echo "===== $$file =====" >> $$OUTPUT_FILE; \
+			echo "" >> $$OUTPUT_FILE; \
+			cat "$$file" >> $$OUTPUT_FILE; \
+			echo -e "\n\n" >> $$OUTPUT_FILE; \
+		else \
+			echo "Warning: File $$file does not exist, skipping."; \
+		fi; \
 	done; \
-	echo "Checking if $$DESTINATION exists"; \
-	if [ -f $$DESTINATION ]; then \
-		echo "Removing existing file on Desktop"; \
-		rm $$DESTINATION; \
-	fi; \
-	echo "Copying $$OUTPUT_FILE to Desktop"; \
-	mv $$OUTPUT_FILE $$DESTINATION; \
 	echo "Copying $$OUTPUT_FILE content to clipboard"; \
 	cat $$OUTPUT_FILE | pbcopy; \
 	echo "Content copied to clipboard";
