@@ -231,6 +231,18 @@ describe('AggregateData Tests', () => {
         });
       }).toThrowError('CompanyTags: must contain at least 1 elements');
     });
+    it('should throw an error if slug does not meet validation rules', () => {
+      expect(() => {
+        new CompanyData(4, {
+          id: companyIdString,
+          name: 'ValidName',
+          description: 'ValidDescription',
+          address: 'ValidAddress',
+          slug: 'ValidSlug',
+          tags: '' as any,
+        });
+      }).toThrowError('value  is not a Array.');
+    });
   });
 
   describe('Level-based validation tests', () => {
