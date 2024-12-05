@@ -3,6 +3,8 @@
 SHELL := /bin/bash
 .PHONY: combine
 
+export OUTPUT_FILE=temp_combined.txt
+
 main-script:
 	npm run format
 	npm run lint:fix
@@ -33,11 +35,10 @@ list-files:
 files-financial-management-domain:
 	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src/domain/account' ); \
 	echo "$$FILE_LIST"; \
-	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
 
 process-content:
-	@OUTPUT_FILE=temp_combined.txt; \
-	if [ -z "$$FILE_LIST" ]; then \
+	@if [ -z "$$FILE_LIST" ]; then \
 		echo "Error: FILE_LIST is empty. No files found for bounded context."; \
 		exit 1; \
 	fi; \
@@ -48,13 +49,18 @@ process-content:
 	fi; \
 	echo "Creating and combining files from $$DIRECTORY into $$OUTPUT_FILE"; \
 	> $$OUTPUT_FILE; \
+	if [ -n "$$INIT_FILE" ] && [ -f "$$INIT_FILE" ]; then \
+		echo "Adding initial content from $$INIT_FILE"; \
+		cat "$$INIT_FILE" >> $$OUTPUT_FILE; \
+	fi; \
 	cat promts/bounded.txt >> $$OUTPUT_FILE; \
+	echo "$$FILE_LIST" >> $$OUTPUT_FILE; \
 	echo "$$FILE_LIST" | tr ' ' '\n' | while read -r file; do \
 		if [ -f "$$file" ]; then \
+		    echo -e "\n\n" >> $$OUTPUT_FILE; \
 			echo "===== $$file =====" >> $$OUTPUT_FILE; \
 			echo "" >> $$OUTPUT_FILE; \
 			cat "$$file" >> $$OUTPUT_FILE; \
-			echo -e "\n\n" >> $$OUTPUT_FILE; \
 		else \
 			echo "Warning: File $$file does not exist, skipping."; \
 		fi; \
