@@ -32,7 +32,7 @@ list-files:
 	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
 
 
-files-financial-management-domain:
+files-financial-management:
 	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' ); \
 	echo "$$FILE_LIST"; \
 	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
