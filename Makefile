@@ -23,16 +23,18 @@ publish:
 	npx lerna publish from-package --yes
 
 
+#	@IGNORE_LIST="\.gitignore$|Makefile$|README.md$|package-lock.json$|tsconfig$|husky$|lerna.json$|ci.yml$|prettier$|eslintrc$|ia$|.zip$\"; \
+
 
 list-files:
-	IGNORE_LIST="\.gitignore$|Makefile$|README.md$|package-lock.json$|tsconfig$|husky$|lerna.json$|ci.yml$|prettier$|eslintrc$|ia$|.zip$\"; \
+	@IGNORE_LIST="\.gitignore$$|Makefile$$|lerna\.md$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
 	if [ -z "$(DIR_PATH)" ]; then \
 		FILES_CMD="git ls-files"; \
 	else \
 		FILES_CMD="git ls-files $(DIR_PATH)"; \
 	fi; \
-	echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'"; \
-	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters."
+	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters.";
+	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
 
 
 
