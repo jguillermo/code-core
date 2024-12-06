@@ -17,6 +17,9 @@ Dentro de la carpeta de cada caso de uso, defina dos clases principales:
    - Orquesta el flujo de trabajo, invocando cualquier agregate, cualquier repositorio,  servicio de dominio. dentro del bundle context que se esta analizando.
    - Absténgase de colocar lógica de negocio, validaciones complejas o cálculos dentro del caso de uso. Su responsabilidad es la de un coordinador, no un tomador de decisiones.
    - Garantice que la lógica clave resida en el dominio y que la capa de aplicación se limite a componer la interacción entre los elementos dominiales.
+   - El nombre de los caos de uso deben reflejar un lenguaje ubicuo en línea con el bundlecontext descrito. Los nombres se centran en acciones significativas y específicas del negocio. El nombre del caso de uso NUNCA debe tener términos genéricos relacionados con CRUD.
+   - El nombre debe estar en ingles y la explicaion en español
+   - tambien incluye el nivel para que pueda ser usado por el usuario final
 
 2. DTO Class (Data Transfer Object):
    - Contenga propiedades fuertemente tipadas que representen los datos de entrada necesarios para el caso de uso.
