@@ -4,6 +4,7 @@ import { DomainValidator } from './domain-validator';
 import { AddValidate } from '../decorator/type-validator';
 import { StringTypeRequired } from '../../type';
 import { Level } from '../../level/level.decorator';
+import { DomainValidatorDto } from './domain-validator.dto';
 
 @Level(1)
 @AddValidate([{ validator: 'MinLength', value: 5 }])
@@ -33,7 +34,7 @@ class CourseLevelSlug extends StringTypeRequired {
   }
 }
 
-class EntityValidateLevelTest {
+class EntityValidateLevelTest extends DomainValidatorDto {
   @Validate(DomainValidator, [CourseLevelTitle])
   public name?: string;
 
@@ -45,8 +46,6 @@ class EntityValidateLevelTest {
 
   @Validate(DomainValidator, [CourseLevelSlug])
   public slug?: string;
-
-  public levelValidation?: number;
 }
 
 describe('validate level DomainValidator', () => {
