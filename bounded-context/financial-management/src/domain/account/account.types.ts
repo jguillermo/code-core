@@ -29,6 +29,6 @@ export class AccountTypes extends AggregateTypes {
     this.financialEntity = this.initializeType(AccountFinantialEntity, params.financialEntity);
     this.number = this.initializeType(AccountAccountNumber, params.number);
     this.tags = this.initializeType(AccountListTag, params.tags);
-    this.creationDate = this.initializeType(CreatedAt, params.creationDate);
+    this.creationDate = CreatedAt.now();
   }
 }

@@ -12,4 +12,8 @@ export class AccountListTag extends AbstractArrayType<AccountTag, null> {
   getItemClass(value: string): AccountTag {
     return new AccountTag(value);
   }
+
+  static empty(): AccountListTag {
+    return new AccountListTag([]);
+  }
 }
