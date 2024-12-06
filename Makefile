@@ -25,8 +25,9 @@ publish:
 	npx lerna publish from-package --yes
 
 #@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' | grep -Ev "\.spec\.ts$$" ); \
+
 list-files:
-	@IGNORE_LIST="\.gitignore$$|Makefile$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
+	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|\.prompt$$|\.md$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
 	FILES_CMD="git ls-files"; \
 	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters"
 	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
