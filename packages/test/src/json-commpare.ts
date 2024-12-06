@@ -11,20 +11,28 @@ type JsonArray = Array<JsonValue>;
 
 export class JsonCompare {
   private _differences: string[] = [];
-  private strict: boolean;
+  private _strictMode: boolean;
+
+  static strict(data: any, reference: any): string[] {
+    return new JsonCompare(data, reference, true).differences;
+  }
+
+  static include(data: any, reference: any): string[] {
+    return new JsonCompare(data, reference, false).differences;
+  }
 
   get differences(): string[] {
     return this._differences;
   }
 
   constructor(data: any, reference: any, strict = false) {
-    this.strict = strict;
+    this._strictMode = strict;
     this._differences = [];
     this.compareValues(data, reference, '');
   }
 
   private compareArrays(data: JsonArray, reference: JsonArray, path: string) {
-    if (this.strict && data.length !== reference.length) {
+    if (this._strictMode && data.length !== reference.length) {
       this._differences.push(`${path}: length of ${universalToString(data)} is not equal to length of ${universalToString(reference)}`);
       return;
     }
@@ -41,7 +49,7 @@ export class JsonCompare {
   }
 
   private compareObjects(data: JsonObject, reference: JsonObject, path: string) {
-    if (this.strict) {
+    if (this._strictMode) {
       Object.keys(reference).forEach((key) => {
         const processPath = this.processPath(path, key);
         if (!Object.prototype.hasOwnProperty.call(data, key)) {

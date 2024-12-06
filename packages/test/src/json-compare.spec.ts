@@ -1,19 +1,18 @@
 import { JsonCompare } from './json-commpare';
 import { universalToString } from '@code-core/common';
 
-function compareValues(data: any, reference: any, strict: boolean, errors: string[]): void {
-  const jsonCompare = new JsonCompare(data, reference, strict);
-  it(`compare strict[${strict}]: ${universalToString(data)} eq ${universalToString(reference)}`, () => {
-    expect(errors).toEqual(jsonCompare.differences);
+function s(data: any, reference: any, errors: string[] = []) {
+  const diff = JsonCompare.strict(data, reference);
+  it(`compare strict: ${universalToString(data)} eq ${universalToString(reference)}`, () => {
+    expect(errors).toEqual(diff);
   });
 }
 
-function s(data: any, reference: any, errors: string[] = []) {
-  compareValues(data, reference, true, errors);
-}
-
 function _(include: any, reference: any, errors: string[] = []) {
-  compareValues(include, reference, false, errors);
+  const diff = JsonCompare.include(include, reference);
+  it(`compare include: ${universalToString(include)} eq ${universalToString(reference)}`, () => {
+    expect(errors).toEqual(diff);
+  });
 }
 
 describe('JsonCompare', () => {
