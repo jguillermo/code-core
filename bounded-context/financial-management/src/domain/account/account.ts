@@ -10,6 +10,12 @@ import { AccountAccountNumber } from './types/account-account-number';
 import { AccountListTag } from './types/account-list-tag';
 import { AccountCreatedEvent } from './events/account-created.event';
 
+/*
+ * Propósito: Gestiona las cuentas financieras, ya sean reales (como cuentas bancarias, efectivo)
+ * o virtuales (como ingresos simbólicos o categorías de gasto).
+ * Uso: Este Aggregate es clave para registrar transacciones, generar reportes financieros, y categorizar el flujo de fondos.
+ * También mantiene las invariantes de negocio relacionadas con los saldos.
+ */
 export class Account extends AggregateRoot {
   constructor(
     private readonly id: AccountId, // Nivel 1: Identificador único de la cuenta
@@ -45,7 +51,9 @@ export class Account extends AggregateRoot {
     };
   }
 
-  // Métodos de negocio
+  /*
+   * Incrementa el saldo de una cuenta real.
+   */
   addFunds(amount: number): void {
     if (this.type.isReal()) {
       this.balance = this.balance.addFunds(amount);
@@ -54,8 +62,9 @@ export class Account extends AggregateRoot {
     }
   }
 
-  // Métodos de negocio
-  // Nivel 1: Retirar fondos de la cuenta
+  /*
+   * Disminuye el saldo de una cuenta real.
+   */
   withdrawFunds(amount: number): void {
     if (this.type.isReal()) {
       this.balance = this.balance.withdrawFunds(amount);
@@ -64,6 +73,9 @@ export class Account extends AggregateRoot {
     }
   }
 
+  /*
+   * Agrega una etiqueta a la cuenta.
+   */
   addTag(tag: string): void {
     this.tags.addItem(tag);
   }

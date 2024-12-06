@@ -1,3 +1,13 @@
-import { StringTypeRequired } from '@code-core/domain';
+import { AbstractEnumType, AddValidate } from '@code-core/domain';
 
-export class AccountCurrency extends StringTypeRequired {}
+enum CurrencyEnum {
+  USD = 'USD',
+  PEN = 'PEN',
+}
+
+@AddValidate([{ validator: 'IsEnum', value: CurrencyEnum }, { validator: 'IsNotEmpty' }])
+export class AccountCurrency extends AbstractEnumType<CurrencyEnum> {
+  protected getEnum(): Record<string, CurrencyEnum> {
+    return CurrencyEnum;
+  }
+}
