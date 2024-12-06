@@ -7,11 +7,11 @@ Account Management (Real and Virtual)
 - **Propósito**: Crea una nueva cuenta (real o virtual) con su información inicial.
 - **Aggregates Involucrados**: `Account`.
 - **Datos del DTO**:
-    - `accountName`: Nombre de la cuenta.
-    - `accountType`: Real o virtual.
-    - `currency`: Moneda de la cuenta.
-    - `initialBalance`: Saldo inicial (opcional para cuentas reales).
-    - `tags`: Etiquetas asociadas (opcional, Nivel 3).
+  - `accountName`: Nombre de la cuenta.
+  - `accountType`: Real o virtual.
+  - `currency`: Moneda de la cuenta.
+  - `initialBalance`: Saldo inicial (opcional para cuentas reales).
+  - `tags`: Etiquetas asociadas (opcional, Nivel 3).
 - **Nivel**: 1.
 
 ---
@@ -21,7 +21,7 @@ Account Management (Real and Virtual)
 - **Propósito**: Cierra una cuenta tras validar que no tenga saldo ni transacciones pendientes.
 - **Aggregates Involucrados**: `Account`, `Transaction`.
 - **Datos del DTO**:
-    - `accountId`: Identificador de la cuenta a cerrar.
+  - `accountId`: Identificador de la cuenta a cerrar.
 - **Nivel**: 1.
 
 ---
@@ -31,9 +31,9 @@ Account Management (Real and Virtual)
 - **Propósito**: Clasifica cuentas según etiquetas, categorías o tipos.
 - **Aggregates Involucrados**: `Account`.
 - **Datos del DTO**:
-    - `accountId`: Identificador de la cuenta.
-    - `categories`: Lista de categorías a asignar.
-    - `tags`: Lista de etiquetas a asignar (opcional, Nivel 3).
+  - `accountId`: Identificador de la cuenta.
+  - `categories`: Lista de categorías a asignar.
+  - `tags`: Lista de etiquetas a asignar (opcional, Nivel 3).
 - **Nivel**: 2.
 
 ---
@@ -43,10 +43,10 @@ Account Management (Real and Virtual)
 - **Propósito**: Actualiza información clave de una cuenta.
 - **Aggregates Involucrados**: `Account`.
 - **Datos del DTO**:
-    - `accountId`: Identificador de la cuenta.
-    - `accountName`: Nuevo nombre de la cuenta (opcional).
-    - `financialEntity`: Nueva entidad financiera asociada (opcional).
-    - `tags`: Nuevas etiquetas (opcional, Nivel 3).
+  - `accountId`: Identificador de la cuenta.
+  - `accountName`: Nuevo nombre de la cuenta (opcional).
+  - `financialEntity`: Nueva entidad financiera asociada (opcional).
+  - `tags`: Nuevas etiquetas (opcional, Nivel 3).
 - **Nivel**: 2.
 
 ---
@@ -56,8 +56,8 @@ Account Management (Real and Virtual)
 - **Propósito**: Fusiona varias cuentas en una sola, consolidando saldos y transacciones.
 - **Aggregates Involucrados**: `Account`, `Transaction`.
 - **Datos del DTO**:
-    - `sourceAccountIds`: Lista de IDs de las cuentas origen.
-    - `destinationAccountId`: ID de la cuenta destino.
+  - `sourceAccountIds`: Lista de IDs de las cuentas origen.
+  - `destinationAccountId`: ID de la cuenta destino.
 - **Nivel**: 3.
 
 ---
@@ -71,13 +71,13 @@ Asset Management
 - **Propósito**: Registra un nuevo activo con sus detalles iniciales.
 - **Aggregates Involucrados**: `Asset`.
 - **Datos del DTO**:
-    - `assetName`: Nombre del activo.
-    - `acquisitionDate`: Fecha de adquisición.
-    - `acquisitionValue`: Valor inicial.
-    - `usefulLife`: Vida útil estimada.
-    - `depreciationMethod`: Método de depreciación (lineal, saldo decreciente).
-    - `residualValue`: Valor residual.
-    - `associatedCosts`: Lista de costos asociados (opcional).
+  - `assetName`: Nombre del activo.
+  - `acquisitionDate`: Fecha de adquisición.
+  - `acquisitionValue`: Valor inicial.
+  - `usefulLife`: Vida útil estimada.
+  - `depreciationMethod`: Método de depreciación (lineal, saldo decreciente).
+  - `residualValue`: Valor residual.
+  - `associatedCosts`: Lista de costos asociados (opcional).
 - **Nivel**: 1.
 
 ---
@@ -87,10 +87,10 @@ Asset Management
 - **Propósito**: Modifica los detalles de un activo existente.
 - **Aggregates Involucrados**: `Asset`.
 - **Datos del DTO**:
-    - `assetId`: Identificador del activo.
-    - `usefulLife`: Nueva vida útil (opcional).
-    - `residualValue`: Nuevo valor residual (opcional).
-    - `associatedCosts`: Nuevos costos asociados (opcional).
+  - `assetId`: Identificador del activo.
+  - `usefulLife`: Nueva vida útil (opcional).
+  - `residualValue`: Nuevo valor residual (opcional).
+  - `associatedCosts`: Nuevos costos asociados (opcional).
 - **Nivel**: 2.
 
 ---
@@ -100,7 +100,7 @@ Asset Management
 - **Propósito**: Calcula la depreciación anual de activos registrados.
 - **Aggregates Involucrados**: `Asset`.
 - **Datos del DTO**:
-    - `assetIds`: Lista de identificadores de activos (opcional, para procesar activos específicos).
+  - `assetIds`: Lista de identificadores de activos (opcional, para procesar activos específicos).
 - **Nivel**: 2.
 
 ---
@@ -110,7 +110,7 @@ Asset Management
 - **Propósito**: Registra los ajustes contables relacionados con la depreciación.
 - **Aggregates Involucrados**: `Asset`, `Transaction`.
 - **Datos del DTO**:
-    - `assetIds`: Lista de identificadores de activos.
+  - `assetIds`: Lista de identificadores de activos.
 - **Nivel**: 3.
 
 ---
@@ -120,7 +120,7 @@ Asset Management
 - **Propósito**: Analiza los costos asociados a activos registrados.
 - **Aggregates Involucrados**: `Asset`.
 - **Datos del DTO**:
-    - `filters`: Filtros opcionales para el análisis (por tipo de costo, rango de fechas, etc.).
+  - `filters`: Filtros opcionales para el análisis (por tipo de costo, rango de fechas, etc.).
 - **Nivel**: 3.
 
 ---
@@ -134,10 +134,10 @@ Liability Management
 - **Propósito**: Registra un nuevo pasivo financiero.
 - **Aggregates Involucrados**: `Liability`.
 - **Datos del DTO**:
-    - `description`: Descripción del pasivo.
-    - `amount`: Monto total del pasivo.
-    - `dueDate`: Fecha de vencimiento.
-    - `creditorEntity`: Entidad acreedora.
+  - `description`: Descripción del pasivo.
+  - `amount`: Monto total del pasivo.
+  - `dueDate`: Fecha de vencimiento.
+  - `creditorEntity`: Entidad acreedora.
 - **Nivel**: 1.
 
 ---
@@ -147,9 +147,9 @@ Liability Management
 - **Propósito**: Modifica información de un pasivo.
 - **Aggregates Involucrados**: `Liability`.
 - **Datos del DTO**:
-    - `liabilityId`: Identificador del pasivo.
-    - `amount`: Nuevo monto (opcional).
-    - `dueDate`: Nueva fecha de vencimiento (opcional).
+  - `liabilityId`: Identificador del pasivo.
+  - `amount`: Nuevo monto (opcional).
+  - `dueDate`: Nueva fecha de vencimiento (opcional).
 - **Nivel**: 2.
 
 ---
@@ -159,8 +159,8 @@ Liability Management
 - **Propósito**: Registra un pago parcial o total realizado para un pasivo.
 - **Aggregates Involucrados**: `Liability`, `Transaction`.
 - **Datos del DTO**:
-    - `liabilityId`: Identificador del pasivo.
-    - `amount`: Monto pagado.
+  - `liabilityId`: Identificador del pasivo.
+  - `amount`: Monto pagado.
 - **Nivel**: 1.
 
 ---
@@ -170,7 +170,7 @@ Liability Management
 - **Propósito**: Crea un plan de pagos para pasivos según prioridades.
 - **Aggregates Involucrados**: `Liability`.
 - **Datos del DTO**:
-    - `prioritizationRules`: Reglas para priorizar pagos (opcional).
+  - `prioritizationRules`: Reglas para priorizar pagos (opcional).
 - **Nivel**: 2.
 
 ---
@@ -180,7 +180,7 @@ Liability Management
 - **Propósito**: Proporciona un resumen del estado actual de los pasivos.
 - **Aggregates Involucrados**: `Liability`.
 - **Datos del DTO**:
-    - `filters`: Filtros opcionales para análisis (por vencimiento, estado, etc.).
+  - `filters`: Filtros opcionales para análisis (por vencimiento, estado, etc.).
 - **Nivel**: 2.
 
 ---
@@ -194,12 +194,12 @@ Transaction Management
 - **Propósito**: Registra una nueva transacción financiera.
 - **Aggregates Involucrados**: `Transaction`, `Account`.
 - **Datos del DTO**:
-    - `fromAccountId`: Cuenta de origen.
-    - `toAccountId`: Cuenta de destino.
-    - `amount`: Monto.
-    - `description`: Descripción.
-    - `category`: Categoría de la transacción.
-    - `tags`: Etiquetas asociadas (opcional).
+  - `fromAccountId`: Cuenta de origen.
+  - `toAccountId`: Cuenta de destino.
+  - `amount`: Monto.
+  - `description`: Descripción.
+  - `category`: Categoría de la transacción.
+  - `tags`: Etiquetas asociadas (opcional).
 - **Nivel**: 1.
 
 ---
@@ -209,9 +209,9 @@ Transaction Management
 - **Propósito**: Transfiere fondos entre cuentas.
 - **Aggregates Involucrados**: `Account`, `Transaction`.
 - **Datos del DTO**:
-    - `fromAccountId`: Cuenta origen.
-    - `toAccountId`: Cuenta destino.
-    - `amount`: Monto.
+  - `fromAccountId`: Cuenta origen.
+  - `toAccountId`: Cuenta destino.
+  - `amount`: Monto.
 - **Nivel**: 1.
 
 ---
@@ -221,8 +221,8 @@ Transaction Management
 - **Propósito**: Asigna categorías a una transacción existente.
 - **Aggregates Involucrados**: `Transaction`.
 - **Datos del DTO**:
-    - `transactionId`: Identificador de la transacción.
-    - `category`: Nueva categoría.
+  - `transactionId`: Identificador de la transacción.
+  - `category`: Nueva categoría.
 - **Nivel**: 2.
 
 ---
@@ -240,8 +240,8 @@ Financial Reporting
 - **Propósito**: Genera un balance general consolidado que incluye activos, pasivos y patrimonio neto.
 - **Aggregates Involucrados**: `Account`, `Asset`, `Liability`.
 - **Datos del DTO**:
-    - `asOfDate`: Fecha de corte para el balance.
-    - `filters`: Filtros opcionales, como etiquetas o categorías.
+  - `asOfDate`: Fecha de corte para el balance.
+  - `filters`: Filtros opcionales, como etiquetas o categorías.
 - **Nivel**: 1.
 
 ---
@@ -251,9 +251,9 @@ Financial Reporting
 - **Propósito**: Genera un estado de resultados con ingresos, gastos y utilidad neta en un período específico.
 - **Aggregates Involucrados**: `Transaction`, `Account`.
 - **Datos del DTO**:
-    - `startDate`: Fecha de inicio del período.
-    - `endDate`: Fecha de fin del período.
-    - `filters`: Filtros opcionales, como etiquetas o categorías.
+  - `startDate`: Fecha de inicio del período.
+  - `endDate`: Fecha de fin del período.
+  - `filters`: Filtros opcionales, como etiquetas o categorías.
 - **Nivel**: 2.
 
 ---
@@ -263,9 +263,9 @@ Financial Reporting
 - **Propósito**: Detalla el flujo de efectivo entrante y saliente, clasificándolo por categorías o períodos.
 - **Aggregates Involucrados**: `Transaction`, `Account`.
 - **Datos del DTO**:
-    - `startDate`: Fecha de inicio del análisis.
-    - `endDate`: Fecha de fin del análisis.
-    - `groupBy`: Parámetro opcional para agrupar datos (categorías, períodos).
+  - `startDate`: Fecha de inicio del análisis.
+  - `endDate`: Fecha de fin del análisis.
+  - `groupBy`: Parámetro opcional para agrupar datos (categorías, períodos).
 - **Nivel**: 2.
 
 ---
@@ -275,9 +275,9 @@ Financial Reporting
 - **Propósito**: Proporciona un análisis financiero basado en categorías específicas de transacciones.
 - **Aggregates Involucrados**: `Transaction`.
 - **Datos del DTO**:
-    - `category`: Categoría a analizar.
-    - `startDate`: Fecha de inicio del análisis.
-    - `endDate`: Fecha de fin del análisis.
+  - `category`: Categoría a analizar.
+  - `startDate`: Fecha de inicio del análisis.
+  - `endDate`: Fecha de fin del análisis.
 - **Nivel**: 2.
 
 ---
@@ -287,9 +287,9 @@ Financial Reporting
 - **Propósito**: Genera un análisis detallado de transacciones agrupadas por etiquetas relevantes.
 - **Aggregates Involucrados**: `Transaction`.
 - **Datos del DTO**:
-    - `tags`: Lista de etiquetas a analizar.
-    - `startDate`: Fecha de inicio del análisis.
-    - `endDate`: Fecha de fin del análisis.
+  - `tags`: Lista de etiquetas a analizar.
+  - `startDate`: Fecha de inicio del análisis.
+  - `endDate`: Fecha de fin del análisis.
 - **Nivel**: 3.
 
 ---
@@ -299,7 +299,7 @@ Financial Reporting
 - **Propósito**: Permite generar reportes financieros personalizados combinando categorías, etiquetas y períodos específicos.
 - **Aggregates Involucrados**: `Transaction`, `Account`, `Asset`, `Liability`.
 - **Datos del DTO**:
-    - `parameters`: Configuración personalizada para el reporte (categorías, etiquetas, fechas, agrupaciones).
+  - `parameters`: Configuración personalizada para el reporte (categorías, etiquetas, fechas, agrupaciones).
 - **Nivel**: 3.
 
 ---
@@ -313,9 +313,9 @@ Integrations and Configuration
 - **Propósito**: Configura las tasas de cambio para la conversión de monedas en cuentas y transacciones.
 - **Aggregates Involucrados**: `Account`, `Transaction`.
 - **Datos del DTO**:
-    - `currencyPairs`: Lista de pares de monedas (ej. USD/EUR).
-    - `rates`: Tasas de conversión para cada par.
-    - `effectiveDate`: Fecha de vigencia de las tasas.
+  - `currencyPairs`: Lista de pares de monedas (ej. USD/EUR).
+  - `rates`: Tasas de conversión para cada par.
+  - `effectiveDate`: Fecha de vigencia de las tasas.
 - **Nivel**: 2.
 
 ---
@@ -325,8 +325,8 @@ Integrations and Configuration
 - **Propósito**: Configura y actualiza las etiquetas y categorías disponibles en el sistema financiero.
 - **Aggregates Involucrados**: `Account`, `Transaction`.
 - **Datos del DTO**:
-    - `categories`: Lista de nuevas categorías a definir o actualizar.
-    - `tags`: Lista de nuevas etiquetas a definir o actualizar.
+  - `categories`: Lista de nuevas categorías a definir o actualizar.
+  - `tags`: Lista de nuevas etiquetas a definir o actualizar.
 - **Nivel**: 2.
 
 ---
@@ -334,7 +334,7 @@ Integrations and Configuration
 ### **Niveles Detallados de los Casos de Uso**
 
 | Nivel | Descripción                                                                                  |
-|-------|----------------------------------------------------------------------------------------------|
+| ----- | -------------------------------------------------------------------------------------------- |
 | **1** | Funcionalidades esenciales del sistema, como creación de cuentas, registro de transacciones. |
 | **2** | Funcionalidades intermedias, como análisis por categorías, conciliaciones o planes.          |
 | **3** | Funcionalidades avanzadas, como reportes personalizados y análisis detallados por etiquetas. |
