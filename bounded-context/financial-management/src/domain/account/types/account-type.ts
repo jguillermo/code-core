@@ -11,6 +11,10 @@ export class AccountType extends AbstractEnumType<EnumAccountType> {
     return EnumAccountType;
   }
 
+  static enum() {
+    return EnumAccountType;
+  }
+
   isReal(): boolean {
     return this.value === EnumAccountType.REAL;
   }

@@ -27,6 +27,9 @@
   "dependencies": {
     "@code-core/domain": "workspace:*"
   },
+  "devDependencies": {
+    "@code-core/test": "workspace:*"
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",

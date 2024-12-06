@@ -3,8 +3,8 @@ import { AccountName } from '../../../domain/account/types/account-name';
 import { AccountType } from '../../../domain/account/types/account-type';
 import { AccountCurrency } from '../../../domain/account/types/account-currency';
 import { AccountBalance } from '../../../domain/account/types/account-balance';
-import { AccountFinantialEntity } from '../../../domain/account/types/account-finantial-entity';
-import { AccountAccountNumber } from '../../../domain/account/types/account-account-number';
+import { AccountFinancialEntity } from '../../../domain/account/types/account-financial-entity';
+import { AccountNumber } from '../../../domain/account/types/account-number';
 import { AccountListTag } from '../../../domain/account/types/account-list-tag';
 import { AccountId } from '../../../domain/account/types/account-id';
 import { DomainValidator, DomainValidatorDto } from '@code-core/domain';
@@ -25,10 +25,10 @@ export class CreateFinancialAccountDto extends DomainValidatorDto {
   @Validate(DomainValidator, [AccountBalance])
   balance?: number;
 
-  @Validate(DomainValidator, [AccountFinantialEntity])
+  @Validate(DomainValidator, [AccountFinancialEntity])
   financialEntity?: string;
 
-  @Validate(DomainValidator, [AccountAccountNumber])
+  @Validate(DomainValidator, [AccountNumber])
   accountNumber?: string;
 
   @Validate(DomainValidator, [AccountListTag])

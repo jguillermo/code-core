@@ -3,13 +3,13 @@ import { PrimitiveTypes } from '@code-core/domain';
 import { AccountTypes } from './account.types';
 
 export abstract class AccountRepository {
-  abstract findById(accountId: string): Account | null;
+  abstract findById(accountId: string): Promise<Account | null>;
 
-  abstract persist(account: Account): void;
+  abstract persist(account: Account): Promise<void>;
 
-  abstract findAll(): Account[];
+  abstract findAll(): Promise<Account[]>;
 
-  abstract findLiabilities(): Account[]; // Para reportes financieros
+  abstract findLiabilities(): Promise<Account[]>; // Para reportes financieros
 
   protected toAggregate(data: PrimitiveTypes<AccountTypes>): Account {
     const dataTypes = new AccountTypes(1, data);

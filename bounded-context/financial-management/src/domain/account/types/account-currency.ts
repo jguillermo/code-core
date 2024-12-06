@@ -7,6 +7,10 @@ enum CurrencyEnum {
 
 @AddValidate([{ validator: 'IsEnum', value: CurrencyEnum }, { validator: 'IsNotEmpty' }])
 export class AccountCurrency extends AbstractEnumType<CurrencyEnum> {
+  static enum() {
+    return CurrencyEnum;
+  }
+
   protected getEnum(): Record<string, CurrencyEnum> {
     return CurrencyEnum;
   }
