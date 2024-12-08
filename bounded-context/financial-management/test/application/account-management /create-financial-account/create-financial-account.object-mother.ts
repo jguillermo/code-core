@@ -29,14 +29,7 @@ export class CreateFinancialAccountObjectMother extends DtoObjectMother<CreateFi
       balance: faker.number.int({ min: 0, max: 10000 }),
       financialEntity: faker.company.name(),
       accountNumber: faker.string.numeric(10),
-      tags: [
-        faker.lorem.word({
-          length: {
-            min: 2,
-            max: 19,
-          },
-        }),
-      ],
+      tags: [faker.lorem.word({ length: { min: 2, max: 19 } })],
     };
   }
 }
