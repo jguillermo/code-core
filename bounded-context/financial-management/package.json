@@ -20,8 +20,8 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
+    "lint": "eslint src test --ext .ts",
+    "lint:fix": "eslint src test --ext .ts --fix",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -36,13 +36,17 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/*.(t|j)s",
+      "test/**/*.(t|j)s"
     ],
     "coverageDirectory": "./../coverage",
     "testEnvironment": "node",

@@ -26,6 +26,24 @@ publish:
 
 #@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' | grep -Ev "\.spec\.ts$$" ); \
 
+
+config-files:
+	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|\.txt$$|package-lock\.json$$|\.ts$$|\.prompt$$|\.md$$|bounded\.txt$$|pre-push$$|pre-commit$$|README\.md$$|husky$$|ci\.yml$$|ia$$|\.zip$\"; \
+	FILES_CMD="git ls-files"; \
+	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters"
+	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
+
+config-financial-management:
+	@FILE_LIST=$$( $(MAKE) config-files | grep 'bounded-context/financial-management' ); \
+	echo "$$FILE_LIST"; \
+	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+
+
+app-config:
+	@FILE_LIST=$$( $(MAKE) config-files ); \
+	echo "$$FILE_LIST"; \
+	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+
 list-files:
 	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|\.prompt$$|\.md$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
 	FILES_CMD="git ls-files"; \

@@ -10,7 +10,7 @@ function s(data: any, reference: any, errors: string[] = []) {
 
 function _(include: any, reference: any, errors: string[] = []) {
   const diff = JsonCompare.include(include, reference);
-  it(`compare include: ${universalToString(include)} eq ${universalToString(reference)}`, () => {
+  it(`compare include: ${universalToString(include)} in ${universalToString(reference)}`, () => {
     expect(errors).toEqual(diff);
   });
 }

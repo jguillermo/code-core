@@ -1,6 +1,14 @@
 import { Account } from './account';
-import { PrimitiveTypes } from '@code-core/domain';
+import { CreatedAt, PrimitiveTypes } from '@code-core/domain';
 import { AccountTypes } from './account.types';
+import { AccountId } from './types/account-id';
+import { AccountCurrency } from './types/account-currency';
+import { AccountName } from './types/account-name';
+import { AccountType } from './types/account-type';
+import { AccountBalance } from './types/account-balance';
+import { AccountFinancialEntity } from './types/account-financial-entity';
+import { AccountNumber } from './types/account-number';
+import { AccountListTag } from './types/account-list-tag';
 
 export abstract class AccountRepository {
   abstract findById(accountId: string): Promise<Account | null>;
@@ -12,17 +20,16 @@ export abstract class AccountRepository {
   abstract findLiabilities(): Promise<Account[]>; // Para reportes financieros
 
   protected toAggregate(data: PrimitiveTypes<AccountTypes>): Account {
-    const dataTypes = new AccountTypes(1, data);
     return new Account(
-      dataTypes.id,
-      dataTypes.name,
-      dataTypes.type,
-      dataTypes.currency,
-      dataTypes.balance,
-      dataTypes.financialEntity,
-      dataTypes.number,
-      dataTypes.tags,
-      dataTypes.creationDate,
+      new AccountId(data.id),
+      new AccountName(data.name),
+      new AccountType(data.type as any),
+      new AccountCurrency(data.currency as any),
+      new AccountBalance(data.balance),
+      new AccountFinancialEntity(data.financialEntity),
+      new AccountNumber(data.number),
+      new AccountListTag(data.tags),
+      new CreatedAt(data.creationDate),
     );
   }
 }

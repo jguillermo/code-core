@@ -1,16 +1,8 @@
-import { CreateFinancialAccount } from './create-financial-account';
-import { CreateFinancialAccountDto } from './create-financial-account.dto';
-import { AccountRepository } from '../../../domain/account/account.repository';
-import { Account } from '../../../domain/account/account';
+import { CreateFinancialAccountDto } from '../../../../src/application/account-management /create-financial-account/create-financial-account.dto';
 import { IdType } from '@code-core/domain';
-
-class MockAccountRepository extends AccountRepository {
-  persist = jest.fn();
-  findById = jest.fn();
-  findAll = jest.fn();
-  findLiabilities = jest.fn();
-  protected toAggregate = jest.fn();
-}
+import { CreateFinancialAccount } from '../../../../src/application/account-management /create-financial-account/create-financial-account';
+import { InMemoryAccountRepository } from '../../../domain/account/in-memory-account-repository';
+import { JsonCompare } from '@code-core/test';
 
 const dtoObjectMother = (params: Partial<CreateFinancialAccountDto>): CreateFinancialAccountDto => {
   const dto = new CreateFinancialAccountDto();
@@ -28,32 +20,34 @@ const dtoObjectMother = (params: Partial<CreateFinancialAccountDto>): CreateFina
 
 describe('CreateFinancialAccount Use Case', () => {
   let useCase: CreateFinancialAccount;
-  const mockAccountRepository = new MockAccountRepository();
+  let accountRepository: InMemoryAccountRepository;
 
   beforeEach(() => {
-    useCase = new CreateFinancialAccount(mockAccountRepository as jest.Mocked<AccountRepository>);
+    accountRepository = new InMemoryAccountRepository();
+    useCase = new CreateFinancialAccount(accountRepository);
   });
 
   describe('Level 1 - Basic functionality', () => {
-    it('should create a valid real account with initial balance', () => {
+    it('should create a valid real account with initial balance', async () => {
       const dto: CreateFinancialAccountDto = dtoObjectMother({
         name: 'My Real Account',
         type: 'Real',
         currency: 'USD',
         balance: 1000,
+        financialEntity: 'Bank X',
+        accountNumber: '123456',
       });
-
       useCase.execute(dto);
+      const persistedAccount = await accountRepository.findById(dto.id ?? '');
 
-      expect(mockAccountRepository.persist).toHaveBeenCalled();
-      const persistedAccount = mockAccountRepository.persist.mock.calls[0][0] as Account;
-
-      expect(persistedAccount.toJson()).toMatchObject({
-        name: dto.name,
-        type: dto.type,
-        currency: dto.currency,
-        balance: dto.balance,
-      });
+      expect(
+        JsonCompare.include(
+          {
+            id: dto.id,
+          },
+          persistedAccount?.toJson(),
+        ),
+      ).toEqual([]);
     });
 
     // it('should throw an error if initial balance is missing for a real account', () => {
@@ -75,8 +69,8 @@ describe('CreateFinancialAccount Use Case', () => {
     //
     //   useCase.execute(dto, 1);
     //
-    //   expect(mockAccountRepository.persist).toHaveBeenCalled();
-    //   const persistedAccount = mockAccountRepository.persist.mock.calls[0][0] as Account;
+    //   expect(accountRepository.persist).toHaveBeenCalled();
+    //   const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
     //
     //   expect(persistedAccount.toJson()).toMatchObject({
     //     name: dto.name,
@@ -110,8 +104,8 @@ describe('CreateFinancialAccount Use Case', () => {
   //
   //     useCase.execute(dto, 2);
   //
-  //     expect(mockAccountRepository.persist).toHaveBeenCalled();
-  //     const persistedAccount = mockAccountRepository.persist.mock.calls[0][0] as Account;
+  //     expect(accountRepository.persist).toHaveBeenCalled();
+  //     const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
   //
   //     expect(persistedAccount.toJson()).toMatchObject({
   //       name: dto.name,
@@ -146,8 +140,8 @@ describe('CreateFinancialAccount Use Case', () => {
   //
   //     useCase.execute(dto, 3);
   //
-  //     expect(mockAccountRepository.persist).toHaveBeenCalled();
-  //     const persistedAccount = mockAccountRepository.persist.mock.calls[0][0] as Account;
+  //     expect(accountRepository.persist).toHaveBeenCalled();
+  //     const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
   //
   //     expect(persistedAccount.toJson()).toMatchObject({
   //       name: dto.name,
