@@ -7,7 +7,16 @@ export class CreateFinancialAccount {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(dto: CreateFinancialAccountDto): Promise<void> {
-    const data = new AccountTypes(dto.levelValidation, dto);
+    const data = new AccountTypes(dto.levelValidation, {
+      id: dto.id,
+      name: dto.name,
+      type: dto.type,
+      currency: dto.currency,
+      balance: dto.balance,
+      financialEntity: dto.financialEntity,
+      number: dto.number,
+      tags: dto.tags,
+    });
 
     const account = Account.create(data);
 

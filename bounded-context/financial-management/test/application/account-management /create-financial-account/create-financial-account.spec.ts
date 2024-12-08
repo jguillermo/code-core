@@ -4,6 +4,7 @@ import { InMemoryAccountRepository } from '../../../domain/account/in-memory-acc
 import { JsonCompare } from '@code-core/test';
 import { CreateFinancialAccountObjectMother as dtoObjectMother } from './create-financial-account.object-mother';
 import { validate } from 'class-validator';
+import { AccountType } from '../../../../src/domain/account/types/account-type';
 
 describe('CreateFinancialAccount Use Case', () => {
   let useCase: CreateFinancialAccount;
@@ -16,7 +17,7 @@ describe('CreateFinancialAccount Use Case', () => {
 
   describe('Level 1 - Basic functionality', () => {
     it('should create a valid dto level 1', async () => {
-      const dto: CreateFinancialAccountDto = dtoObjectMother.create(1);
+      const dto = dtoObjectMother.create(1);
       const errors = await validate(dto);
       expect(errors.length).toBe(0);
       await useCase.execute(dto);
@@ -24,15 +25,21 @@ describe('CreateFinancialAccount Use Case', () => {
       expect(JsonCompare.include({ id: dto.id }, persistedAccount?.toJson())).toEqual([]);
     });
 
-    // it('should throw an error if initial balance is missing for a real account', () => {
-    //   const dto: CreateFinancialAccountDto = {
-    //     name: 'My Real Account',
-    //     type: 'Real',
-    //     currency: 'USD',
-    //   };
-    //
-    //   expect(() => useCase.execute(dto, 1)).toThrowError('Initial balance is required for real accounts at level 1.');
-    // });
+    it('should throw an error if initial balance is missing for a real account, with validation', async () => {
+      expect(async () => {
+        const dto = dtoObjectMother.create(1, { type: AccountType.enum().REAL }, ['balance']);
+        const errors = await validate(dto);
+        expect(errors.length).toBe(1);
+        await useCase.execute(dto);
+      }).rejects.toThrow('AccountBalance: must be a number, should not be empty');
+    });
+
+    it('should throw an error if initial balance is missing for a real account', async () => {
+      expect(async () => {
+        const dto = dtoObjectMother.create(1, { type: AccountType.enum().REAL }, ['balance']);
+        await useCase.execute(dto);
+      }).rejects.toThrow('AccountBalance: must be a number, should not be empty');
+    });
     //
     // it('should create a virtual account without balance', () => {
     //   const dto: CreateFinancialAccountDto = {
@@ -61,7 +68,7 @@ describe('CreateFinancialAccount Use Case', () => {
     //     currency: 'USD',
     //   };
     //
-    //   expect(() => useCase.execute(dto, 1)).toThrowError();
+    //   expect(() => useCase.execute(dto, 1)).toThrow();
     // });
   });
 
@@ -107,7 +114,7 @@ describe('CreateFinancialAccount Use Case', () => {
     //       balance: 1000,
     //     };
     //
-    //     expect(() => useCase.execute(dto, 2)).toThrowError('Financial entity and account number are required at level 2 for real accounts.');
+    //     expect(() => useCase.execute(dto, 2)).toThrow('Financial entity and account number are required at level 2 for real accounts.');
     //   });
   });
   //
@@ -150,7 +157,7 @@ describe('CreateFinancialAccount Use Case', () => {
     //       tags: 'InvalidTag',
     //     };
     //
-    //     expect(() => useCase.execute(dto, 3)).toThrowError();
+    //     expect(() => useCase.execute(dto, 3)).toThrow();
     //   });
     // });
     //
@@ -161,7 +168,7 @@ describe('CreateFinancialAccount Use Case', () => {
     //       type: 'Real',
     //     };
     //
-    //     expect(() => useCase.execute(dto, 1)).toThrowError();
+    //     expect(() => useCase.execute(dto, 1)).toThrow();
     //   });
     //
     //   it('should throw an error if type is invalid', () => {
@@ -171,7 +178,7 @@ describe('CreateFinancialAccount Use Case', () => {
     //       currency: 'USD',
     //     };
     //
-    //     expect(() => useCase.execute(dto, 1)).toThrowError();
+    //     expect(() => useCase.execute(dto, 1)).toThrow();
     //   });
   });
 });
