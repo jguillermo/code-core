@@ -6,11 +6,11 @@ import { Account } from '../../../domain/account/account';
 export class CreateFinancialAccount {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  execute(dto: CreateFinancialAccountDto): void {
+  async execute(dto: CreateFinancialAccountDto): Promise<void> {
     const data = new AccountTypes(dto.levelValidation, dto);
 
     const account = Account.create(data);
 
-    this.accountRepository.persist(account);
+    await this.accountRepository.persist(account);
   }
 }
