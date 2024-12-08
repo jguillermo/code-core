@@ -4,6 +4,7 @@ import { JsonCompare } from '@code-core/test';
 import { CreateFinancialAccountObjectMother as dtoObjectMother } from './create-financial-account.object-mother';
 import { validate } from 'class-validator';
 import { AccountType } from '../../../../src/domain/account/types/account-type';
+import { CreateFinancialAccountDto } from '../../../../src/application/account-management/create-financial-account/create-financial-account.dto';
 
 describe('CreateFinancialAccount Use Case', () => {
   let useCase: CreateFinancialAccount;
@@ -59,96 +60,94 @@ describe('CreateFinancialAccount Use Case', () => {
   });
 
   describe('Level 2 - Intermediate functionality', () => {
-    //   it('should create a real account with financial details', () => {
-    //     const dto: CreateFinancialAccountDto = {
-    //       name: 'Real Account with Details',
-    //       type: 'Real',
-    //       currency: 'USD',
-    //       balance: 500,
-    //       financialEntity: 'Bank X',
-    //       accountNumber: '123456',
-    //     };
-    //
-    //     useCase.execute(dto, 2);
-    //
-    //     expect(accountRepository.persist).toHaveBeenCalled();
-    //     const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
-    //
-    //     expect(persistedAccount.toJson()).toMatchObject({
-    //       name: dto.name,
-    //       type: dto.type,
-    //       currency: dto.currency,
-    //       balance: dto.balance,
-    //       financialEntity: dto.financialEntity,
-    //       number: dto.accountNumber,
-    //     });
-    //   });
-    //
-    //   it('should throw an error if financial details are missing at level 2', () => {
-    //     const dto: CreateFinancialAccountDto = {
-    //       name: 'Real Account with Missing Details',
-    //       type: 'Real',
-    //       currency: 'USD',
-    //       balance: 1000,
-    //     };
-    //
-    //     expect(() => useCase.execute(dto, 2)).toThrow('Financial entity and account number are required at level 2 for real accounts.');
-    //   });
+    it('should create a real account with financial details', async () => {
+      const dto = dtoObjectMother.create(1, {
+        name: 'Real Account with Details',
+        type: 'Real',
+        currency: 'USD',
+        balance: 500,
+        financialEntity: 'Bank X',
+        number: '123456',
+      });
+      await useCase.execute(dto);
+
+      const persistedAccount = await accountRepository.findById(dto.id ?? '');
+      expect(
+        JsonCompare.include(
+          {
+            id: dto.id,
+            name: 'Real Account with Details',
+            type: 'Real',
+            currency: 'USD',
+            balance: 500,
+            financialEntity: 'Bank X',
+            number: '123456',
+          },
+          persistedAccount?.toJson(),
+        ),
+      ).toEqual([]);
+    });
+
+    it('should throw an error if financial details are missing at level 2', async () => {
+      const dto = new CreateFinancialAccountDto();
+      dto.name = 'Real Account with Missing Details';
+      dto.type = 'Real';
+      dto.currency = 'USD';
+      dto.balance = 1000;
+      dto.levelValidation = 2;
+      expect(() => useCase.execute(dto)).rejects.toThrow('AccountId: must be a UUID, should not be empty');
+    });
   });
-  //
+
   describe('Level 3 - Advanced functionality', () => {
-    //   it('should create an account with tags', () => {
-    //     const dto: CreateFinancialAccountDto = {
-    //       name: 'Tagged Account',
-    //       type: 'Virtual',
-    //       currency: 'EUR',
-    //       tags: ['Project A', 'Marketing'],
-    //     };
-    //
-    //     useCase.execute(dto, 3);
-    //
-    //     expect(accountRepository.persist).toHaveBeenCalled();
-    //     const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
-    //
-    //     expect(persistedAccount.toJson()).toMatchObject({
-    //       name: dto.name,
-    //       type: dto.type,
-    //       currency: dto.currency,
-    //       balance: 0,
-    //       tags: ['Project A', 'Marketing'],
-    //     });
-    //   });
-    //
-    //   it('should throw an error if tags are not an array', () => {
-    //     const dto: any = {
-    //       name: 'Invalid Tags Account',
-    //       type: 'Virtual',
-    //       currency: 'USD',
-    //       tags: 'InvalidTag',
-    //     };
-    //
-    //     expect(() => useCase.execute(dto, 3)).toThrow();
-    //   });
-    // });
-    //
-    // describe('Common validation errors', () => {
-    //   it('should throw an error if currency is not provided', () => {
-    //     const dto: any = {
-    //       name: 'No Currency Account',
-    //       type: 'Real',
-    //     };
-    //
-    //     expect(() => useCase.execute(dto, 1)).toThrow();
-    //   });
-    //
-    //   it('should throw an error if type is invalid', () => {
-    //     const dto: any = {
-    //       name: 'Invalid Type Account',
-    //       type: 'Invalid',
-    //       currency: 'USD',
-    //     };
-    //
-    //     expect(() => useCase.execute(dto, 1)).toThrow();
-    //   });
+    it('should create an account with tags', async () => {
+      const dto = dtoObjectMother.create(1, {
+        name: 'Tagged Account',
+        type: 'Virtual',
+        currency: 'USD',
+        tags: ['Project A', 'Marketing'],
+      });
+      await useCase.execute(dto);
+
+      const persistedAccount = await accountRepository.findById(dto.id ?? '');
+      expect(
+        JsonCompare.include(
+          {
+            id: dto.id,
+            name: 'Tagged Account',
+            type: 'Virtual',
+            currency: 'USD',
+            tags: ['Project A', 'Marketing'],
+            balance: 0,
+          },
+          persistedAccount?.toJson(),
+        ),
+      ).toEqual([]);
+    });
+
+    it('should throw an error if tags are not an array', () => {
+      const dto = dtoObjectMother.create(3, {
+        tags: 'InvalidTag' as any,
+      });
+      expect(() => useCase.execute(dto)).rejects.toThrow();
+    });
+
+    describe('Common validation errors', () => {
+      it('should throw an error if currency is not provided', () => {
+        const dto = new CreateFinancialAccountDto();
+        dto.name = 'No Currency Account';
+        dto.type = 'Real';
+        dto.levelValidation = 1;
+
+        expect(() => useCase.execute(dto)).rejects.toThrow();
+      });
+
+      it('should throw an error if type is invalid', () => {
+        const dto = dtoObjectMother.create(1, {
+          type: 'Invalid',
+        });
+        expect(() => useCase.execute(dto)).rejects.toThrow();
+      });
+    });
   });
 });
