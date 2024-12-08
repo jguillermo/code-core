@@ -64,12 +64,12 @@ describe('CreateFinancialAccountObjectMother Validation', () => {
     expect(dto.tags).toEqual(['CustomTag']);
   });
 
-  it.skip('should exclude properties correctly when creating a DTO', async () => {
+  it('should exclude properties correctly when creating a DTO', async () => {
     const dto = CreateFinancialAccountObjectMother.create(1, {}, ['id', 'name']); // Exclude id and name
 
     expect(dto.id).toBeUndefined();
     expect(dto.name).toBeUndefined();
     const errors = await validate(dto);
-    expect(errors.length).toBe(0); // No validation errors for other properties
+    expect(errors.length).toBe(2); // No validation errors for other properties
   });
 });
