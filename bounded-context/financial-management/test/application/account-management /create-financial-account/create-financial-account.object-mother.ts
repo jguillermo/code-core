@@ -14,8 +14,6 @@ export class CreateFinancialAccountObjectMother extends DtoObjectMother<CreateFi
     };
   }
 
-  x;
-
   getNewDto(): CreateFinancialAccountDto {
     return new CreateFinancialAccountDto();
   }
