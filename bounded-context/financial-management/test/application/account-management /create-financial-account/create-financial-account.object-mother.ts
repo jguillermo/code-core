@@ -9,7 +9,7 @@ export class CreateFinancialAccountObjectMother extends DtoObjectMother<CreateFi
   getPropertiesByLevel(): Record<number, (keyof CreateFinancialAccountDto)[]> {
     return {
       1: ['id', 'name', 'type', 'currency', 'balance'],
-      2: ['financialEntity', 'accountNumber'],
+      2: ['financialEntity', 'number'],
       3: ['tags'],
     };
   }
@@ -26,7 +26,7 @@ export class CreateFinancialAccountObjectMother extends DtoObjectMother<CreateFi
       currency: faker.helpers.arrayElement([AccountCurrency.enum().USD, AccountCurrency.enum().PEN]),
       balance: faker.number.int({ min: 0, max: 10000 }),
       financialEntity: faker.company.name(),
-      accountNumber: faker.string.numeric(10),
+      number: faker.string.numeric(10),
       tags: [faker.lorem.word({ length: { min: 2, max: 19 } })],
     };
   }

@@ -29,7 +29,7 @@ export class CreateFinancialAccountDto extends DomainValidatorDto {
   financialEntity?: string;
 
   @Validate(DomainValidator, [AccountNumber])
-  accountNumber?: string;
+  number?: string;
 
   @Validate(DomainValidator, [AccountListTag])
   tags?: string[];
