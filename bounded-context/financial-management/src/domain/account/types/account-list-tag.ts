@@ -1,5 +1,6 @@
 import { AbstractArrayType, AddValidate, Level, StringTypeRequired } from '@code-core/domain';
 
+@AddValidate([{ validator: 'MaxLength', value: 20 }])
 class AccountTag extends StringTypeRequired {}
 
 @Level(3)

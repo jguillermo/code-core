@@ -1,22 +1,8 @@
 import { CreateFinancialAccountDto } from '../../../../src/application/account-management/create-financial-account/create-financial-account.dto';
-import { IdType } from '@code-core/domain';
 import { CreateFinancialAccount } from '../../../../src/application/account-management/create-financial-account/create-financial-account';
 import { InMemoryAccountRepository } from '../../../domain/account/in-memory-account-repository';
 import { JsonCompare } from '@code-core/test';
-
-const dtoObjectMother = (params: Partial<CreateFinancialAccountDto>): CreateFinancialAccountDto => {
-  const dto = new CreateFinancialAccountDto();
-  dto.id = params.id ?? IdType.random();
-  dto.name = params.name ?? undefined;
-  dto.type = params.type ?? undefined;
-  dto.currency = params.currency ?? undefined;
-  dto.balance = params.balance ?? undefined;
-  dto.financialEntity = params.financialEntity ?? undefined;
-  dto.accountNumber = params.accountNumber ?? undefined;
-  dto.tags = params.tags ?? undefined;
-  dto.levelValidation = params.levelValidation ?? dto.levelValidation;
-  return dto;
-};
+import { CreateFinancialAccountObjectMother as dtoObjectMother } from './create-financial-account.object-mother';
 
 describe('CreateFinancialAccount Use Case', () => {
   let useCase: CreateFinancialAccount;
@@ -29,7 +15,7 @@ describe('CreateFinancialAccount Use Case', () => {
 
   describe('Level 1 - Basic functionality', () => {
     it('should create a valid real account with initial balance', async () => {
-      const dto: CreateFinancialAccountDto = dtoObjectMother({
+      const dto: CreateFinancialAccountDto = dtoObjectMother.create(1, {
         name: 'My Real Account',
         type: 'Real',
         currency: 'USD',
