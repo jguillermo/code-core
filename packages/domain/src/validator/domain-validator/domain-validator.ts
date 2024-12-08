@@ -35,6 +35,9 @@ export class DomainValidator implements ValidatorConstraintInterface {
   }
 
   private shouldSkipLevelValidation(args: ValidationArguments): boolean {
+    if (args.value) {
+      return false; // not skip level validation if value is not null
+    }
     const level = getLevel(args.constraints[0]);
     const currentLevel = normalizeLevel((args.object as any).levelValidation);
     return level > currentLevel;

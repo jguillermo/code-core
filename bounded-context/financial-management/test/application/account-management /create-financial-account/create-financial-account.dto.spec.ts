@@ -33,7 +33,7 @@ describe('CreateFinancialAccountObjectMother Validation', () => {
     expect(errors[0].property).toBe('currency');
   });
 
-  it.skip('should invalidate a DTO with invalid tags', async () => {
+  it('should invalidate a DTO with invalid tags', async () => {
     const dto = CreateFinancialAccountObjectMother.create(3, { tags: ['ValidTag', 'InvalidTagWithMoreThan50Characters'] });
 
     const errors = await validate(dto);

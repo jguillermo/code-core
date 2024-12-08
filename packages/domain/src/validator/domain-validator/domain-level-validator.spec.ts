@@ -94,3 +94,23 @@ describe('validate level DomainValidator', () => {
     expect(errors.length).toEqual(1);
   });
 });
+
+describe('validate level DomainValidator if send valud diferent a level', () => {
+  it('ignore validate slug is empty level 1 string', async () => {
+    const obj = new EntityValidateLevelTest();
+    obj.levelValidation = 1;
+    obj.name = 'testtest';
+    const errors = await validate(obj);
+    expect(errors.length).toEqual(0);
+  });
+  it('validate slug level 1 string', async () => {
+    const obj = new EntityValidateLevelTest();
+    obj.levelValidation = 1;
+    obj.name = 'testtest';
+    obj.slug = 'errorlug';
+    const errors = await validate(obj);
+    expect(errors.length).toEqual(1);
+    expect(errors[0].property).toEqual('slug');
+    expect(errors[0].value).toEqual('errorlug');
+  });
+});
