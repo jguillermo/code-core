@@ -1,4 +1,3 @@
-import { CreateFinancialAccountDto } from '../../../../src/application/account-management/create-financial-account/create-financial-account.dto';
 import { CreateFinancialAccount } from '../../../../src/application/account-management/create-financial-account/create-financial-account';
 import { InMemoryAccountRepository } from '../../../domain/account/in-memory-account-repository';
 import { JsonCompare } from '@code-core/test';
@@ -15,16 +14,20 @@ describe('CreateFinancialAccount Use Case', () => {
     useCase = new CreateFinancialAccount(accountRepository);
   });
 
-  describe('Level 1 - Basic functionality', () => {
-    it('should create a valid dto level 1', async () => {
-      const dto = dtoObjectMother.create(1);
-      const errors = await validate(dto);
-      expect(errors.length).toBe(0);
-      await useCase.execute(dto);
-      const persistedAccount = await accountRepository.findById(dto.id ?? '');
-      expect(JsonCompare.include({ id: dto.id }, persistedAccount?.toJson())).toEqual([]);
+  describe('happy path run in all levels', () => {
+    [1, 2, 3].forEach((level) => {
+      it(`should create a valid dto level ${level}`, async () => {
+        const dto = dtoObjectMother.create(level);
+        const errors = await validate(dto);
+        expect(errors.length).toBe(0);
+        await useCase.execute(dto);
+        const persistedAccount = await accountRepository.findById(dto.id ?? '');
+        expect(JsonCompare.include({ id: dto.id }, persistedAccount?.toJson())).toEqual([]);
+      });
     });
+  });
 
+  describe('Level 1 - Basic functionality', () => {
     it('should throw an error if initial balance is missing for a real account, with validation', async () => {
       expect(async () => {
         const dto = dtoObjectMother.create(1, { type: AccountType.enum().REAL }, ['balance']);
@@ -56,14 +59,6 @@ describe('CreateFinancialAccount Use Case', () => {
   });
 
   describe('Level 2 - Intermediate functionality', () => {
-    it('should create a valid dto level 2', async () => {
-      const dto: CreateFinancialAccountDto = dtoObjectMother.create(2);
-      const errors = await validate(dto);
-      expect(errors.length).toBe(0);
-      await useCase.execute(dto);
-      const persistedAccount = await accountRepository.findById(dto.id ?? '');
-      expect(JsonCompare.include({ id: dto.id }, persistedAccount?.toJson())).toEqual([]);
-    });
     //   it('should create a real account with financial details', () => {
     //     const dto: CreateFinancialAccountDto = {
     //       name: 'Real Account with Details',
@@ -102,14 +97,6 @@ describe('CreateFinancialAccount Use Case', () => {
   });
   //
   describe('Level 3 - Advanced functionality', () => {
-    it('should create a valid dto level 2', async () => {
-      const dto: CreateFinancialAccountDto = dtoObjectMother.create(3);
-      const errors = await validate(dto);
-      expect(errors.length).toBe(0);
-      await useCase.execute(dto);
-      const persistedAccount = await accountRepository.findById(dto.id ?? '');
-      expect(JsonCompare.include({ id: dto.id }, persistedAccount?.toJson())).toEqual([]);
-    });
     //   it('should create an account with tags', () => {
     //     const dto: CreateFinancialAccountDto = {
     //       name: 'Tagged Account',
