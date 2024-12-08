@@ -1,6 +1,6 @@
-import { CreateFinancialAccountDto } from '../../../../src/application/account-management /create-financial-account/create-financial-account.dto';
+import { CreateFinancialAccountDto } from '../../../../src/application/account-management/create-financial-account/create-financial-account.dto';
 import { IdType } from '@code-core/domain';
-import { CreateFinancialAccount } from '../../../../src/application/account-management /create-financial-account/create-financial-account';
+import { CreateFinancialAccount } from '../../../../src/application/account-management/create-financial-account/create-financial-account';
 import { InMemoryAccountRepository } from '../../../domain/account/in-memory-account-repository';
 import { JsonCompare } from '@code-core/test';
 

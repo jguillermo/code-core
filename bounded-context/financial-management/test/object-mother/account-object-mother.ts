@@ -10,16 +10,16 @@ import { AccountFinancialEntity } from '../../src/domain/account/types/account-f
 import { AccountNumber } from '../../src/domain/account/types/account-number';
 import { AccountListTag } from '../../src/domain/account/types/account-list-tag';
 
-export const AccountObjectMother = (params?: Partial<PrimitiveTypes<AccountTypes>>): Account => {
+export const AccountObjectMother = (overrides?: Partial<PrimitiveTypes<AccountTypes>>): Account => {
   return new Account(
-    new AccountId(params?.id ?? AccountId.random()),
-    new AccountName(params?.name ?? 'Account A'),
-    new AccountType((params?.type as any) ?? AccountType.enum().REAL),
-    new AccountCurrency((params?.currency as any) ?? AccountCurrency.enum().USD),
-    new AccountBalance(params?.balance ?? 1000),
-    new AccountFinancialEntity(params?.financialEntity ?? 'Bank A'),
-    new AccountNumber(params?.number ?? '123456'),
-    new AccountListTag(params?.tags ?? ['saving', 'personal']),
-    new CreatedAt(params?.creationDate ?? new Date()),
+    new AccountId(overrides?.id ?? AccountId.random()),
+    new AccountName(overrides?.name ?? 'Account A'),
+    new AccountType((overrides?.type as any) ?? AccountType.enum().REAL),
+    new AccountCurrency((overrides?.currency as any) ?? AccountCurrency.enum().USD),
+    new AccountBalance(overrides?.balance ?? 1000),
+    new AccountFinancialEntity(overrides?.financialEntity ?? 'Bank A'),
+    new AccountNumber(overrides?.number ?? '123456'),
+    new AccountListTag(overrides?.tags ?? ['saving', 'personal']),
+    new CreatedAt(overrides?.creationDate ?? new Date()),
   );
 };
