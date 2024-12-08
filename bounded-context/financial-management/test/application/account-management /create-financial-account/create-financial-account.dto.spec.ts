@@ -41,14 +41,6 @@ describe('CreateFinancialAccountObjectMother Validation', () => {
     expect(errors[0].property).toBe('tags');
   });
 
-  it.skip('should invalidate a DTO with a negative balance', async () => {
-    const dto = CreateFinancialAccountObjectMother.create(1, { balance: -100 }); // Negative balance
-
-    const errors = await validate(dto);
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe('balance');
-  });
-
   it('should validate a DTO created at level 2 with valid financialEntity and accountNumber', async () => {
     const dto = CreateFinancialAccountObjectMother.create(2); // Level 2 object
 
@@ -56,7 +48,7 @@ describe('CreateFinancialAccountObjectMother Validation', () => {
     expect(errors.length).toBe(0); // No validation errors
   });
 
-  it.skip('should invalidate a DTO at level 2 with an empty financialEntity', async () => {
+  it('should invalidate a DTO at level 2 with an empty financialEntity', async () => {
     const dto = CreateFinancialAccountObjectMother.create(2, { financialEntity: '' }); // Invalid financialEntity
 
     const errors = await validate(dto);

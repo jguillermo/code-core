@@ -21,6 +21,8 @@ export abstract class DtoObjectMother<T extends object> {
       return dto;
     }, {} as Partial<T>);
 
+    result['levelValidation'] = level;
+
     return Object.assign(instance.getNewDto(), result);
   }
 
