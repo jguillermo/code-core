@@ -29,6 +29,9 @@ export class Account extends AggregateRoot {
     private readonly creationDate: CreatedAt, // nivel 1: Fecha de creación de la cuenta
   ) {
     super();
+    if (this.type.isVirtual()) {
+      this.balance = new AccountBalance(0);
+    }
   }
 
   static create(data: AccountTypes): Account {

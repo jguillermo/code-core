@@ -40,36 +40,19 @@ describe('CreateFinancialAccount Use Case', () => {
         await useCase.execute(dto);
       }).rejects.toThrow('AccountBalance: must be a number, should not be empty');
     });
-    //
-    // it('should create a virtual account without balance', () => {
-    //   const dto: CreateFinancialAccountDto = {
-    //     name: 'My Virtual Account',
-    //     type: 'Virtual',
-    //     currency: 'USD',
-    //   };
-    //
-    //   useCase.execute(dto, 1);
-    //
-    //   expect(accountRepository.persist).toHaveBeenCalled();
-    //   const persistedAccount = accountRepository.persist.mock.calls[0][0] as Account;
-    //
-    //   expect(persistedAccount.toJson()).toMatchObject({
-    //     name: dto.name,
-    //     type: dto.type,
-    //     currency: dto.currency,
-    //     balance: 0,
-    //   });
-    // });
-    //
-    // it('should throw an error if name is too short', () => {
-    //   const dto: CreateFinancialAccountDto = {
-    //     name: 'A',
-    //     type: 'Virtual',
-    //     currency: 'USD',
-    //   };
-    //
-    //   expect(() => useCase.execute(dto, 1)).toThrow();
-    // });
+
+    it('should create a virtual account without balance', async () => {
+      const dto = dtoObjectMother.create(1, { type: AccountType.enum().VIRTUAL });
+      await useCase.execute(dto);
+
+      const persistedAccount = await accountRepository.findById(dto.id ?? '');
+      expect(JsonCompare.include({ id: dto.id, balance: 0 }, persistedAccount?.toJson())).toEqual([]);
+    });
+
+    it('should throw an error if name is too short', () => {
+      const dto = dtoObjectMother.create(1, { name: 'A' });
+      expect(() => useCase.execute(dto)).rejects.toThrow();
+    });
   });
 
   describe('Level 2 - Intermediate functionality', () => {

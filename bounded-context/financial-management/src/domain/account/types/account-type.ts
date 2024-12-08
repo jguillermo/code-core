@@ -18,4 +18,8 @@ export class AccountType extends AbstractEnumType<EnumAccountType> {
   isReal(): boolean {
     return this.value === EnumAccountType.REAL;
   }
+
+  isVirtual(): boolean {
+    return this.value === EnumAccountType.VIRTUAL;
+  }
 }
