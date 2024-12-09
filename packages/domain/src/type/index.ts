@@ -45,8 +45,12 @@ export class CreatedAt extends DateTypeRequired {
 }
 
 export class UpdatedAt extends DateTypeRequired {
-  static now(): CreatedAt {
+  static now(): UpdatedAt {
     return new UpdatedAt(new Date());
+  }
+
+  setNow(): void {
+    this._value = new Date();
   }
 }
 

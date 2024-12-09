@@ -84,6 +84,7 @@ process-content:
 			echo "Warning: File $$file does not exist, skipping."; \
 		fi; \
 	done; \
+	cat promts/uses-cases.prompt >> $$OUTPUT_FILE; \
 	echo "Copying $$OUTPUT_FILE content to clipboard"; \
 	cat $$OUTPUT_FILE | pbcopy; \
 	echo "Content copied to clipboard";

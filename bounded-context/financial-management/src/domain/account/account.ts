@@ -1,5 +1,5 @@
 import { AccountId } from './types/account-id';
-import { AggregateRoot, CreatedAt, DomainException, PrimitiveTypes } from '@code-core/domain';
+import { AggregateRoot, CreatedAt, DomainException, PrimitiveTypes, UpdatedAt } from '@code-core/domain';
 import { AccountName } from './types/account-name';
 import { AccountType } from './types/account-type';
 import { AccountTypes } from './account.types';
@@ -9,6 +9,7 @@ import { AccountFinancialEntity } from './types/account-financial-entity';
 import { AccountNumber } from './types/account-number';
 import { AccountListTag } from './types/account-list-tag';
 import { AccountCreatedEvent } from './events/account-created.event';
+import { AccountStatus } from './types/account-status';
 
 /*
  * Propósito: Gestiona las cuentas financieras, ya sean reales (como cuentas bancarias, efectivo)
@@ -23,10 +24,12 @@ export class Account extends AggregateRoot {
     private readonly type: AccountType, // Nivel 1: Tipo de cuenta (Real o Virtual)
     private readonly currency: AccountCurrency, // Nivel 1: Moneda en la que opera la cuenta
     private balance: AccountBalance, // Nivel 1: Saldo de la cuenta (Solo para cuentas reales)
+    private readonly status: AccountStatus, // Nivel 1: Saldo de la cuenta (Solo para cuentas reales)
     private readonly financialEntity: AccountFinancialEntity, // Nivel 2: Entidad financiera asociada (solo para cuentas bancarias o tarjetas de crédito)
     private readonly number: AccountNumber, // Nivel 2: Número de cuenta (solo para cuentas reales)
     private readonly tags: AccountListTag, // Nivel 3: Etiquetas para clasificar la cuenta (ej: "Proyecto A", "Centro de Costos")
     private readonly creationDate: CreatedAt, // nivel 1: Fecha de creación de la cuenta
+    private readonly lastUpdated: UpdatedAt, // nivel 1: Fecha de actualization
   ) {
     super();
     if (this.type.isVirtual()) {
@@ -35,7 +38,19 @@ export class Account extends AggregateRoot {
   }
 
   static create(data: AccountTypes): Account {
-    const aggregate = new Account(data.id, data.name, data.type, data.currency, data.balance, data.financialEntity, data.number, data.tags, data.creationDate);
+    const aggregate = new Account(
+      data.id,
+      data.name,
+      data.type,
+      data.currency,
+      data.balance,
+      AccountStatus.active(),
+      data.financialEntity,
+      data.number,
+      data.tags,
+      CreatedAt.now(),
+      UpdatedAt.now(),
+    );
     aggregate.record(new AccountCreatedEvent(aggregate.toJson()));
     return aggregate;
   }
@@ -51,11 +66,22 @@ export class Account extends AggregateRoot {
       type: this.type.value,
       currency: this.currency.value,
       balance: this.balance.value,
+      status: this.status.value,
       financialEntity: this.financialEntity.value,
       number: this.number.value,
       tags: this.tags.value,
       creationDate: this.creationDate.value,
+      lastUpdated: this.lastUpdated.value,
     };
+  }
+
+  /*
+   * Método para validar que el saldo sea cero antes de cerrar la cuenta.
+   */
+  validateZeroBalance(): void {
+    if (this.balance.value !== 0) {
+      throw new DomainException('Account balance must be zero to close the account');
+    }
   }
 
   /*
@@ -89,5 +115,17 @@ export class Account extends AggregateRoot {
 
   removeTag(tag: string): void {
     this.tags.removeItem(tag);
+  }
+
+  /*
+   * Método para cerrar la cuenta
+   */
+  close(): void {
+    if (this.status.isClosed()) {
+      throw new DomainException('Account is already closed');
+    }
+    this.validateZeroBalance();
+    this.status.toClose();
+    this.lastUpdated.setNow();
   }
 }
