@@ -26,7 +26,6 @@ Este GPT está configurado para construir un ERP en TypeScript, aplicando una es
            account.repository.ts  // Repositorio abstracto para "Account"
            services/              // Servicios de dominio específicos de "Account"
            events/                // Eventos de dominio relacionados con "Account"
-       services/                  // Servicios de dominio generales
      application/                 // Capa de aplicación con casos de uso
        transferMoney/             // Carpeta para el caso de uso "TransferMoney"
        generateReport/            // Carpeta para el caso de uso "GenerateFinancialReport"

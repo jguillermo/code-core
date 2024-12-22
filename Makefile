@@ -56,6 +56,12 @@ files-financial-management:
 	echo "$$FILE_LIST"; \
 	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
 
+
+generate-examples:
+	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/.*\.ts$$' ); \
+	echo "$$FILE_LIST"; \
+	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+
 process-content:
 	@if [ -z "$$FILE_LIST" ]; then \
 		echo "Error: FILE_LIST is empty. No files found for bounded context."; \
@@ -84,7 +90,10 @@ process-content:
 			echo "Warning: File $$file does not exist, skipping."; \
 		fi; \
 	done; \
-	cat promts/uses-cases.prompt >> $$OUTPUT_FILE; \
+	if [ -n "$$END_FILE" ] && [ -f "$$END_FILE" ]; then \
+		echo "Adding end content from $$END_FILE"; \
+		cat promts/uses-cases.prompt >> $$OUTPUT_FILE; \
+	fi; \
 	echo "Copying $$OUTPUT_FILE content to clipboard"; \
 	cat $$OUTPUT_FILE | pbcopy; \
 	echo "Content copied to clipboard";

@@ -50,7 +50,7 @@ Reglas del Prompt:
 
 13. Enfoque estructurado y completo: Ser estricto en la creación del modelo, asegurando que todas las clases necesarias estén incluidas y siguiendo un enfoque estructurado para un análisis correcto de las clases y servicios.
 
-14. Unit test: siempre genera unit test para el dominio. No test a la capa de aplicación sino al dominio. Genera unit testing para la capa de dominio, no considerar test a la capa de infraestructura.
+14. Unit test: siempre genera unit test para el dominio y aplicacion. No test a la capa de infraestructura sino al dominio y aplicacion. Genera unit testing para la capa de dominio y aplicacion, no considerar test a la capa de infraestructura.
 
 15. Genera los bundle context que sean necesarios y todo el código en TypeScript que consideres. Analiza el texto y genera el código fuente de la aplicación en TypeScript puro.
 
