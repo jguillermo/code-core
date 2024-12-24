@@ -1,4 +1,4 @@
-export class InMemoryRepository<T extends { id: string }> {
+export class EphemeraDb<T extends { id: string }> {
   private items: T[] = [];
 
   findById(id: string): Promise<T | null> {

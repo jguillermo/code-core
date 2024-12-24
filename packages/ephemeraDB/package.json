@@ -1,14 +1,22 @@
 {
-  "name": "@bounded-context/financial-management",
+  "name": "@code-core/ephemeradb",
   "version": "0.0.1",
-  "private": true,
+  "keywords": [
+    "DDD",
+    "node",
+    "value object"
+  ],
   "author": "Jose Guillermo",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jguillermo/code-core"
+  },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -20,17 +28,9 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint src test --ext .ts",
-    "lint:fix": "eslint src test --ext .ts --fix",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write ."
-  },
-  "dependencies": {
-    "@code-core/domain": "file:../../packages/domain"
-  },
-  "devDependencies": {
-    "@code-core/test": "file:../../packages/test",
-    "@faker-js/faker": "^9.3.0",
-    "@code-core/ephemeradb": "file:../../packages/ephemeraDB"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -38,29 +38,28 @@
       "json",
       "ts"
     ],
-    "roots": [
-      "<rootDir>/src",
-      "<rootDir>/test"
-    ],
+    "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "src/**/*.(t|j)s",
-      "test/**/*.(t|j)s"
+      "**/*.(t|j)s"
     ],
     "coverageDirectory": "./../coverage",
     "testEnvironment": "node",
     "collectCoverage": false,
     "coverageThreshold": {
       "global": {
-        "branches": 60,
-        "functions": 60,
-        "lines": 60,
-        "statements": 60
+        "branches": 20,
+        "functions": 20,
+        "lines": 20,
+        "statements": 20
       }
     }
   },
-  "gitHead": "ec24f58d7c943a184f815076751029df7294f689"
+  "gitHead": "ec24f58d7c943a184f815076751029df7294f689",
+  "dependencies": {
+    "@code-core/common": "^0.0.7"
+  }
 }

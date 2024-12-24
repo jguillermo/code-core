@@ -1,4 +1,4 @@
-import { InMemoryRepository } from './in-memory-repository';
+import { EphemeraDb } from './ephemera-db';
 
 class Account {
   constructor(
@@ -10,11 +10,11 @@ class Account {
   ) {}
 }
 
-describe('InMemoryRepository', () => {
-  let repo: InMemoryRepository<Account>;
+describe('EphemeraDb', () => {
+  let repo: EphemeraDb<Account>;
 
   beforeEach(() => {
-    repo = new InMemoryRepository<Account>();
+    repo = new EphemeraDb<Account>();
   });
 
   test('Should persist a new item correctly', async () => {

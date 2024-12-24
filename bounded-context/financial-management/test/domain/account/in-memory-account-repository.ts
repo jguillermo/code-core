@@ -1,11 +1,10 @@
-import { AccountRepository } from '../../../src/domain/account/account.repository';
-import { InMemoryRepository } from '@code-core/test';
+import { Account, AccountRepository } from '../../../src';
 import { PrimitiveTypes } from '@code-core/domain';
 import { AccountTypes } from '../../../src/domain/account/account.types';
-import { Account } from '../../../src/domain/account/account';
+import { EphemeraDb } from '@code-core/ephemeradb';
 
 export class InMemoryAccountRepository extends AccountRepository {
-  private db = new InMemoryRepository<PrimitiveTypes<AccountTypes>>();
+  private db = new EphemeraDb<PrimitiveTypes<AccountTypes>>();
 
   async findAll(): Promise<Account[]> {
     const rs = await this.db.findAll();

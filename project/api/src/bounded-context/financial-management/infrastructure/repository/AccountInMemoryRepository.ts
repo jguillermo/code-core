@@ -5,11 +5,11 @@ import {
 } from '@bounded-context/financial-management';
 import { PrimitiveTypes } from '@code-core/domain';
 import { AccountTypes } from '@bounded-context/financial-management/src/domain/account/account.types';
-import { InMemoryRepository } from '@code-core/test';
+import { EphemeraDb } from '@code-core/ephemeradb';
 
 @Injectable()
 export class AccountInMemoryRepository extends AccountRepository {
-  private db = new InMemoryRepository<PrimitiveTypes<AccountTypes>>();
+  private db = new EphemeraDb<PrimitiveTypes<AccountTypes>>();
 
   async findAll(): Promise<Account[]> {
     const rs = await this.db.findAll();
