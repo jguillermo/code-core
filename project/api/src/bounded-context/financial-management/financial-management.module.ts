@@ -18,10 +18,7 @@ import {
         new CreateFinancialAccount(accountRepository),
       inject: [AccountRepository],
     },
-    // ProviderFactory.forClass(CreateFinancialAccount).withDependencies([
-    //   AccountInMemoryRepository,
-    // ]),
   ],
-  exports: [],
+  exports: [CreateFinancialAccount],
 })
 export class FinancialManagementModule {}
