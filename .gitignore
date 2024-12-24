@@ -59,4 +59,5 @@ lerna-debug.log
 tsconfig.build.tsbuildinfo
 
 temp_combined.txt
+.content_files
 

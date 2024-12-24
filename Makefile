@@ -4,6 +4,7 @@ SHELL := /bin/bash
 .PHONY: combine
 
 export OUTPUT_FILE=temp_combined.txt
+export CONTENT_FILES=.content_files
 
 main-script:
 	npm run format
@@ -27,44 +28,40 @@ publish:
 #@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' | grep -Ev "\.spec\.ts$$" ); \
 
 
-config-files:
-	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|\.txt$$|package-lock\.json$$|\.ts$$|\.prompt$$|\.md$$|bounded\.txt$$|pre-push$$|pre-commit$$|README\.md$$|husky$$|ci\.yml$$|ia$$|\.zip$\"; \
-	FILES_CMD="git ls-files"; \
-	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters"
-	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
-
-config-financial-management:
-	@FILE_LIST=$$( $(MAKE) config-files | grep 'bounded-context/financial-management' ); \
-	echo "$$FILE_LIST"; \
-	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
-
-
-app-config:
-	@FILE_LIST=$$( $(MAKE) config-files ); \
-	echo "$$FILE_LIST"; \
-	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
-
 list-files:
-	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|\.prompt$$|\.md$$|lerna\.md$$|bounded\.txt$$|package\.json$$|pre-push$$|pre-commit$$|README\.md$$|\.prettierrc$$|\.prettierignore$$|package-lock\.json$$|\.eslintrc\.js$$|tsconfig$$|husky$$|lerna\.json$$|ci\.yml$$|prettier$$|eslintrc$$|ia$$|\.zip$\"; \
+	@IGNORE_LIST="\.gitignore$$|Makefile$$|\.gitkeep$$|package-lock.json$$|\.prompt$$|\.md$$|\.txt$$|^\.husky|ci\.yml$$|\.zip$\"; \
 	FILES_CMD="git ls-files"; \
 	$$FILES_CMD | grep -Ev "$$IGNORE_LIST" || echo "No files found after applying filters"
-	@#echo "Executing command: $$FILES_CMD | grep -Ev '$$IGNORE_LIST'";
 
 
-files-financial-management:
-	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' ); \
-	echo "$$FILE_LIST"; \
-	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
+config-files:
+	@FILE_LIST=$$( $(MAKE) list-files | grep -Ev "\.ts$$" ); \
+	$(MAKE) read-files FILE_LIST="$$FILE_LIST"  \
+	$(MAKE) write-content FILE_PATHS="'$$CONTENT_FILES'";
 
-
-generate-examples:
-	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/.*\.ts$$' ); \
-	echo "$$FILE_LIST"; \
-	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
-
-process-content:
+read-files:
 	@if [ -z "$$FILE_LIST" ]; then \
 		echo "Error: FILE_LIST is empty. No files found for bounded context."; \
+		exit 1; \
+	fi; \
+	echo "Checking if $$CONTENT_FILES exists"; \
+	if [ -f $$CONTENT_FILES ]; then \
+		echo "Removing existing $$CONTENT_FILES"; \
+		rm $$CONTENT_FILES; \
+	fi; \
+	echo "$$FILE_LIST" | tr ' ' '\n' | while read -r file; do \
+		if [ -f "$$file" ]; then \
+		    echo "===== $$file =====" >> $$CONTENT_FILES; \
+			cat "$$file" >> $$CONTENT_FILES; \
+			echo -e "\n" >> $$CONTENT_FILES; \
+		else \
+			echo "Warning: File $$file does not exist, skipping."; \
+		fi; \
+	done;
+
+write-content:
+	@if [ -z "$(FILE_PATHS)" ]; then \
+		echo "Error: Debes definir la variable FILE_PATHS con una lista de cadenas."; \
 		exit 1; \
 	fi; \
 	echo "Checking if $$OUTPUT_FILE exists"; \
@@ -74,30 +71,44 @@ process-content:
 	fi; \
 	echo "Creating and combining files from $$DIRECTORY into $$OUTPUT_FILE"; \
 	> $$OUTPUT_FILE; \
-	if [ -n "$$INIT_FILE" ] && [ -f "$$INIT_FILE" ]; then \
-		echo "Adding initial content from $$INIT_FILE"; \
-		cat "$$INIT_FILE" >> $$OUTPUT_FILE; \
-	fi; \
-	cat promts/bounded.txt >> $$OUTPUT_FILE; \
-	echo "$$FILE_LIST" >> $$OUTPUT_FILE; \
-	echo "$$FILE_LIST" | tr ' ' '\n' | while read -r file; do \
+	for file in $(FILE_PATHS); do \
 		if [ -f "$$file" ]; then \
-		    echo -e "\n\n" >> $$OUTPUT_FILE; \
-			echo "===== $$file =====" >> $$OUTPUT_FILE; \
-			echo "" >> $$OUTPUT_FILE; \
 			cat "$$file" >> $$OUTPUT_FILE; \
 		else \
 			echo "Warning: File $$file does not exist, skipping."; \
+			echo "$$file" >> $$OUTPUT_FILE; \
 		fi; \
+		echo -e "\n" >> $$OUTPUT_FILE; \
 	done; \
-	if [ -n "$$END_FILE" ] && [ -f "$$END_FILE" ]; then \
-		echo "Adding end content from $$END_FILE"; \
-		cat promts/uses-cases.prompt >> $$OUTPUT_FILE; \
-	fi; \
 	echo "Copying $$OUTPUT_FILE content to clipboard"; \
 	cat $$OUTPUT_FILE | pbcopy; \
 	echo "Content copied to clipboard";
 
+
+#config-financial-management:
+#	@FILE_LIST=$$( $(MAKE) config-files | grep 'bounded-context/financial-management' ); \
+#	echo "$$FILE_LIST"; \
+#	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+#
+#
+#app-config:
+#	@FILE_LIST=$$( $(MAKE) config-files ); \
+#	echo "$$FILE_LIST"; \
+#	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
+#
+#
+#
+#
+#files-financial-management:
+#	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/src' ); \
+#	echo "$$FILE_LIST"; \
+#	$(MAKE) process-content FILE_LIST="$$FILE_LIST" INIT_FILE="bounded-context/financial-management/doc/financial-management.prompt";
+#
+#
+#generate-examples:
+#	@FILE_LIST=$$( $(MAKE) list-files | grep 'bounded-context/financial-management/.*\.ts$$' ); \
+#	echo "$$FILE_LIST"; \
+#	$(MAKE) process-content FILE_LIST="$$FILE_LIST";
 
 help:
 	@printf "\033[31m%-16s %-59s %s\033[0m\n" "Target" "Help" "Usage"; \
