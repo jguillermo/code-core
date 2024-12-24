@@ -1,14 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { AccountId } from '@bounded-context/financial-management/dist/domain/account/types/account-id';
-import { IdType } from '@code-core/domain';
+import {
+  Account,
+  AccountRepository,
+} from '@bounded-context/financial-management';
+import { PrimitiveTypes } from '@code-core/domain';
+import { AccountTypes } from '@bounded-context/financial-management/src/domain/account/account.types';
+import { InMemoryRepository } from '@code-core/test';
 
 @Injectable()
-export class AccountInMemoryRepository {
-  async findAll() {
-    return new AccountId(AccountId.random());
+export class AccountInMemoryRepository extends AccountRepository {
+  private db = new InMemoryRepository<PrimitiveTypes<AccountTypes>>();
+
+  async findAll(): Promise<Account[]> {
+    const rs = await this.db.findAll();
+    return rs.map((r) => this.toAggregate(r));
   }
 
-  async findAll2() {
-    return new IdType(IdType.random());
+  async findById(accountId: string): Promise<Account | null> {
+    const rs = await this.db.findById(accountId);
+    return rs ? this.toAggregate(rs) : null;
+  }
+
+  async findLiabilities(): Promise<Account[]> {
+    const rs = await this.db.findAll();
+    return rs.map((a) => this.toAggregate(a));
+  }
+
+  async persist(account: Account): Promise<void> {
+    await this.db.persist(account.toJson());
   }
 }
