@@ -5,7 +5,7 @@ import { IdType } from '@code-core/domain';
 import { AccountRepository } from '@bounded-context/financial-management';
 import { JsonCompare } from '@code-core/test';
 
-describe('createFinancialAccount (e2e)', () => {
+describe('createFinancialAccount (e2e) [/account-management/create-financial-account (POST)]', () => {
   let app: INestApplication;
   let accountRepository: AccountRepository;
 
@@ -15,7 +15,7 @@ describe('createFinancialAccount (e2e)', () => {
     ]));
   });
 
-  it('[/account-management/create-financial-account (POST)]', async () => {
+  it('valid values', async () => {
     const bodyRequest = {
       id: IdType.random(),
       name: 'namenamenamename',
@@ -50,6 +50,32 @@ describe('createFinancialAccount (e2e)', () => {
         account?.toJson(),
       ),
     ).toEqual([]);
+  });
+
+  it('invalid data', async () => {
+    const bodyRequest = {
+      id: IdType.random(),
+      name: 'namenamenamename',
+      type: 'REAL',
+      currency: 'PEN',
+      balance: 10,
+      financialEntity: 'financialEntity',
+      number: '234234234234',
+      tags: ['tags1'],
+    };
+
+    const requestCreate = await request(app.getHttpServer())
+      .post(`/account-management/create-financial-account`)
+      .send(bodyRequest);
+
+    expect(requestCreate.body).toEqual({
+      error: 'Bad Request',
+      message: [
+        'Validation Error: Expected one of [Real, Virtual], but received "REAL".',
+      ],
+      statusCode: 400,
+    });
+    // expect(requestCreate.statusCode).toBe(HttpStatus.CREATED);
   });
 
   afterAll(async () => {

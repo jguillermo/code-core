@@ -2,6 +2,7 @@ import { ValidationArguments, ValidationError, ValidatorConstraint, ValidatorCon
 import { validateType } from '../decorator/type-validator';
 import { TypeValidatorInterface } from '../primitive-validator/type-validator-interface';
 import { getLevel, normalizeLevel } from '../../level/level.decorator';
+import { TypePrimitiveException } from '../../exceptions/domain/type-primitive.exception';
 
 @ValidatorConstraint({ name: 'domainValidator', async: false })
 export class DomainValidator implements ValidatorConstraintInterface {
@@ -30,6 +31,9 @@ export class DomainValidator implements ValidatorConstraintInterface {
       const type: TypeValidatorInterface = new args.constraints[0](args.value);
       return type.validatorMessageStr();
     } catch (e) {
+      if (e instanceof TypePrimitiveException) {
+        return e.message;
+      }
       return 'Validation error';
     }
   }
