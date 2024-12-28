@@ -1,6 +1,64 @@
 import 'reflect-metadata';
 
-export function analyzeClass(dtoClass: any) {
+import * as ClassValidator from 'class-validator';
+
+// Explorar el módulo para localizar `getMetadataStorage`
+const getMetadataStorage =
+  (ClassValidator as any).getMetadataStorage ||
+  (() => {
+    throw new Error('getMetadataStorage no está disponible');
+  });
+
+export function extractClassProperties(cls: any): any {
+  const metadata = getMetadataStorage().getTargetValidationMetadatas(cls, '', false);
+
+  //console.log('metadata:', metadata);
+
+  const result: any = {};
+
+  metadata.forEach((meta) => {
+    const propertyInfo: any = {
+      propertyName: meta.propertyName,
+      type: meta.constraintCls ? meta.constraintCls.name : 'unknown',
+      constraints: [],
+    };
+
+    console.log('metadata---------------------------------------------------', meta);
+    // Procesar cada constraint
+    meta.constraints?.forEach((constraint) => {
+      console.log('constraint---------------------------------------------------', constraint);
+      //console.log('constraint:', extractValidationsFromConstraints([constraint]));
+      console.log('constraint:', getMetadataStorage().getTargetValidationMetadatas(constraint, '', false));
+      console.log('constraint---------------------------------------------------');
+      const constraintInfo: any = {
+        className: constraint.constructor.name,
+        validations: [],
+        valueType: undefined,
+      };
+
+      // Inspeccionar las validaciones internas de la clase de constraint
+      Object.getOwnPropertyNames(constraint).forEach((key) => {
+        if (key === 'value') {
+          const valueType = Reflect.getMetadata('design:type', constraint, key);
+          constraintInfo.valueType = valueType ? valueType.name : 'unknown';
+        } else {
+          constraintInfo.validations.push({
+            property: key,
+            value: constraint[key],
+          });
+        }
+      });
+
+      propertyInfo.constraints.push(constraintInfo);
+    });
+
+    result[meta.propertyName] = propertyInfo;
+  });
+
+  return result;
+}
+
+export function analyzeClass_old(dtoClass: any) {
   console.log(`\n===== Iniciando análisis de la clase: ${dtoClass.name} =====`);
 
   const prototype = dtoClass.prototype;

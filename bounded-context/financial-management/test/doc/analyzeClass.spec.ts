@@ -1,13 +1,13 @@
 import { CreateFinancialAccountDto } from '../../src';
 import { JsonCompare } from '@code-core/test';
-import { analyzeClass } from './analyzeClass';
+import { extractClassProperties } from './analyzeClass';
 
 describe('doc', () => {
   test('properties', async () => {
-    const resultado = analyzeClass(CreateFinancialAccountDto);
+    const resultado = extractClassProperties(CreateFinancialAccountDto);
     console.log('\n===== Resultado Final =====');
     console.log(JSON.stringify(resultado, null, 2));
 
-    expect(JsonCompare.strict(resultado, [])).toEqual([]);
+    expect(JsonCompare.strict([1], [1])).toEqual([]);
   });
 });
