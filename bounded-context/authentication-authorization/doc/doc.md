@@ -3,7 +3,6 @@
 Esta documentación describe el diseño del *bounded context* **Authentication and Authorization**, un sistema seguro, escalable y extensible para la gestión de usuarios,
 autenticación, unificación de identidades y manejo de datos adicionales. Se incluyen mecanismos para el manejo de conflictos, auditorías, y cumplimiento de regulaciones de
 privacidad.
-
 ---
 
 ### **1. Introducción**
