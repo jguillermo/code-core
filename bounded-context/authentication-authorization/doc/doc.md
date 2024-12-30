@@ -1,13 +1,14 @@
-### Documentación Completa del *Bounded Context*: **Authentication and Authorization**
+### Documentación Completa del _Bounded Context_: **Authentication and Authorization**
 
-Esta documentación describe el diseño del *bounded context* **Authentication and Authorization**, un sistema seguro, escalable y extensible para la gestión de usuarios,
+Esta documentación describe el diseño del _bounded context_ **Authentication and Authorization**, un sistema seguro, escalable y extensible para la gestión de usuarios,
 autenticación, unificación de identidades y manejo de datos adicionales. Se incluyen mecanismos para el manejo de conflictos, auditorías, y cumplimiento de regulaciones de
 privacidad.
+
 ---
 
 ### **1. Introducción**
 
-El *bounded context* **Authentication and Authorization** está diseñado para gestionar la identidad y autorización de usuarios en el sistema, ofreciendo:
+El _bounded context_ **Authentication and Authorization** está diseñado para gestionar la identidad y autorización de usuarios en el sistema, ofreciendo:
 
 1. **Autenticación Flexible**: Admite múltiples métodos (e.g., Google, Facebook, Username/Password).
 2. **Unificación de Usuarios**: Consolida perfiles duplicados creados con diferentes métodos de autenticación.
@@ -70,9 +71,7 @@ Los usuarios invitados son manejados mediante tokens temporales que no se persis
 ```json
 {
   "userId": null,
-  "roles": [
-    "guest"
-  ],
+  "roles": ["guest"],
   "permissions": []
 }
 ```
@@ -113,21 +112,21 @@ La unificación consolida perfiles duplicados creados mediante diferentes métod
 #### **Flujo de Unificación**
 
 1. **Detección de Conflictos**:
-    - Se identifican usuarios con datos relacionados (e.g., mismos `externalIds`).
+   - Se identifican usuarios con datos relacionados (e.g., mismos `externalIds`).
 2. **Resolución**:
-    - Un usuario se designa como principal.
-    - Roles, permisos y métodos de los usuarios secundarios se consolidan en el principal.
+   - Un usuario se designa como principal.
+   - Roles, permisos y métodos de los usuarios secundarios se consolidan en el principal.
 3. **Actualización**:
-    - Los usuarios secundarios se vinculan al principal mediante el atributo `unifiedWith`.
+   - Los usuarios secundarios se vinculan al principal mediante el atributo `unifiedWith`.
 
 #### **Protocolo para Manejo de Conflictos**
 
 1. **Priorización de Datos**:
-    - Determinar qué atributos prevalecen en caso de conflictos (e.g., nombres, correos).
+   - Determinar qué atributos prevalecen en caso de conflictos (e.g., nombres, correos).
 2. **Validación**:
-    - Implementar verificaciones para evitar unificaciones incorrectas.
+   - Implementar verificaciones para evitar unificaciones incorrectas.
 3. **Auditoría**:
-    - Registrar todos los cambios realizados durante la unificación.
+   - Registrar todos los cambios realizados durante la unificación.
 
 ---
 
@@ -136,11 +135,11 @@ La unificación consolida perfiles duplicados creados mediante diferentes métod
 Para garantizar la integridad de los registros:
 
 1. **Auditorías Programadas**:
-    - Revisiones regulares para identificar inconsistencias, duplicados o datos obsoletos.
+   - Revisiones regulares para identificar inconsistencias, duplicados o datos obsoletos.
 2. **Trazabilidad de Cambios**:
-    - Registro de operaciones críticas, como unificaciones y actualizaciones de datos.
+   - Registro de operaciones críticas, como unificaciones y actualizaciones de datos.
 3. **Alertas Proactivas**:
-    - Notificar a los administradores sobre anomalías detectadas durante las auditorías.
+   - Notificar a los administradores sobre anomalías detectadas durante las auditorías.
 
 ---
 
@@ -149,13 +148,13 @@ Para garantizar la integridad de los registros:
 El sistema cumple con normativas como GDPR y CCPA, adoptando las siguientes prácticas:
 
 1. **Minimización de Datos**:
-    - Almacenar solo los datos estrictamente necesarios para la operación del sistema.
+   - Almacenar solo los datos estrictamente necesarios para la operación del sistema.
 2. **Consentimiento Explícito**:
-    - Solicitar permiso al usuario antes de recuperar datos adicionales de servicios de autenticación.
+   - Solicitar permiso al usuario antes de recuperar datos adicionales de servicios de autenticación.
 3. **Portabilidad de Datos**:
-    - Proveer herramientas para que los usuarios descarguen o eliminen su información si lo solicitan.
+   - Proveer herramientas para que los usuarios descarguen o eliminen su información si lo solicitan.
 4. **Protección de Datos Sensibles**:
-    - Cifrar y proteger datos como correos electrónicos y números de teléfono.
+   - Cifrar y proteger datos como correos electrónicos y números de teléfono.
 
 ---
 
@@ -176,24 +175,14 @@ El token refleja la información consolidada de usuarios unificados.
 ```json
 {
   "userId": "user-12345",
-  "linkedUserIds": [
-    "user-67890"
-  ],
+  "linkedUserIds": ["user-67890"],
   "externalIds": {
     "google": "google-12345",
     "facebook": "facebook-67890"
   },
-  "roles": [
-    "user"
-  ],
-  "permissions": [
-    "read_profile",
-    "edit_profile"
-  ],
-  "authMethods": [
-    "google",
-    "facebook"
-  ],
+  "roles": ["user"],
+  "permissions": ["read_profile", "edit_profile"],
+  "authMethods": ["google", "facebook"],
   "additionalInfo": {
     "email": "john.doe@example.com",
     "phoneNumber": "+1234567890"
@@ -208,32 +197,32 @@ El token refleja la información consolidada de usuarios unificados.
 ### **9. Ventajas del Diseño**
 
 1. **Flexibilidad**:
-    - Maneja múltiples métodos de autenticación con facilidad.
+   - Maneja múltiples métodos de autenticación con facilidad.
 2. **Escalabilidad**:
-    - Facilita la integración de nuevos servicios como Github y LinkedIn.
+   - Facilita la integración de nuevos servicios como Github y LinkedIn.
 3. **Consistencia**:
-    - Evita duplicados mediante unificación eficiente.
+   - Evita duplicados mediante unificación eficiente.
 4. **Cumplimiento**:
-    - Adopta prácticas para cumplir con GDPR y CCPA.
+   - Adopta prácticas para cumplir con GDPR y CCPA.
 5. **Trazabilidad**:
-    - Auditorías y registro de cambios garantizan la integridad del sistema.
+   - Auditorías y registro de cambios garantizan la integridad del sistema.
 
 ---
 
 ### **10. Próximos Pasos**
 
 1. **Definir Prioridades de Datos**:
-    - Establecer reglas claras para resolver conflictos de datos durante la unificación.
+   - Establecer reglas claras para resolver conflictos de datos durante la unificación.
 2. **Expansión de Métodos de Autenticación**:
-    - Ampliar soporte para servicios adicionales como Github y LinkedIn.
+   - Ampliar soporte para servicios adicionales como Github y LinkedIn.
 3. **Automatizar Auditorías**:
-    - Desarrollar procesos automáticos para revisar y mantener la integridad de los registros.
+   - Desarrollar procesos automáticos para revisar y mantener la integridad de los registros.
 4. **Documentar Cumplimiento de Privacidad**:
-    - Incluir guías claras sobre cómo el sistema cumple con GDPR y CCPA.
+   - Incluir guías claras sobre cómo el sistema cumple con GDPR y CCPA.
 
 ---
 
 ### **Conclusión**
 
-El diseño del *bounded context* **Authentication and Authorization** garantiza una solución robusta y segura para la gestión de usuarios y autenticación. Su enfoque modular,
+El diseño del _bounded context_ **Authentication and Authorization** garantiza una solución robusta y segura para la gestión de usuarios y autenticación. Su enfoque modular,
 capacidad de unificación, auditorías integradas y cumplimiento normativo aseguran que el sistema sea confiable, escalable y alineado con las necesidades del negocio.
