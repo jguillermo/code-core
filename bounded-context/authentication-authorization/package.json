@@ -1,0 +1,66 @@
+{
+  "name": "@bounded-context/authentication-authorization",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Jose Guillermo",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "prebuild": "rm -rf dis && rm tsconfig.build.tsbuildinfo || true",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "lint": "eslint src test --ext .ts",
+    "lint:fix": "eslint src test --ext .ts --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@code-core/domain": "file:../../packages/domain"
+  },
+  "devDependencies": {
+    "@code-core/test": "file:../../packages/test",
+    "@faker-js/faker": "^9.3.0",
+    "@code-core/ephemeradb": "file:../../packages/ephemeraDB"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "src/**/*.(t|j)s",
+      "test/**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./../coverage",
+    "testEnvironment": "node",
+    "collectCoverage": false,
+    "coverageThreshold": {
+      "global": {
+        "branches": 60,
+        "functions": 60,
+        "lines": 60,
+        "statements": 60
+      }
+    }
+  },
+  "gitHead": "ec24f58d7c943a184f815076751029df7294f689"
+}
