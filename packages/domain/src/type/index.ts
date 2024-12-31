@@ -4,7 +4,6 @@ import { AbstractDateType } from './abstract-date-type';
 import { AbstractNumberType } from './abstract-number-type';
 import { AbstractStringType } from './abstract-string-type';
 import { AbstractUuidType } from './abstract-uuid-type';
-import { AbstractType } from './abstract-type';
 
 export { AbstractArrayType } from './abstract-array-type';
 export { AbstractBooleanType } from './abstract-boolean-type';
@@ -92,19 +91,19 @@ export class StringTypeOptional extends AbstractStringType<null> {
 export class StringTypeRequired extends AbstractStringType {}
 
 //array utils
-export class ArrayType {
-  static hasValue<T extends AbstractType<any>>(data: T[], value: T): boolean {
-    return data.some((item) => item.value === value.value);
-  }
-
-  static addValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
-    if (!ArrayType.hasValue(data, value)) {
-      data.push(value);
-    }
-    return data;
-  }
-
-  static removeValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
-    return data.filter((item) => item.value !== value.value);
-  }
-}
+// export class ArrayType {
+//   static hasValue<T extends AbstractType<any>>(data: T[], value: T): boolean {
+//     return data.some((item) => item.value === value.value);
+//   }
+//
+//   static addValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
+//     if (!ArrayType.hasValue(data, value)) {
+//       data.push(value);
+//     }
+//     return data;
+//   }
+//
+//   static removeValue<T extends AbstractType<any>>(data: T[], value: T): T[] {
+//     return data.filter((item) => item.value !== value.value);
+//   }
+// }

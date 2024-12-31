@@ -6,3 +6,4 @@ export * from './validator';
 export * from './primitive/primitive-types';
 export * from './exceptions';
 export * from './level/level.decorator';
+export * from './primitive/primitive-type';
