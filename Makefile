@@ -7,8 +7,9 @@ export OUTPUT_FILE=temp_combined.txt
 export CONTENT_FILES=.content_files
 
 main-script:
-	npm run format
+	npm run format:fix
 	npm run lint:fix
+	npm run format
 	npm run lint
 	npm run build
 	make test
