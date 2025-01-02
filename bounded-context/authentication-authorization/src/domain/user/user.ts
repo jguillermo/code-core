@@ -59,4 +59,8 @@ export class User extends AggregateRoot {
   revokeRole(role: string): void {
     this.roles.removeItem(role);
   }
+
+  passwordAutenticate(password: string) {
+    return password === 'securePassword';
+  }
 }

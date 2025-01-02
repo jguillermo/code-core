@@ -14,6 +14,7 @@
     "lint": "lerna run lint --stream",
     "lint:fix": "lerna run lint:fix --stream",
     "format": "lerna run format --stream",
+    "format:fix": "lerna run format:fix --stream",
     "code": "lerna run lint --stream && lerna run format --stream",
     "prepare": "husky install"
   },

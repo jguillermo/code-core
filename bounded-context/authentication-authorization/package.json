@@ -22,15 +22,18 @@
     "coverage": "jest --coverage",
     "lint": "eslint src test --ext .ts",
     "lint:fix": "eslint src test --ext .ts --fix",
-    "format": "prettier --write ."
+    "format": "prettier --check \"{src,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:fix": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
-    "@code-core/domain": "file:../../packages/domain"
+    "@code-core/domain": "file:../../packages/domain",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@code-core/ephemeradb": "file:../../packages/ephemeraDB",
     "@code-core/test": "file:../../packages/test",
     "@faker-js/faker": "^9.3.0",
-    "@code-core/ephemeradb": "file:../../packages/ephemeraDB"
+    "@types/jsonwebtoken": "^9.0.7"
   },
   "jest": {
     "moduleFileExtensions": [
