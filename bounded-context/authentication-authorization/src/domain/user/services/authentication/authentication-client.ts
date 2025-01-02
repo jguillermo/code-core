@@ -1,3 +1,3 @@
-export enum AuthenticationMethods {
+export enum AuthenticationClient {
   USERNAME_PASSWORD = 'username_password',
 }
