@@ -14,6 +14,10 @@ main-script:
 	npm run build
 	make test
 
+fix:
+	npm run format:fix
+	npm run lint:fix
+
 test:
 	npm run test
 

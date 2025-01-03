@@ -3,17 +3,13 @@ import { UsernamePasswordAuthentication } from './client/username-password-authe
 import { AuthenticationClient } from './authentication-client';
 import { UserRepository } from '../../user.repository';
 import { DomainException } from '@code-core/domain';
+import { PasswordEncryptor } from '../password-encryptor/PasswordEncryptor';
 
 export class AuthenticationFactory {
-  /**
-   * Devuelve la estrategia de autenticación basada en el método solicitado.
-   * @param method Nombre del método de autenticación.
-   * @returns AuthenticationMethod
-   */
-  static getAuthenticationMethod(repository: UserRepository, method: string): AuthenticationMethod {
+  static getAuthenticationMethod(method: string, repository: UserRepository, passwordEncryptor: PasswordEncryptor): AuthenticationMethod {
     switch (method) {
       case AuthenticationClient.USERNAME_PASSWORD:
-        return new UsernamePasswordAuthentication(repository);
+        return new UsernamePasswordAuthentication(repository, passwordEncryptor);
       default:
         throw new DomainException(`Authentication method '${method}' is not supported.`);
     }

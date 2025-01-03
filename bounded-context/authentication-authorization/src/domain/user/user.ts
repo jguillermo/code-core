@@ -35,16 +35,6 @@ export class User extends AggregateRoot {
   }
 
   /**
-   * Autentica al usuario con credenciales básicas.
-   * @param username Nombre de usuario
-   * @param password Contraseña
-   * @returns boolean
-   */
-  authenticate(username: string, password: string): boolean {
-    return username === this.name.value && password === 'securePassword';
-  }
-
-  /**
    * Asigna un rol al usuario.
    * @param role Rol a asignar
    */
@@ -60,7 +50,7 @@ export class User extends AggregateRoot {
     this.roles.removeItem(role);
   }
 
-  passwordAutenticate(password: string) {
-    return password === 'securePassword';
+  get password(): string {
+    return 'securePassword';
   }
 }
