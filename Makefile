@@ -44,6 +44,12 @@ config-files:
 	$(MAKE) read-files FILE_LIST="$$FILE_LIST"  \
 	$(MAKE) write-content FILE_PATHS="'$$CONTENT_FILES'";
 
+bounded-auth:
+	@FILE_LIST=$$( $(MAKE) list-files | grep -E "^bounded-context/authentication-authorization/(src|test)" ); \
+	$(MAKE) read-files FILE_LIST="$$FILE_LIST"  \
+	$(MAKE) write-content FILE_PATHS="'$$CONTENT_FILES'";
+
+
 read-files:
 	@if [ -z "$$FILE_LIST" ]; then \
 		echo "Error: FILE_LIST is empty. No files found for bounded context."; \
