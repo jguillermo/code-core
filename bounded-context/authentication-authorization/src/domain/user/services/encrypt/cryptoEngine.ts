@@ -1,4 +1,6 @@
-export class CryptoEngine {
+import { AbstractCrypto } from './abstract-crypto';
+
+export class CryptoEngine extends AbstractCrypto {
   private CHARACTER_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   private CHARACTER_SET_LENGTH = this.CHARACTER_SET.length;
 
@@ -8,6 +10,7 @@ export class CryptoEngine {
   private initialWheelPositions: number[];
 
   constructor(seedKey: string) {
+    super();
     const encodedSeedKey = this.toBase64(seedKey);
     this.plugboardMapping = this.createPlugboardMapping(encodedSeedKey);
     this.reflectorMap = this.createReflectorMap(encodedSeedKey);
