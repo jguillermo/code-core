@@ -2,6 +2,7 @@ import { AbstractJsonType } from '@code-core/domain/dist/type/abstract-json-type
 
 interface AuthenticationDetails {
   password?: string;
+  userName?: string;
 
   [key: string]: string | undefined;
 }

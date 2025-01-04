@@ -11,7 +11,7 @@ export class UsernamePasswordAuthentication implements AuthenticationMethod {
 
   async authenticate(credentials: Record<string, string>): Promise<User | null> {
     const { username, password } = credentials;
-    const user = await this.repository.findByAttribute('username', username);
+    const user = await this.repository.findByUserName(username);
     if (!user) {
       return null;
     }
