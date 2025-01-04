@@ -15,6 +15,9 @@ export class UsernamePasswordAuthentication implements AuthenticationMethod {
     if (!user) {
       return null;
     }
+    if (!user.password) {
+      return null;
+    }
     const isPasswordValid = await this.passwordEncryptor.verify(password, user.password);
     if (!isPasswordValid) {
       return null;

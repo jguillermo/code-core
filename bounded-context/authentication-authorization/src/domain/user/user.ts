@@ -2,23 +2,22 @@ import { AggregateRoot, PrimitiveTypes } from '@code-core/domain';
 import { UserId } from './types/userId';
 import { UserName } from './types/userName';
 import { UserRoles } from './types/userPermissions';
-import { UserPermissions } from './types/userRoles';
 import { AccountId } from '@bounded-context/financial-management/src';
 import { UserTypes } from './user.types';
+import { UserAuthenticationDetails } from './types/userAuthenticationDetails';
 
 export class User extends AggregateRoot {
   constructor(
     private readonly _id: UserId, // ID único del usuario
     private readonly name: UserName, // Nombre del usuario
     private readonly roles: UserRoles, // Lista de roles
-    private readonly permissions: UserPermissions, // Lista de permisos derivados de roles
+    private readonly authenticationDetails: UserAuthenticationDetails, // Detalles de autenticación dinámica
   ) {
     super();
   }
 
   static create(data: UserTypes): User {
-    const aggregate = new User(data.id, data.name, data.roles, data.permissions);
-    return aggregate;
+    return new User(data.id, data.name, data.roles, data.authenticationDetails);
   }
 
   get id(): AccountId {
@@ -30,7 +29,7 @@ export class User extends AggregateRoot {
       id: this._id.value,
       name: this.name.value,
       roles: this.roles.value,
-      permissions: this.permissions.value,
+      authenticationDetails: this.authenticationDetails.value,
     };
   }
 
@@ -50,7 +49,7 @@ export class User extends AggregateRoot {
     this.roles.removeItem(role);
   }
 
-  get password(): string {
-    return 'securePassword';
+  get password(): string | null {
+    return this.authenticationDetails.password;
   }
 }
