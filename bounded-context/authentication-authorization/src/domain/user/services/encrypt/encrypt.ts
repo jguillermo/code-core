@@ -8,9 +8,10 @@ export class EnigmaMachine {
   private initialRotorPositions: number[];
 
   constructor(baseHash: string) {
-    this.pegboardMapping = this.generatePlugboardMapping(baseHash);
-    this.reflectorWiring = this.generateReflectorWiring(baseHash);
-    this.rotors = this.generateRotors(baseHash);
+    const encodedBaseHash = this.encodeBase64(baseHash);
+    this.pegboardMapping = this.generatePlugboardMapping(encodedBaseHash);
+    this.reflectorWiring = this.generateReflectorWiring(encodedBaseHash);
+    this.rotors = this.generateRotors(encodedBaseHash);
     this.initialRotorPositions = this.rotors.map((rotor) => rotor.position);
   }
 
