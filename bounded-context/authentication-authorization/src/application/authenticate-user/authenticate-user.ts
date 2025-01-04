@@ -12,11 +12,6 @@ export class AuthenticateUser {
     private readonly passwordEncryptor: PasswordEncryptor,
   ) {}
 
-  /**
-   * Ejecuta el caso de uso de autenticación.
-   * @param dto DTO con los datos de autenticación.
-   * @returns Promise<boolean>
-   */
   async execute(dto: AuthenticateUserDTO): Promise<string> {
     const authMethod = AuthenticationFactory.getAuthenticationMethod(dto.method, this.repository, this.passwordEncryptor);
     const user = await authMethod.authenticate(dto.credentials);
