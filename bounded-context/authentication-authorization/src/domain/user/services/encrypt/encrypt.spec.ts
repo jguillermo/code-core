@@ -4,42 +4,47 @@ describe('EnigmaMachine', () => {
   const baseHash = 'testhash123';
 
   it('should correctly encode and decode a simple message', () => {
-    const machine = new EnigmaMachine(baseHash);
+    const machine = new EnigmaMachine('testhash123');
     const message = 'HELLO WORLD';
 
     const encoded = machine.encode(message);
+    expect(encoded).toBe('Pt3/97FmPVoz+4JG');
     const decoded = machine.decode(encoded);
 
     expect(decoded).toBe(message);
   });
 
   it('should handle messages with special characters, emojis, and whitespace', () => {
-    const machine = new EnigmaMachine(baseHash);
+    const machine = new EnigmaMachine('testhash123');
     const message = 'Hello, World! 😊🔥💻\n\t';
 
     const encoded = machine.encode(message);
+    expect(encoded).toBe('Px3xUGFvgewLxqCzxU+oBQ0D0CDMba8xfZjIoshO');
     const decoded = machine.decode(encoded);
 
     expect(decoded).toBe(message);
   });
 
   it('should handle an empty string without errors', () => {
-    const machine = new EnigmaMachine(baseHash);
+    const machine = new EnigmaMachine('testhash123');
     const message = '';
 
     const encoded = machine.encode(message);
+    expect(encoded).toBe('');
     const decoded = machine.decode(encoded);
 
     expect(decoded).toBe(message);
   });
 
   it('should produce consistent results for the same message and configuration', () => {
-    const machine1 = new EnigmaMachine(baseHash);
-    const machine2 = new EnigmaMachine(baseHash);
+    const machine1 = new EnigmaMachine('testhash123');
+    const machine2 = new EnigmaMachine('testhash123');
     const message = 'Consistency Test';
 
     const encoded1 = machine1.encode(message);
+    expect(encoded1).toBe('BKAJnhf2N76DeiZoak/tYHWk');
     const encoded2 = machine2.encode(message);
+    expect(encoded2).toBe('BKAJnhf2N76DeiZoak/tYHWk');
 
     expect(encoded1).toBe(encoded2);
 
@@ -51,10 +56,11 @@ describe('EnigmaMachine', () => {
   });
 
   it('should handle messages with various lengths and character sets, including control characters', () => {
-    const machine = new EnigmaMachine(baseHash);
+    const machine = new EnigmaMachine('testhash123');
     const message = '1234567890!@#$%^&*()_+-=[]{}|;:,.<>?/\\"`~ 🤖🌍🐍🚀\b\r\f\v';
 
     const encoded = machine.encode(message);
+    expect(encoded).toBe('ZvEAf9TzdS=/ldu/xZv=TE3R6J5+MeaoXmfQ+1MxyL+z7A/t/ky6b/hmd09eMBktRZXJcNcWiPYZ2qOHNTax');
     const decoded = machine.decode(encoded);
 
     expect(decoded).toBe(message);
