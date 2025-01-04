@@ -1,164 +1,145 @@
 import { EnigmaMachine } from './encrypt';
 
 describe('EnigmaMachine', () => {
-  const baseHash = 'testhash';
+  const baseHash = 'testhash123';
 
-  it('should reset rotor positions to initial state', () => {
-    const machine = new EnigmaMachine(baseHash);
-
-    // Step the rotors by processing a few characters
-    machine.process('TEST');
-
-    // Save the rotor positions after processing
-    const positionsAfterProcessing = machine.rotors.map((rotor) => rotor.position);
-
-    // Reset the rotors
-    machine.resetRotors();
-
-    // Save the rotor positions after resetting
-    const positionsAfterReset = machine.rotors.map((rotor) => rotor.position);
-
-    // Ensure that reset restored the initial positions
-    expect(positionsAfterReset).not.toEqual(positionsAfterProcessing);
-    expect(positionsAfterReset).toEqual(machine.initialRotorPositions);
-  });
-  it('should correctly step the rotors during processing', () => {
-    const machine = new EnigmaMachine(baseHash);
-    const message = 'TEST';
-
-    // Save initial rotor positions
-    const initialPositions = machine.rotors.map((rotor) => rotor.position);
-
-    // Process the message
-    machine.process(message);
-
-    // Save positions after processing
-    const positionsAfterProcessing = machine.rotors.map((rotor) => rotor.position);
-
-    // Check that positions after processing are not equal to initial positions
-    expect(positionsAfterProcessing).not.toEqual(initialPositions);
-  });
-
-  it('should ensure plugboard mapping is symmetric', () => {
-    const machine = new EnigmaMachine(baseHash);
-
-    machine.pegboardMapping.forEach((value, key) => {
-      expect(machine.pegboardMapping.get(value)).toBe(key);
-    });
-  });
-
-  it('should ensure reflector wiring is symmetric', () => {
-    const machine = new EnigmaMachine(baseHash);
-
-    machine.reflectorWiring.forEach((value, index) => {
-      expect(machine.reflectorWiring[value]).toBe(index);
-    });
-  });
-
-  it('should correctly process a message and reset rotors manually', () => {
+  it('should correctly encode and decode a simple message', () => {
     const machine = new EnigmaMachine(baseHash);
     const message = 'HELLO WORLD';
 
-    // Encrypt the message
-    const encrypted = machine.process(message);
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
 
-    // Reset the rotors to decrypt
-    machine.resetRotors();
-
-    const decrypted = machine.process(encrypted);
-
-    expect(decrypted).toBe(message);
+    expect(decoded).toBe(message);
   });
 
-  it('should handle messages with unsupported characters', () => {
+  it('should handle messages with special characters, emojis, and whitespace', () => {
     const machine = new EnigmaMachine(baseHash);
-    const message = 'HELLO123!';
+    const message = 'Hello, World! 😊🔥💻\n\t';
 
-    // Encrypt the message
-    const encrypted = machine.process(message);
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
 
-    // Reset the rotors to decrypt
-    machine.resetRotors();
-
-    const decrypted = machine.process(encrypted);
-
-    expect(decrypted).toBe(message);
+    expect(decoded).toBe(message);
   });
 
-  it('should handle empty messages without errors', () => {
+  it('should handle an empty string without errors', () => {
     const machine = new EnigmaMachine(baseHash);
     const message = '';
 
-    const encrypted = machine.process(message);
-    machine.resetRotors();
-    const decrypted = machine.process(encrypted);
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
 
-    expect(decrypted).toBe(message);
+    expect(decoded).toBe(message);
   });
 
-  it('should produce consistent results for the same configuration', () => {
+  it('should produce consistent results for the same message and configuration', () => {
     const machine1 = new EnigmaMachine(baseHash);
     const machine2 = new EnigmaMachine(baseHash);
-    const message = 'HELLO WORLD';
+    const message = 'Consistency Test';
 
-    const encrypted1 = machine1.process(message);
-    const encrypted2 = machine2.process(message);
+    const encoded1 = machine1.encode(message);
+    const encoded2 = machine2.encode(message);
 
-    expect(encrypted1).toBe(encrypted2);
+    expect(encoded1).toBe(encoded2);
+
+    const decoded1 = machine1.decode(encoded1);
+    const decoded2 = machine2.decode(encoded2);
+
+    expect(decoded1).toBe(decoded2);
+    expect(decoded1).toBe(message);
   });
 
-  it('should step rotors correctly after processing characters', () => {
+  it('should handle messages with various lengths and character sets, including control characters', () => {
     const machine = new EnigmaMachine(baseHash);
-    const message = 'ABC';
+    const message = '1234567890!@#$%^&*()_+-=[]{}|;:,.<>?/\\"`~ 🤖🌍🐍🚀\b\r\f\v';
 
-    const encrypted1 = machine.process(message[0]);
-    const encrypted2 = machine.process(message[1]);
-    const encrypted3 = machine.process(message[2]);
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
 
-    expect(encrypted1).not.toBe(encrypted2);
-    expect(encrypted2).not.toBe(encrypted3);
+    expect(decoded).toBe(message);
   });
 
-  it('should handle long messages without errors', () => {
+  it('should encode and decode a message entirely in Base64 format', () => {
     const machine = new EnigmaMachine(baseHash);
-    const message = 'THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG 1234567890';
+    const message = 'VGhpcyBpcyBhIEJhc2U2NCB0ZXN0Lg=='; // "This is a Base64 test."
 
-    const encrypted = machine.process(message);
-    machine.resetRotors();
-    const decrypted = machine.process(encrypted);
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
 
-    expect(decrypted).toBe(message);
-  });
-
-  it('should handle a single character message', () => {
-    const machine = new EnigmaMachine(baseHash);
-    const message = 'A';
-
-    const encrypted = machine.process(message);
-    machine.resetRotors();
-    const decrypted = machine.process(encrypted);
-
-    expect(decrypted).toBe(message);
+    expect(decoded).toBe(message);
   });
 
   it('should not mutate the original message', () => {
     const machine = new EnigmaMachine(baseHash);
-    const message = 'HELLO';
-    const originalMessage = message.slice();
+    const message = 'Original Message';
+    const originalCopy = message.slice();
 
-    machine.process(message);
+    machine.encode(message);
 
-    expect(message).toBe(originalMessage);
+    expect(message).toBe(originalCopy);
   });
 
-  it('should handle different base hashes producing different results', () => {
+  it('should produce different encoded messages for different base hashes', () => {
     const machine1 = new EnigmaMachine('hash1');
     const machine2 = new EnigmaMachine('hash2');
     const message = 'HELLO WORLD';
 
-    const encrypted1 = machine1.process(message);
-    const encrypted2 = machine2.process(message);
+    const encoded1 = machine1.encode(message);
+    const encoded2 = machine2.encode(message);
 
-    expect(encrypted1).not.toBe(encrypted2);
+    expect(encoded1).not.toBe(encoded2);
+  });
+
+  it('should decode to the original message even after multiple resets', () => {
+    const machine = new EnigmaMachine(baseHash);
+    const message = 'Reset Test Message';
+
+    const encoded = machine.encode(message);
+    machine.resetRotors();
+    machine.resetRotors(); // Multiple resets
+    const decoded = machine.decode(encoded);
+
+    expect(decoded).toBe(message);
+  });
+
+  it('should handle messages with mixed languages and scripts, including uncommon characters', () => {
+    const machine = new EnigmaMachine(baseHash);
+    const message = 'Hello こんにちは Привет 🚀 ✨𓂀𓀀𓃰';
+
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
+
+    expect(decoded).toBe(message);
+  });
+
+  it('should encode and decode a message with repeated patterns and alternating cases', () => {
+    const machine = new EnigmaMachine(baseHash);
+    const message = 'AbAbAbAbAbAbAbAb';
+
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
+
+    expect(decoded).toBe(message);
+  });
+
+  it('should maintain correct functionality when processing a very long message', () => {
+    const machine = new EnigmaMachine(baseHash);
+    const message = 'A!@#$%^&*()1234567890'.repeat(100); // Very long string
+
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
+
+    expect(decoded).toBe(message);
+  });
+
+  it('should handle messages with edge-case ASCII characters', () => {
+    const machine = new EnigmaMachine(baseHash);
+    const message = String.fromCharCode(...Array.from({ length: 32 }, (_, i) => i));
+
+    const encoded = machine.encode(message);
+    const decoded = machine.decode(encoded);
+
+    expect(decoded).toBe(message);
   });
 });

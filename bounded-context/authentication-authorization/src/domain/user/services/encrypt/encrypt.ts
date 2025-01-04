@@ -1,17 +1,25 @@
 export class EnigmaMachine {
-  private ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>?/';
+  private ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   private ALPHABET_SIZE = this.ALPHABET.length;
 
-  pegboardMapping: Map<number, number>;
-  reflectorWiring: number[];
-  rotors: { wiring: number[]; notch: number; position: number }[];
-  initialRotorPositions: number[];
+  private pegboardMapping: Map<number, number>;
+  private reflectorWiring: number[];
+  private rotors: { wiring: number[]; notch: number; position: number }[];
+  private initialRotorPositions: number[];
 
   constructor(baseHash: string) {
     this.pegboardMapping = this.generatePlugboardMapping(baseHash);
     this.reflectorWiring = this.generateReflectorWiring(baseHash);
     this.rotors = this.generateRotors(baseHash);
     this.initialRotorPositions = this.rotors.map((rotor) => rotor.position);
+  }
+
+  private encodeBase64(input: string): string {
+    return Buffer.from(input, 'utf-8').toString('base64');
+  }
+
+  private decodeBase64(input: string): string {
+    return Buffer.from(input, 'base64').toString('utf-8');
   }
 
   public resetRotors(): void {
@@ -112,7 +120,17 @@ export class EnigmaMachine {
     return (rotor.wiring.indexOf((num + rotor.position) % this.ALPHABET_SIZE) - rotor.position + this.ALPHABET_SIZE) % this.ALPHABET_SIZE;
   }
 
-  public process(message: string): string {
+  encode(message: string): string {
+    this.resetRotors();
+    return this.process(this.encodeBase64(message));
+  }
+
+  decode(message: string): string {
+    this.resetRotors();
+    return this.decodeBase64(this.process(message));
+  }
+
+  private process(message: string): string {
     return message
       .split('')
       .map((char) => {
