@@ -130,11 +130,28 @@ describe('Primitive Types', () => {
     @AddValidate([{ validator: 'IsNotEmpty' }])
     class JsonTypeRequired extends AbstractJsonType<JsonValuesTest> {}
 
-    expectTypeOf<PrimitiveType<JsonTypeRequired>>().toEqualTypeOf<object>();
-    expectTypeOf<PrimitiveType<JsonTypeOptional>>().toEqualTypeOf<object | null>();
+    expectTypeOf<PrimitiveType<JsonTypeRequired>>().toEqualTypeOf<JsonValuesTest>();
+    expectTypeOf<PrimitiveType<JsonTypeOptional>>().toEqualTypeOf<JsonValuesTest | null>();
 
-    expectTypeOf<PrimitiveType<JsonTypeRequired[]>>().toEqualTypeOf<object[]>();
-    expectTypeOf<PrimitiveType<JsonTypeOptional[]>>().toEqualTypeOf<Array<object | null>>();
+    expectTypeOf<PrimitiveType<JsonTypeRequired[]>>().toEqualTypeOf<JsonValuesTest[]>();
+    expectTypeOf<PrimitiveType<JsonTypeOptional[]>>().toEqualTypeOf<Array<JsonValuesTest | null>>();
+  });
+
+  it('json', () => {
+    interface AuthDet {
+      password?: string;
+      userName?: string;
+
+      [key: string]: string | undefined;
+    }
+
+    class DataAuthDet extends AbstractJsonType<AuthDet> {
+      get password(): string | null {
+        return this.value?.password ?? null;
+      }
+    }
+
+    expectTypeOf<PrimitiveType<DataAuthDet>>().toEqualTypeOf<AuthDet>();
   });
 
   it('array number', () => {

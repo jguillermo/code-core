@@ -152,4 +152,27 @@ describe('AbstractJsonType', () => {
       expectTypeOf(instance1.value).toMatchTypeOf<ExpectType>();
     });
   });
+
+  describe('Expect Type object', () => {
+    interface AuthDet {
+      password?: string;
+      userName?: string;
+
+      [key: string]: string | undefined;
+    }
+
+    class DataAuthDet extends AbstractJsonType<AuthDet> {
+      get password(): string | null {
+        return this.value?.password ?? null;
+      }
+    }
+
+    it('json', () => {
+      const instance1 = new DataAuthDet({ password: '123' });
+
+      expectTypeOf<DataAuthDet['value']>().toMatchTypeOf<AuthDet>();
+      expectTypeOf<AuthDet>().toMatchTypeOf<DataAuthDet['value']>();
+      expectTypeOf(instance1.value).toMatchTypeOf<AuthDet>();
+    });
+  });
 });
