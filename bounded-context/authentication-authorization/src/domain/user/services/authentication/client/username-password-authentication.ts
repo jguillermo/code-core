@@ -2,8 +2,11 @@ import { AuthenticationMethod } from '../authentication-method';
 import { User } from '../../../user';
 import { UserRepository } from '../../../user.repository';
 import { PasswordEncryptor } from '../../password-encryptor/PasswordEncryptor';
+import { InvalidCredentialsException } from '../invalid-credentials.exception';
 
 export class UsernamePasswordAuthentication implements AuthenticationMethod {
+  private readonly exceptionError = 'The user does not exist or the password is incorrect';
+
   constructor(
     private readonly repository: UserRepository,
     private readonly passwordEncryptor: PasswordEncryptor,
@@ -13,14 +16,14 @@ export class UsernamePasswordAuthentication implements AuthenticationMethod {
     const { username, password } = credentials;
     const user = await this.repository.findByUserName(username);
     if (!user) {
-      return null;
+      throw new InvalidCredentialsException(this.exceptionError, 'AUTH-101');
     }
     if (!user.password) {
-      return null;
+      throw new InvalidCredentialsException(this.exceptionError, 'AUTH-102');
     }
     const isPasswordValid = await this.passwordEncryptor.verify(password, user.password);
     if (!isPasswordValid) {
-      return null;
+      throw new InvalidCredentialsException(this.exceptionError, 'AUTH-103');
     }
 
     return user;

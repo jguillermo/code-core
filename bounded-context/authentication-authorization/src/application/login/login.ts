@@ -1,10 +1,11 @@
 import { LoginDto } from './login.dto';
 import { AuthenticationFactory } from '../../domain/user/services/authentication/authentication-factory';
 import { UserRepository } from '../../domain/user/user.repository';
-import { ApplicationException } from '@code-core/domain';
 import { DataSigner } from '../../domain/user/services/sign/data-signer';
 import { PasswordEncryptor } from '../../domain/user/services/password-encryptor/PasswordEncryptor';
 import { LoginResponse } from './login.response';
+import { AuthenticationType } from '../../domain/user/services/authentication/authentication-type';
+import { InvalidCredentialsException } from '../../domain/user/services/authentication/invalid-credentials.exception';
 
 export class Login {
   constructor(
@@ -14,9 +15,9 @@ export class Login {
   ) {}
 
   async execute(dto: LoginDto): Promise<LoginResponse> {
-    const authMethod = AuthenticationFactory.getAuthenticationMethod(dto.method, this.repository, this.passwordEncryptor);
-    const user = await authMethod.authenticate(dto.credentials);
-    if (!user) throw new ApplicationException('The user does not exist or the password is incorrect');
+    const authMethod = AuthenticationFactory.getAuthenticationMethod(new AuthenticationType(dto.type as any), this.repository, this.passwordEncryptor);
+    const user = await authMethod.authenticate(dto.credentials ?? {});
+    if (!user) throw new InvalidCredentialsException('The user credential is invalid', 'AUTH-001');
     const { id, roles, name } = user.toJson();
     const token = this.dataSigner.sign({ id, roles, name });
     return new LoginResponse(token);

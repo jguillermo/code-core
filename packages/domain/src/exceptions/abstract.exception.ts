@@ -1,11 +1,11 @@
 import { ExceptionCode } from './exception-code';
 
 export abstract class AbstractException extends Error {
-  private readonly exceptionCodes: ExceptionCode[];
-  public readonly code: ExceptionCode;
+  private readonly exceptionCodes: Array<ExceptionCode | string>;
+  public readonly code: ExceptionCode | string;
   public readonly timestamp: Date;
 
-  constructor(message: string, exceptionCodes: ExceptionCode[]) {
+  constructor(message: string, exceptionCodes: Array<ExceptionCode | string>) {
     super(message);
     this.name = this.constructor.name;
     this.exceptionCodes = exceptionCodes;
@@ -26,7 +26,12 @@ export abstract class AbstractException extends Error {
     );
 
   public get description(): string {
-    return this.exceptionCodes.map((code) => `${AbstractException.ExceptionCodeStrings[code]} (${code})`).join(', ');
+    return this.exceptionCodes
+      .map((code) => {
+        const codeString = AbstractException.ExceptionCodeStrings[code] ?? this.name;
+        return `${codeString} (${code})`;
+      })
+      .join(', ');
   }
 
   print(): string {
