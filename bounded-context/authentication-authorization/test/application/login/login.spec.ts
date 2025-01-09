@@ -52,16 +52,33 @@ describe('Auth Login', () => {
       const loginDto = Builder(LoginDto).type('username_password').credentials({ username: 'invalidUser', password: 'testPassword' }).build();
 
       await expect(loginUseCase.execute(loginDto)).rejects.toThrow(InvalidCredentialsException);
+      await expect(loginUseCase.execute(loginDto)).rejects.toThrow(
+        expect.objectContaining({
+          message: 'The user does not exist or the password is incorrect',
+          code: 'AUTH-101',
+        }),
+      );
     });
 
     it('should throw error if authentication method is not supported', async () => {
       const loginDto = Builder(LoginDto).type('unsupported_method').credentials({ username: 'testUser', password: 'testPassword' }).build();
       await expect(loginUseCase.execute(loginDto)).rejects.toThrow(DomainException);
+      await expect(loginUseCase.execute(loginDto)).rejects.toThrow(
+        expect.objectContaining({
+          message: 'Validation Error: Expected one of [username_password], but received "unsupported_method".',
+        }),
+      );
     });
 
     it('should throw error if password is incorrect', async () => {
       const loginDto = Builder(LoginDto).type('username_password').credentials({ username: 'testUser', password: 'wrongPassword' }).build();
       await expect(loginUseCase.execute(loginDto)).rejects.toThrow(InvalidCredentialsException);
+      await expect(loginUseCase.execute(loginDto)).rejects.toThrow(
+        expect.objectContaining({
+          message: 'The user does not exist or the password is incorrect',
+          code: 'AUTH-103',
+        }),
+      );
     });
 
     it('should throw error if token generation fails', async () => {
