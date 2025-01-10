@@ -1,6 +1,6 @@
 import { Login } from '../../../src/application/login/login';
 import { UserRepository } from '../../../src/domain/user/user.repository';
-import { PasswordEncryptor } from '../../../src/domain/user/services/password-encryptor/PasswordEncryptor';
+import { PasswordEncryptor } from '../../../src/domain/user/services/password-encryptor/password-encryptor';
 import { DataSigner } from '../../../src/domain/user/services/sign/data-signer';
 import { UserObjectMother } from '../../object-mother/user-object-mother';
 import { LoginDto } from '../../../src/application/login/login.dto';

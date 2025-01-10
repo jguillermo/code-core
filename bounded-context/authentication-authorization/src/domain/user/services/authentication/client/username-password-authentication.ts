@@ -1,7 +1,7 @@
 import { AuthenticationMethod } from '../authentication-method';
 import { User } from '../../../user';
 import { UserRepository } from '../../../user.repository';
-import { PasswordEncryptor } from '../../password-encryptor/PasswordEncryptor';
+import { PasswordEncryptor } from '../../password-encryptor/password-encryptor';
 import { InvalidCredentialsException } from '../invalid-credentials.exception';
 
 export class UsernamePasswordAuthentication implements AuthenticationMethod {

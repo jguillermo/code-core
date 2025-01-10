@@ -2,7 +2,7 @@ import { LoginDto } from './login.dto';
 import { AuthenticationFactory } from '../../domain/user/services/authentication/authentication-factory';
 import { UserRepository } from '../../domain/user/user.repository';
 import { DataSigner } from '../../domain/user/services/sign/data-signer';
-import { PasswordEncryptor } from '../../domain/user/services/password-encryptor/PasswordEncryptor';
+import { PasswordEncryptor } from '../../domain/user/services/password-encryptor/password-encryptor';
 import { LoginResponse } from './login.response';
 import { AuthenticationType } from '../../domain/user/services/authentication/authentication-type';
 import { InvalidCredentialsException } from '../../domain/user/services/authentication/invalid-credentials.exception';
