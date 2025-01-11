@@ -1,4 +1,4 @@
-import { CryptoEncryptor } from '../../../src/infrastructure/password-encryptor/crypto-encryptor';
+import { CryptoEncryptor } from '../../../src';
 
 describe('CryptoEncryptor', () => {
   let encryptor: CryptoEncryptor;

@@ -1,12 +1,6 @@
-import { Login } from '../../../src/application/login/login';
-import { UserRepository } from '../../../src/domain/user/user.repository';
-import { PasswordEncryptor } from '../../../src/domain/user/services/password-encryptor/password-encryptor';
-import { DataSigner } from '../../../src/domain/user/services/sign/data-signer';
+import { DataSigner, Login, LoginDto, LoginResponse, PasswordEncryptor, User, UserRepository } from '../../../src';
 import { UserObjectMother } from '../../object-mother/user-object-mother';
-import { LoginDto } from '../../../src/application/login/login.dto';
-import { LoginResponse } from '../../../src/application/login/login.response';
 import { Builder, DomainException } from '@code-core/domain';
-import { User } from '../../../src/domain/user/user';
 import { InvalidCredentialsException } from '../../../src/domain/user/services/authentication/invalid-credentials.exception';
 
 describe('Auth Login', () => {

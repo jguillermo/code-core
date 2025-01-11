@@ -1,4 +1,4 @@
-import { DataSigner } from '../../domain/user/services/sign/data-signer';
+import { DataSigner } from '../../domain';
 import { SignPayload } from '../../domain/user/services/sign/sign-payload';
 import * as jwt from 'jsonwebtoken';
 import { SignOptions, VerifyOptions } from 'jsonwebtoken';

@@ -1,4 +1,4 @@
-import { AbstractCrypto } from './abstract-crypto';
+import { AbstractCrypto } from '../../domain';
 
 export class CryptoEngine extends AbstractCrypto {
   private CHARACTER_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';

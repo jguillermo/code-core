@@ -1,4 +1,4 @@
-import { PasswordEncryptor } from '../../domain/user/services/password-encryptor/password-encryptor';
+import { PasswordEncryptor } from '../../domain';
 import { PasswordEncryptorException } from './password-encryptor-exception';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
