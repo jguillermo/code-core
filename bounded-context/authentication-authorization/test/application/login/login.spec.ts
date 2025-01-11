@@ -26,6 +26,7 @@ describe('Auth Login', () => {
     mockSigner = {
       sign: jest.fn().mockReturnValue('token'),
       verify: jest.fn(),
+      data: jest.fn(),
     } as jest.Mocked<DataSigner>;
 
     mockEncryptor = {

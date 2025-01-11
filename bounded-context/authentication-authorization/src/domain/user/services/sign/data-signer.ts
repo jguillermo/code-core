@@ -1,5 +1,9 @@
-export abstract class DataSigner {
-  abstract sign(payload: object): string;
+import { SignPayload } from './sign-payload';
 
-  abstract verify(token: string): object | null;
+export abstract class DataSigner {
+  abstract sign(payload: SignPayload): string;
+
+  abstract verify(token: string): SignPayload;
+
+  abstract data(signedData: string): object;
 }

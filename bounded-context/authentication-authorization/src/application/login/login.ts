@@ -18,8 +18,7 @@ export class Login {
     const authMethod = AuthenticationFactory.getAuthenticationMethod(new AuthenticationType(dto.type as any), this.repository, this.passwordEncryptor);
     const user = await authMethod.authenticate(dto.credentials ?? {});
     if (!user) throw new InvalidCredentialsException('The user credential is invalid', 'AUTH-001');
-    const { id, roles, name } = user.toJson();
-    const token = this.dataSigner.sign({ id, roles, name });
+    const token = this.dataSigner.sign(user.payload());
     return new LoginResponse(token);
   }
 }

@@ -5,6 +5,7 @@ import { UserRoles } from './types/userPermissions';
 import { AccountId } from '@bounded-context/financial-management/src';
 import { UserTypes } from './user.types';
 import { UserAuthenticationDetails } from './types/userAuthenticationDetails';
+import { SignPayload } from './services/sign/sign-payload';
 
 export class User extends AggregateRoot {
   constructor(
@@ -31,6 +32,10 @@ export class User extends AggregateRoot {
       roles: this.roles.value,
       authenticationDetails: this.authenticationDetails.value,
     };
+  }
+
+  payload(): SignPayload {
+    return new SignPayload(this._id, this.roles, this.name);
   }
 
   /**
