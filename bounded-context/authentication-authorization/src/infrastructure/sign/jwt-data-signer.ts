@@ -41,8 +41,7 @@ export class JWTDataSigner extends DataSigner {
       const decoded = jwt.decode(signedData) as object | null;
       return SignPayload.create(decoded).toJson();
     } catch (error) {
-      console.error('Error al decodificar el token:', (error as Error).message);
-      return {};
+      throw new DataSignerException(`data Error: ${(error as Error).message}`);
     }
   }
 }
