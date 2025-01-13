@@ -1,14 +1,22 @@
 {
-  "name": "@bounded-context/authentication-authorization",
+  "name": "@code-core/auth-encript",
   "version": "0.0.1",
-  "private": true,
+  "keywords": [
+    "DDD",
+    "node",
+    "value object"
+  ],
   "author": "Jose Guillermo",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jguillermo/code-core"
+  },
   "engines": {
     "node": ">=16"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
@@ -20,18 +28,16 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint src test --ext .ts",
-    "lint:fix": "eslint src test --ext .ts --fix",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --check \"{src,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "format:fix": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
-    "@code-core/domain": "file:../../packages/domain"
+    "@bounded-context/authentication-authorization": "file:../../bounded-context/authentication-authorization",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@code-core/ephemeradb": "file:../../packages/ephemeraDB",
-    "@code-core/test": "file:../../packages/test",
-    "@faker-js/faker": "^9.3.0",
     "@types/jsonwebtoken": "^9.0.7"
   },
   "jest": {
@@ -40,17 +46,13 @@
       "json",
       "ts"
     ],
-    "roots": [
-      "<rootDir>/src",
-      "<rootDir>/test"
-    ],
+    "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "src/**/*.(t|j)s",
-      "test/**/*.(t|j)s"
+      "**/*.(t|j)s"
     ],
     "coverageDirectory": "./../coverage",
     "testEnvironment": "node",

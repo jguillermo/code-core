@@ -1,4 +1,4 @@
-import { AbstractCrypto } from '../../domain';
+import { AbstractCrypto } from '@bounded-context/authentication-authorization';
 
 export class CryptoEngine extends AbstractCrypto {
   private CHARACTER_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';

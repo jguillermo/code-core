@@ -1,10 +1,8 @@
-import { PasswordEncryptor } from '../../domain';
-import { PasswordEncryptorException } from './password-encryptor-exception';
-
+import { PasswordEncryptorException } from '@bounded-context/authentication-authorization';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto');
 
-export class CryptoEncryptor extends PasswordEncryptor {
+export class CryptoEncryptor {
   private readonly saltLength: number;
   private readonly iterations: number;
   private readonly keyLength: number;
@@ -18,8 +16,6 @@ export class CryptoEncryptor extends PasswordEncryptor {
    * @param {string} [options.digest='sha512'] - Algoritmo de digestión utilizado (como 'sha256', 'sha512'). Algoritmos más fuertes ofrecen mayor resistencia a ataques, pero requieren más recursos.
    */
   constructor({ saltLength = 16, iterations = 10000, keyLength = 64, digest = 'sha512' }: { saltLength?: number; iterations?: number; keyLength?: number; digest?: string } = {}) {
-    super();
-
     const supportedDigests = crypto.getHashes();
 
     if (typeof saltLength !== 'number' || saltLength <= 8 || saltLength > 32) {

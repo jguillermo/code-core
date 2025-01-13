@@ -1,5 +1,5 @@
-import { SignPayload } from '../../../src/domain/user/services/sign/sign-payload';
-import { JWTDataSigner } from '../../../src';
+import { JWTDataSigner } from './jwt-data-signer';
+import { SignPayload } from '@bounded-context/authentication-authorization';
 
 describe('JWTDataSigner', () => {
   const secretKey = 'supersecretkeysupersecretkey';

@@ -1,17 +1,12 @@
-import { DataSigner } from '../../domain';
-import { SignPayload } from '../../domain/user/services/sign/sign-payload';
 import * as jwt from 'jsonwebtoken';
 import { SignOptions, VerifyOptions } from 'jsonwebtoken';
-import { DataSignerException } from './data-signer-exception';
 
-export class JWTDataSigner extends DataSigner {
+export class JWTDataSigner {
   private readonly secretKey: string;
   private readonly signOptions: SignOptions;
   private readonly verifyOptions: VerifyOptions;
 
   constructor(secretKey: string, signOptions: SignOptions = {}, verifyOptions: VerifyOptions = {}) {
-    super();
-
     const MIN_SECRET_KEY_LENGTH = 16;
 
     if (typeof secretKey !== 'string' || secretKey.length < MIN_SECRET_KEY_LENGTH) {
@@ -23,25 +18,25 @@ export class JWTDataSigner extends DataSigner {
     this.verifyOptions = verifyOptions;
   }
 
-  sign(data: SignPayload): string {
-    return jwt.sign(data.toJson(), this.secretKey, this.signOptions);
+  sign(data: object): string {
+    return jwt.sign(data, this.secretKey, this.signOptions);
   }
 
-  verify(signedData: string): SignPayload {
+  verify(signedData: string): object {
     try {
       const data = jwt.verify(signedData, this.secretKey, this.verifyOptions) as object | null;
-      return SignPayload.create(data);
+      return data ?? {};
     } catch (error) {
-      throw new DataSignerException(`verify Error: ${(error as Error).message}`);
+      throw new Error(`verify Error: ${(error as Error).message}`);
     }
   }
 
   data(signedData: string): object {
     try {
       const decoded = jwt.decode(signedData) as object | null;
-      return SignPayload.create(decoded).toJson();
+      return decoded ?? {};
     } catch (error) {
-      throw new DataSignerException(`data Error: ${(error as Error).message}`);
+      throw new Error(`data Error: ${(error as Error).message}`);
     }
   }
 }

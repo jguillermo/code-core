@@ -1,4 +1,4 @@
-import { CryptoEngine } from '../../../src';
+import { CryptoEngine } from './cryptoEngine';
 
 describe('CryptoEngine', () => {
   const baseHash = 'testhash123';
