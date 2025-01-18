@@ -1,17 +1,13 @@
 import * as bcrypt from 'bcrypt';
+import { PasswordEncryptor } from '../password-encryptor';
 
-export class PasswordEncryptor {
-  private readonly _saltRounds: number;
-
+export class BcryptPasswordEncryptor extends PasswordEncryptor {
   /**
    * Constructor for the PasswordEncryptor class.
    * @param saltRounds Number of salt rounds to generate the hashes (default is 10).
    */
   constructor(saltRounds: number = 10) {
-    if (saltRounds < 4 || saltRounds > 31) {
-      throw new Error('Salt rounds must be between 4 and 31.');
-    }
-    this._saltRounds = saltRounds;
+    super(saltRounds);
   }
 
   /**
