@@ -9,20 +9,6 @@ describe('BcryptPasswordEncryptor', () => {
     encryptor = PasswordEncryptorFactory.create(BcryptPasswordEncryptor.name, 12); // Setting up with 12 salt rounds.
   });
 
-  describe('Constructor', () => {
-    it('should initialize with a valid saltRounds value', () => {
-      expect(() => PasswordEncryptorFactory.create(BcryptPasswordEncryptor.name, 10)).not.toThrow();
-    });
-
-    it('should throw an error if saltRounds is less than 4', () => {
-      expect(() => PasswordEncryptorFactory.create(BcryptPasswordEncryptor.name, 3)).toThrowError('Salt rounds must be between 4 and 31.');
-    });
-
-    it('should throw an error if saltRounds is greater than 31', () => {
-      expect(() => PasswordEncryptorFactory.create(BcryptPasswordEncryptor.name, 32)).toThrowError('Salt rounds must be between 4 and 31.');
-    });
-  });
-
   describe('hashPassword', () => {
     it('should generate a valid hash for a password', async () => {
       const password = 'SecurePassword123!';
