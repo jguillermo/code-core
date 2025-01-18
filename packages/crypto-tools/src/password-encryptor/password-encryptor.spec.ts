@@ -1,10 +1,11 @@
 import { PasswordEncryptor } from './password-encryptor';
 import { PasswordEncryptorFactory } from './password-encryptor-factory';
 import { BcryptPasswordEncryptor } from './client/bcrypt-password-encryptor';
+import { SodiumPasswordEncryptor } from './client/sodium-password-encryptor';
 
 describe('PasswordEncryptorFactory', () => {
   let listEncryptor: PasswordEncryptor[];
-  const clients = [BcryptPasswordEncryptor.name];
+  const clients = [BcryptPasswordEncryptor.name, SodiumPasswordEncryptor.name];
 
   beforeEach(() => {
     listEncryptor = clients.map((clientName: string) => PasswordEncryptorFactory.create(clientName, 12));
@@ -18,6 +19,7 @@ describe('PasswordEncryptorFactory', () => {
     });
 
     it('should throw an error if saltRounds is less than 4', () => {
+      expect(() => PasswordEncryptorFactory.create(SodiumPasswordEncryptor.name, 3)).toThrowError('Salt rounds must be between 4 and 31.');
       for (const client of clients) {
         expect(() => PasswordEncryptorFactory.create(client, 3)).toThrowError('Salt rounds must be between 4 and 31.');
       }

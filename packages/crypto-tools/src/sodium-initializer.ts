@@ -2,18 +2,17 @@ import * as sodium from 'libsodium-wrappers-sumo';
 
 export class SodiumInitializer {
   private static initializedPromise: Promise<void> | null = null;
-  private static isInitialized: boolean = false;
 
   public static async ensureInitialized(): Promise<void> {
-    if (this.isInitialized) {
-      return;
-    }
-
     if (!this.initializedPromise) {
-      this.initializedPromise = sodium.ready.then(() => {
-        this.isInitialized = true;
-        this.initializedPromise = null;
-      });
+      this.initializedPromise = sodium.ready
+        .then(() => {
+          console.debug('Sodium successfully initialized.');
+        })
+        .catch((error) => {
+          console.error('Failed to initialize Sodium:', error);
+          throw error;
+        });
     }
     await this.initializedPromise;
   }

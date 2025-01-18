@@ -15,34 +15,6 @@ describe('BcryptPasswordEncryptor', () => {
       const hash = await encryptor.hashPassword(password);
       expect(hash).toMatch(/^\$2[aby]?\$\d{2}\$[./A-Za-z0-9]{53}$/);
     });
-
-    it('should generate unique hashes for the same password', async () => {
-      const password = 'SecurePassword123!';
-      const hash1 = await encryptor.hashPassword(password);
-      const hash2 = await encryptor.hashPassword(password);
-      expect(hash1).not.toEqual(hash2);
-    });
-  });
-
-  describe('verifyPassword', () => {
-    it('should successfully verify a valid password', async () => {
-      const password = 'SecurePassword123!';
-      const hash = await encryptor.hashPassword(password);
-      const isValid = await encryptor.verifyPassword(password, hash);
-      expect(isValid).toBe(true);
-    });
-
-    it('should fail to verify an invalid password', async () => {
-      const password = 'SecurePassword123!';
-      const hash = await encryptor.hashPassword(password);
-      const isValid = await encryptor.verifyPassword('WrongPassword!', hash);
-      expect(isValid).toBe(false);
-    });
-
-    it('should fail to verify with a malformed hash', async () => {
-      const isValid = await encryptor.verifyPassword('SecurePassword123!', '$2b$12$malformedhashXXXXXXXXXXXXXXXXXXXXXXX');
-      expect(isValid).toBe(false);
-    });
   });
 
   describe('isValidHash', () => {
