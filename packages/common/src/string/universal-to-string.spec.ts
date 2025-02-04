@@ -7,6 +7,14 @@ it('universalToString', () => {
 
   const circularObj: CircularObject = {};
   circularObj.self = circularObj;
+  const largeObject = {
+    id: 1,
+    name: 'Object',
+    metadata: {
+      author: 'developer',
+    },
+  };
+
   [
     [null, 'null'],
     [undefined, 'undefined'],
@@ -33,6 +41,11 @@ it('universalToString', () => {
     [Symbol('sym'), 'Symbol(sym)'],
     [Promise.resolve('data promise'), 'Promise'],
     [new Error('data error'), 'new Error(data error)'],
+    [largeObject, '{"id":1,"name":"Object","metadata":{"author":"developer"}}'],
+    [new Error(largeObject as any), 'new Error([object Object])'],
+    [new Error({} as any), 'new Error([object Object])'],
+    [new Error([] as any), 'new Error()'],
+    [new Error(1 as any), 'new Error(1)'],
     [new RegExp('test'), 'RegExp(/test/)'],
     [circularObj, '[Circular or too complex to stringify]'],
   ].forEach(([input, expected]) => {
