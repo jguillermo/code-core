@@ -1,11 +1,11 @@
-import * as sodium from 'libsodium-wrappers-sumo';
-
 export class SodiumInitializer {
   private static initializedPromise: Promise<void> | null = null;
+  private static sodium: any = null;
 
   public static async ensureInitialized(): Promise<void> {
     if (!this.initializedPromise) {
-      this.initializedPromise = sodium.ready
+      this.sodium = require('libsodium-wrappers-sumo');
+      this.initializedPromise = this.sodium.ready
         .then(() => {
           console.debug('Sodium successfully initialized.');
         })
@@ -17,8 +17,11 @@ export class SodiumInitializer {
     await this.initializedPromise;
   }
 
-  public static async getSodium(): Promise<typeof sodium> {
+  public static async getSodium(): Promise<any> {
     await this.ensureInitialized();
-    return sodium;
+    if (!this.sodium) {
+      throw new Error('libsodium-wrappers-sumo is not available. Please install it if needed.');
+    }
+    return this.sodium;
   }
 }

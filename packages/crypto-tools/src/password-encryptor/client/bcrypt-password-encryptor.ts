@@ -1,13 +1,27 @@
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 import { PasswordEncryptor } from '../password-encryptor';
 
 export class BcryptPasswordEncryptor extends PasswordEncryptor {
+  private static bcrypt: any = null;
+
   /**
    * Constructor for the PasswordEncryptor class.
    * @param saltRounds Number of salt rounds to generate the hashes (default is 10).
    */
   constructor(saltRounds: number = 10) {
     super(saltRounds);
+    this.ensureBcryptAvailable();
+  }
+
+  private ensureBcryptAvailable(): void {
+    if (!BcryptPasswordEncryptor.bcrypt) {
+      try {
+        BcryptPasswordEncryptor.bcrypt = require('bcrypt');
+      } catch (error) {
+        console.warn('bcrypt is not installed. Password encryption will not be available.');
+        throw new Error('bcrypt module is required but not installed.');
+      }
+    }
   }
 
   /**
@@ -16,7 +30,7 @@ export class BcryptPasswordEncryptor extends PasswordEncryptor {
    * @returns The generated hash.
    */
   async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, this._saltRounds);
+    return await BcryptPasswordEncryptor.bcrypt.hash(password, this._saltRounds);
   }
 
   /**
@@ -26,7 +40,7 @@ export class BcryptPasswordEncryptor extends PasswordEncryptor {
    * @returns True if they match, otherwise false.
    */
   async verifyPassword(password: string, hash: string): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
+    return await BcryptPasswordEncryptor.bcrypt.compare(password, hash);
   }
 
   /**

@@ -34,13 +34,26 @@
     "format:fix": "prettier --write \"{src,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "libsodium-wrappers-sumo": "^0.7.15"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.7"
+  },
+  "peerDependencies": {
+    "libsodium-wrappers-sumo": "^0.7.15",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "peerDependenciesMeta": {
+    "libsodium-wrappers-sumo": {
+      "optional": true
+    },
+    "bcrypt": {
+      "optional": true
+    },
+    "jsonwebtoken": {
+      "optional": true
+    }
   },
   "jest": {
     "moduleFileExtensions": [
