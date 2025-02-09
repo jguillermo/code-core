@@ -30,12 +30,12 @@ export class JWTDataSigner {
   }
 
   sign(data: object): string {
-    return jwt.sign(data, this.secretKey, this.signOptions);
+    return JWTDataSigner.jwt.sign(data, this.secretKey, this.signOptions);
   }
 
   verify(signedData: string): object {
     try {
-      const data = jwt.verify(signedData, this.secretKey, this.verifyOptions) as object | null;
+      const data = JWTDataSigner.jwt.verify(signedData, this.secretKey, this.verifyOptions) as object | null;
       return data ?? {};
     } catch (error) {
       throw new Error(`verify Error: ${(error as Error).message}`);
@@ -44,7 +44,7 @@ export class JWTDataSigner {
 
   data(signedData: string): object {
     try {
-      const decoded = jwt.decode(signedData) as object | null;
+      const decoded = JWTDataSigner.jwt.decode(signedData) as object | null;
       return decoded ?? {};
     } catch (error) {
       throw new Error(`data Error: ${(error as Error).message}`);
