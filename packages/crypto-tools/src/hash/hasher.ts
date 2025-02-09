@@ -1,4 +1,4 @@
-import { SodiumInitializer } from './sodium-initializer';
+import { SodiumInitializer } from '../sodium-initializer';
 
 export class Hasher {
   private static readonly validAlgorithms = ['sha256', 'sha512', 'blake2b'] as const;
