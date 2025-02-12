@@ -1,6 +1,6 @@
 import { SignPayload } from './sign-payload';
 
-export abstract class DataSigner {
+export abstract class UserSigner {
   abstract sign(payload: SignPayload): string;
 
   abstract verify(token: string): SignPayload;

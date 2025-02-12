@@ -1,7 +1,7 @@
 import { AuthenticationMethod } from '../authentication-method';
 import { User } from '../../../user';
 import { UserRepository } from '../../../user.repository';
-import { PasswordEncryptor } from '../../password-encryptor/password-encryptor';
+import { UserPasswordEncryptor } from '../../password-encryptor/user-password-encryptor';
 import { InvalidCredentialsException } from '../invalid-credentials.exception';
 
 export class UsernamePasswordAuthentication implements AuthenticationMethod {
@@ -9,7 +9,7 @@ export class UsernamePasswordAuthentication implements AuthenticationMethod {
 
   constructor(
     private readonly repository: UserRepository,
-    private readonly passwordEncryptor: PasswordEncryptor,
+    private readonly passwordEncryptor: UserPasswordEncryptor,
   ) {}
 
   async authenticate(credentials: Record<string, string>): Promise<User | null> {

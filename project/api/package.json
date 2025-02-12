@@ -28,6 +28,8 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "@bounded-context/financial-management": "file:../../bounded-context/financial-management",
+    "@bounded-context/authentication-authorization": "file:../../bounded-context/authentication-authorization",
+    "@code-core/cypto-tools": "file:../../packages/crypto-tools",
     "@code-core/ephemeradb": "file:../../packages/ephemeraDB"
   },
   "devDependencies": {

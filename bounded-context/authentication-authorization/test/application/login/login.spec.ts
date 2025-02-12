@@ -1,4 +1,4 @@
-import { DataSigner, Login, LoginDto, LoginResponse, PasswordEncryptor, User, UserRepository } from '../../../src';
+import { Login, LoginDto, LoginResponse, User, UserPasswordEncryptor, UserRepository, UserSigner } from '../../../src';
 import { UserObjectMother } from '../../object-mother/user-object-mother';
 import { Builder, DomainException } from '@code-core/domain';
 import { InvalidCredentialsException } from '../../../src/domain/user/services/authentication/invalid-credentials.exception';
@@ -6,8 +6,8 @@ import { InvalidCredentialsException } from '../../../src/domain/user/services/a
 describe('Auth Login', () => {
   let loginUseCase: Login;
   let mockRepository: jest.Mocked<UserRepository>;
-  let mockSigner: jest.Mocked<DataSigner>;
-  let mockEncryptor: jest.Mocked<PasswordEncryptor>;
+  let mockSigner: jest.Mocked<UserSigner>;
+  let mockEncryptor: jest.Mocked<UserPasswordEncryptor>;
   let user: User;
 
   beforeEach(() => {
@@ -21,12 +21,12 @@ describe('Auth Login', () => {
       sign: jest.fn().mockReturnValue('token'),
       verify: jest.fn(),
       data: jest.fn(),
-    } as jest.Mocked<DataSigner>;
+    } as jest.Mocked<UserSigner>;
 
     mockEncryptor = {
       encrypt: jest.fn(),
       verify: jest.fn().mockImplementation((password) => Promise.resolve(password === 'testPassword')),
-    } as jest.Mocked<PasswordEncryptor>;
+    } as jest.Mocked<UserPasswordEncryptor>;
 
     loginUseCase = new Login(mockRepository, mockSigner, mockEncryptor);
   });
