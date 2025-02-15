@@ -126,4 +126,63 @@ describe('SearchQuerySerializer', () => {
       expect(reserializedSpec).toBe(spec);
     });
   });
+
+  // Additional tests in search-query-serializer.spec.ts
+
+  describe.skip('SearchQuerySerializer - Special Characters', () => {
+    it('should correctly serialize and deserialize filter values with accented characters', () => {
+      // Create a query with accented characters in the field value
+      const query = new SearchQueryDto(new SimpleFilterDto('nombre', FilterOperator.EQ, 'José, María ñáéíóúü'));
+      const serialized = SearchQuerySerializer.serialize(query);
+      // Expect the serialized string to contain the accented characters as-is.
+      expect(serialized).toEqual('F:S:nombre:eq:José, María ñáéíóúü');
+
+      const deserialized = SearchQuerySerializer.deserialize(serialized);
+      const filter = deserialized.filters as SimpleFilterDto;
+      expect(filter.field).toBe('nombre');
+      expect(filter.value).toBe('José, María ñáéíóúü');
+    });
+
+    it('should correctly handle filter values containing reserved substrings such as "S:" and pipes', () => {
+      // Create a query where the filter value includes reserved substrings like "S:" and "|"
+      const query = new SearchQueryDto(new SimpleFilterDto('note', FilterOperator.LIKE, 'This is a test with S: and | inside'));
+      const serialized = SearchQuerySerializer.serialize(query);
+      // Expect the serialized string to include the reserved sequences unmodified
+      expect(serialized).toContain('This is a test with S: and | inside');
+
+      const deserialized = SearchQuerySerializer.deserialize(serialized);
+      const filter = deserialized.filters as SimpleFilterDto;
+      expect(filter.field).toBe('note');
+      expect(filter.value).toBe('This is a test with S: and | inside');
+    });
+
+    it('should correctly serialize and deserialize composite filters with special characters in nested values', () => {
+      // Create a composite filter with inner simple filters containing reserved characters.
+      const compositeFilter = new CompositeFilterDto('and', [
+        new CompositeFilterDto('or', [
+          new SimpleFilterDto('title', FilterOperator.LIKE, 'Introduction: Part 1'),
+          new SimpleFilterDto('title', FilterOperator.LIKE, 'Conclusion | Final Thoughts'),
+        ]),
+        new SimpleFilterDto('description', FilterOperator.LIKE, 'Contains S: and multiple, commas'),
+      ]);
+      const query = new SearchQueryDto(compositeFilter, [new SearchOrderDto('createdAt', 'asc')], new SearchPaginatorDto(1, 5), ['section']);
+      const serialized = SearchQuerySerializer.serialize(query);
+      // Check that special characters remain intact in the serialized string.
+      expect(serialized).toContain('Introduction: Part 1');
+      expect(serialized).toContain('Conclusion | Final Thoughts');
+      expect(serialized).toContain('Contains S: and multiple, commas');
+
+      const deserialized = SearchQuerySerializer.deserialize(serialized);
+      // Verify nested composite filter values
+      const compFilter = deserialized.filters as CompositeFilterDto;
+      const innerOr = compFilter.filters[0] as CompositeFilterDto;
+      const firstSimple = innerOr.filters[0] as SimpleFilterDto;
+      const secondSimple = innerOr.filters[1] as SimpleFilterDto;
+      expect(firstSimple.value).toBe('Introduction: Part 1');
+      expect(secondSimple.value).toBe('Conclusion | Final Thoughts');
+
+      const descriptionFilter = compFilter.filters[1] as SimpleFilterDto;
+      expect(descriptionFilter.value).toBe('Contains S: and multiple, commas');
+    });
+  });
 });

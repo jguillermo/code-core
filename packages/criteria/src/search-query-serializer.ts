@@ -45,7 +45,7 @@ export class SearchQuerySerializer {
       const inner = filter.filters.map((f) => this.serializeFilter(f)).join('|');
       return `C:${filter.logicalOperator}:(${inner})`;
     }
-    throw new Error('Tipo de filtro desconocido');
+    throw new Error('Unknown filter type');
   }
 
   private static serializeOrders(orders: SearchOrderDto[]): string {
@@ -81,7 +81,7 @@ export class SearchQuerySerializer {
     if (text.startsWith('S:')) {
       // Formato: S:<field>:<operator>:<value>
       const parts = text.split(':');
-      if (parts.length < 4) throw new Error('Formato de filtro simple inválido');
+      if (parts.length < 4) throw new Error('Invalid simple filter format');
       const field = parts[1];
       const operator = parts[2];
       const valueStr = parts.slice(3).join(':'); // En caso de que el valor tenga ':'
@@ -95,14 +95,14 @@ export class SearchQuerySerializer {
     } else if (text.startsWith('C:')) {
       // Formato: C:<logicalOperator>:(<filter1>|<filter2>|...|<filterN>)
       const idx = text.indexOf(':(');
-      if (idx === -1) throw new Error('Formato de filtro compuesto inválido');
+      if (idx === -1) throw new Error('Invalid composite filter format');
       const logicalOperator = text.substring(2, idx);
       const innerText = text.substring(idx + 2, text.length - 1);
       const filterParts = this.splitByPipe(innerText);
       const filters = filterParts.map((fp) => this.deserializeFilter(fp));
       return new CompositeFilterDto(logicalOperator as any, filters);
     }
-    throw new Error('Formato de filtro desconocido');
+    throw new Error('Unknown filter format');
   }
 
   // Divide la cadena por '|' sin romper paréntesis anidados.
