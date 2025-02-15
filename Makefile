@@ -49,6 +49,10 @@ bounded-auth:
 	$(MAKE) read-files FILE_LIST="$$FILE_LIST"  \
 	$(MAKE) write-content FILE_PATHS="'$$CONTENT_FILES'";
 
+package-criteria:
+	@FILE_LIST=$$( $(MAKE) list-files | grep -E "^packages/criteria/src" ); \
+	$(MAKE) read-files FILE_LIST="$$FILE_LIST"  \
+	$(MAKE) write-content FILE_PATHS="'$$CONTENT_FILES'";
 
 read-files:
 	@if [ -z "$$FILE_LIST" ]; then \
