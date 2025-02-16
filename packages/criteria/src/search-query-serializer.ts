@@ -4,141 +4,155 @@ import { SearchPaginatorDto } from './search-paginator.dto';
 import { SearchFilterDto } from './search-filter.dto';
 import { CompositeFilterDto } from './composite-filter.dto';
 import { SimpleFilterDto } from './simple-filter.dto';
+import { FilterOperator } from './filter-operator';
 
 /**
- * Clase encargada de serializar y deserializar instancias de SearchQueryDto en un formato URL‑amigable.
+ * Class responsible for serializing and deserializing SearchQueryDto instances
+ * into a custom JSON object.
  *
- * Formato:
- * - Filtros:
- *   - Filtro simple: S:<field>:<operator>:<value>
- *     (Si el valor es un array, se unen con comas)
- *   - Filtro compuesto: C:<logicalOperator>:(<filter1>|<filter2>|...|<filterN>)
- * - Órdenes:
- *   - O:<field>:<direction>,<field>:<direction>,...
- * - Paginador:
- *   - P:<page>,<perPage>
- * - Query completa: se unen secciones con '/'
+ * The JSON format:
+ * {
+ *   "filters": <custom filters object>,
+ *   "orders": <array of orders>,
+ *   "paginator": <paginator object>,
+ *   "groupBy": <array of groupBy fields>
+ * }
  */
 export class SearchQuerySerializer {
+  /**
+   * Serializes a SearchQueryDto instance into a JSON string.
+   * @param query An instance of SearchQueryDto.
+   * @returns A JSON string representing the query.
+   */
   public static serialize(query: SearchQueryDto): string {
-    const parts: string[] = [];
-    if (query.filters) {
-      parts.push('F:' + this.serializeFilter(query.filters));
-    }
-    if (query.orders && query.orders.length > 0) {
-      parts.push('O:' + this.serializeOrders(query.orders));
-    }
-    if (query.paginator) {
-      parts.push('P:' + this.serializePaginator(query.paginator));
-    }
-    if (query.groupBy && query.groupBy.length > 0) {
-      parts.push('G:' + query.groupBy.join(','));
-    }
-    return parts.join('/');
+    const obj: any = {};
+    obj.filters = query.filters ? this.serializeFilter(query.filters) : null;
+    obj.orders = query.orders ? query.orders.map((o) => ({ field: o.field, direction: o.direction })) : null;
+    obj.paginator = query.paginator ? { page: query.paginator.page, perPage: query.paginator.perPage } : null;
+    obj.groupBy = query.groupBy || null;
+    return JSON.stringify(obj);
   }
 
-  private static serializeFilter(filter: SearchFilterDto): string {
+  /**
+   * Deserializes a JSON string (in the custom format) back into a SearchQueryDto instance.
+   * @param serialized The JSON string.
+   * @returns The reconstructed SearchQueryDto instance.
+   */
+  public static deserialize(serialized: string): SearchQueryDto {
+    let obj: any;
+    try {
+      obj = JSON.parse(serialized);
+    } catch (error) {
+      throw new Error('Invalid JSON string');
+    }
+    // Validate orders
+    if (obj.orders !== null && !Array.isArray(obj.orders)) {
+      throw new Error('Orders must be an array');
+    }
+    if (obj.orders) {
+      obj.orders.forEach((o: any) => {
+        if (typeof o.field !== 'string') {
+          throw new Error('Order field must be a string');
+        }
+        if (o.direction !== 'asc' && o.direction !== 'desc') {
+          throw new Error('Order direction must be either "asc" or "desc"');
+        }
+      });
+    }
+    // Validate paginator
+    if (obj.paginator !== null) {
+      if (typeof obj.paginator.page !== 'number' || typeof obj.paginator.perPage !== 'number') {
+        throw new Error('Paginator values must be numbers');
+      }
+      // Optionally check for positive values
+      if (obj.paginator.page < 0 || obj.paginator.perPage < 0) {
+        throw new Error('Paginator values must be non-negative');
+      }
+    }
+    // Validate groupBy
+    if (obj.groupBy !== null && !Array.isArray(obj.groupBy)) {
+      throw new Error('groupBy must be an array');
+    }
+    const filters = obj.filters ? this.deserializeFilter(obj.filters) : undefined;
+    const orders = obj.orders ? obj.orders.map((o: any) => new SearchOrderDto(o.field, o.direction)) : undefined;
+    const paginator = obj.paginator ? new SearchPaginatorDto(obj.paginator.page, obj.paginator.perPage) : undefined;
+    const groupBy = Array.isArray(obj.groupBy) ? obj.groupBy : undefined;
+    return new SearchQueryDto(filters, orders, paginator, groupBy);
+  }
+
+  // Helper method to serialize a SearchFilterDto into a custom object.
+  private static serializeFilter(filter: SearchFilterDto): any {
     if (filter instanceof SimpleFilterDto) {
-      const valueStr = Array.isArray(filter.value) ? filter.value.join(',') : filter.value;
-      return `S:${filter.field}:${filter.operator}:${valueStr}`;
+      // Validate that required properties exist
+      if (!filter.field || !filter.operator || filter.value === undefined) {
+        throw new Error('Simple filter is missing required properties');
+      }
+      return {
+        type: 'simple',
+        field: filter.field,
+        operator: filter.operator,
+        value: filter.value,
+      };
     } else if (filter instanceof CompositeFilterDto) {
-      const inner = filter.filters.map((f) => this.serializeFilter(f)).join('|');
-      return `C:${filter.logicalOperator}:(${inner})`;
+      if (!filter.logicalOperator || !Array.isArray(filter.filters)) {
+        throw new Error('Composite filter is missing required properties or filters is not an array');
+      }
+      return {
+        type: 'composite',
+        logicalOperator: filter.logicalOperator,
+        filters: filter.filters.map((f) => this.serializeFilter(f)),
+      };
     }
     throw new Error('Unknown filter type');
   }
 
-  private static serializeOrders(orders: SearchOrderDto[]): string {
-    return orders.map((o) => `${o.field}:${o.direction}`).join(',');
-  }
-
-  private static serializePaginator(paginator: SearchPaginatorDto): string {
-    return `${paginator.page},${paginator.perPage}`;
-  }
-
-  public static deserialize(serialized: string): SearchQueryDto {
-    const parts = serialized.split('/');
-    let filters: SearchFilterDto | undefined;
-    let orders: SearchOrderDto[] | undefined;
-    let paginator: SearchPaginatorDto | undefined;
-    let groupBy: string[] | undefined;
-
-    for (const part of parts) {
-      if (part.startsWith('F:')) {
-        filters = this.deserializeFilter(part.substring(2));
-      } else if (part.startsWith('O:')) {
-        orders = this.deserializeOrders(part.substring(2));
-      } else if (part.startsWith('P:')) {
-        paginator = this.deserializePaginator(part.substring(2));
-      } else if (part.startsWith('G:')) {
-        groupBy = part.substring(2).split(',');
+  // Helper method to deserialize a filter object back into a SearchFilterDto.
+  private static deserializeFilter(obj: any): SearchFilterDto {
+    if (obj.type === 'simple') {
+      if (typeof obj.field !== 'string') {
+        throw new Error('Simple filter "field" must be a string');
       }
-    }
-    return new SearchQueryDto(filters, orders, paginator, groupBy);
-  }
-
-  private static deserializeFilter(text: string): SearchFilterDto {
-    if (text.startsWith('S:')) {
-      // Formato: S:<field>:<operator>:<value>
-      const parts = text.split(':');
-      if (parts.length < 4) throw new Error('Invalid simple filter format');
-      const field = parts[1];
-      const operator = parts[2];
-      const valueStr = parts.slice(3).join(':'); // En caso de que el valor tenga ':'
-      let value: string | number | (string | number)[];
-      if (valueStr.indexOf(',') !== -1) {
-        value = valueStr.split(',').map((v) => (isNaN(Number(v)) ? v : Number(v)));
-      } else {
-        value = isNaN(Number(valueStr)) ? valueStr : Number(valueStr);
+      if (typeof obj.operator !== 'string') {
+        throw new Error('Simple filter "operator" must be a string');
       }
-      return new SimpleFilterDto(field, operator as any, value);
-    } else if (text.startsWith('C:')) {
-      // Formato: C:<logicalOperator>:(<filter1>|<filter2>|...|<filterN>)
-      const idx = text.indexOf(':(');
-      if (idx === -1) throw new Error('Invalid composite filter format');
-      const logicalOperator = text.substring(2, idx);
-      const innerText = text.substring(idx + 2, text.length - 1);
-      const filterParts = this.splitByPipe(innerText);
-      const filters = filterParts.map((fp) => this.deserializeFilter(fp));
-      return new CompositeFilterDto(logicalOperator as any, filters);
+      if (!Object.prototype.hasOwnProperty.call(obj, 'value')) {
+        throw new Error('Simple filter is missing "value"');
+      }
+      // Validate that obj.operator is one of the allowed values.
+      if (!Object.values(FilterOperator).includes(obj.operator)) {
+        throw new Error(`Unknown operator "${obj.operator}" in simple filter`);
+      }
+      // List of operators that require numeric values.
+      const numericOperators = [FilterOperator.LT, FilterOperator.LTE, FilterOperator.GT, FilterOperator.GTE, FilterOperator.BETWEEN];
+      let value: any = obj.value;
+      if (numericOperators.includes(obj.operator)) {
+        if (Array.isArray(value)) {
+          value = value.map((v) => {
+            const num = Number(v);
+            if (isNaN(num)) {
+              throw new Error(`Invalid numeric value in array: ${v}`);
+            }
+            return num;
+          });
+        } else {
+          const num = Number(value);
+          if (isNaN(num)) {
+            throw new Error(`Invalid numeric value: ${value}`);
+          }
+          value = num;
+        }
+      }
+      return new SimpleFilterDto(obj.field, obj.operator, value);
+    } else if (obj.type === 'composite') {
+      if (typeof obj.logicalOperator !== 'string') {
+        throw new Error('Composite filter "logicalOperator" must be a string');
+      }
+      if (!Array.isArray(obj.filters)) {
+        throw new Error('Composite filter "filters" must be an array');
+      }
+      const subFilters = obj.filters.map((sub: any) => this.deserializeFilter(sub));
+      return new CompositeFilterDto(obj.logicalOperator, subFilters);
     }
     throw new Error('Unknown filter format');
-  }
-
-  // Divide la cadena por '|' sin romper paréntesis anidados.
-  private static splitByPipe(text: string): string[] {
-    const result: string[] = [];
-    let current = '';
-    let depth = 0;
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      if (char === '(') {
-        depth++;
-        current += char;
-      } else if (char === ')') {
-        depth--;
-        current += char;
-      } else if (char === '|' && depth === 0) {
-        result.push(current);
-        current = '';
-      } else {
-        current += char;
-      }
-    }
-    if (current.length > 0) result.push(current);
-    return result;
-  }
-
-  private static deserializeOrders(text: string): SearchOrderDto[] {
-    if (!text) return [];
-    return text.split(',').map((part) => {
-      const [field, direction] = part.split(':');
-      return new SearchOrderDto(field, direction as 'asc' | 'desc');
-    });
-  }
-
-  private static deserializePaginator(text: string): SearchPaginatorDto {
-    const [pageStr, perPageStr] = text.split(',');
-    return new SearchPaginatorDto(Number(pageStr), Number(perPageStr));
   }
 }
