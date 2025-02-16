@@ -1,4 +1,4 @@
-import { SearchOrderItemDto } from './search-order-item-dto';
+import { SearchOrderItemDto } from './search-order-item.dto';
 
 /**
  * DTO for managing multiple order criteria.

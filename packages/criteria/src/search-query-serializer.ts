@@ -5,7 +5,7 @@ import { SearchFilterDto } from './search-filter.dto';
 import { CompositeFilterDto } from './composite-filter.dto';
 import { SimpleFilterDto } from './simple-filter.dto';
 import { SearchGroupByDto } from './search-group-by-dto';
-import { SearchOrderItemDto } from './search-order-item-dto';
+import { SearchOrderItemDto } from './search-order-item.dto';
 
 /**
  * Class responsible for serializing and deserializing SearchCriteriaDto instances
