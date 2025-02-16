@@ -1,7 +1,7 @@
 import { SearchFilterDto } from './search-filter.dto';
 import { SearchOrderDto } from './search-order.dto';
 import { SearchPaginatorDto } from './search-paginator.dto';
-import { SearchGroupByDto } from './search-group-by-dto';
+import { SearchGroupByDto } from './search-group-by.dto';
 
 export class SearchCriteriaDto {
   constructor(

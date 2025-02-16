@@ -1,4 +1,4 @@
-import { SearchGroupByDto } from './search-group-by-dto';
+import { SearchGroupByDto } from './search-group-by.dto';
 
 describe('SearchGroupByDto', () => {
   describe('Valid Cases', () => {

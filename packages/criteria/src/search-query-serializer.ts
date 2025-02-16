@@ -4,7 +4,7 @@ import { SearchPaginatorDto } from './search-paginator.dto';
 import { SearchFilterDto } from './search-filter.dto';
 import { CompositeFilterDto } from './composite-filter.dto';
 import { SimpleFilterDto } from './simple-filter.dto';
-import { SearchGroupByDto } from './search-group-by-dto';
+import { SearchGroupByDto } from './search-group-by.dto';
 import { SearchOrderItemDto } from './search-order-item.dto';
 
 /**

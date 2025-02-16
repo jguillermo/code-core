@@ -7,7 +7,7 @@ import { CompositeFilterDto } from './composite-filter.dto';
 import { FilterOperator } from './filter-operator';
 import { SearchOrderDto } from './search-order.dto';
 import { SearchPaginatorDto } from './search-paginator.dto';
-import { SearchGroupByDto } from './search-group-by-dto';
+import { SearchGroupByDto } from './search-group-by.dto';
 import { SearchOrderItemDto } from './search-order-item.dto';
 
 describe('SearchQuerySerializer', () => {
