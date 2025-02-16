@@ -1,14 +1,14 @@
 export enum FilterOperator {
-  EQ = 'eq', // Igual a
-  NE = 'ne', // No igual a
-  LT = 'lt', // Menor que
-  LTE = 'lte', // Menor o igual que
-  GT = 'gt', // Mayor que
-  GTE = 'gte', // Mayor o igual que
-  IN = 'in', // El valor se encuentra en un conjunto
-  NIN = 'nin', // El valor NO se encuentra en un conjunto
-  BETWEEN = 'between', // El valor está entre dos límites (se espera un array [min, max])
-  LIKE = 'like', // Búsqueda de tipo LIKE (sensible a mayúsculas)
-  ILIKE = 'ilike', // Búsqueda de tipo LIKE (insensible a mayúsculas)
-  INARRAY = 'inarray', // Verifica si un valor se encuentra dentro de un array contenido en el campo
+  EQ = 'eq', // Equals
+  NE = 'ne', // Not equals
+  LT = 'lt', // Less than
+  LTE = 'lte', // Less than or equal
+  GT = 'gt', // Greater than
+  GTE = 'gte', // Greater than or equal
+  IN = 'in', // In a set
+  NIN = 'nin', // Not in a set
+  BETWEEN = 'between', // Between two limits (expects an array [min, max])
+  LIKE = 'like', // LIKE search (case sensitive)
+  ILIKE = 'ilike', // LIKE search (case insensitive)
+  INARRAY = 'inarray', // Checks if a value is contained in an array field
 }

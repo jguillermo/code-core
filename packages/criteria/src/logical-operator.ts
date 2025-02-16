@@ -1,5 +1,4 @@
 /**
- * Operadores lógicos para combinar filtros.
- * Se usa para construir condiciones compuestas.
+ * Logical operators used to combine filters.
  */
 export type LogicalOperator = 'and' | 'or';

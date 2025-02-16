@@ -1,17 +1,18 @@
 // search-query-serializer.spec.ts
 
-import { SearchQueryDto } from './search-query.dto';
 import { SearchOrderDto } from './search-order.dto';
 import { SearchPaginatorDto } from './search-paginator.dto';
 import { CompositeFilterDto } from './composite-filter.dto';
 import { SimpleFilterDto } from './simple-filter.dto';
 import { SearchQuerySerializer } from './search-query-serializer';
 import { FilterOperator } from './filter-operator';
+import { SearchCriteriaDto } from './search-criteria.dto';
+import { SearchGroupByDto } from './search-group-by-dto';
 
 describe('SearchQuerySerializer', () => {
   describe('Basic Sections', () => {
     it('should serialize and deserialize a query with only a simple filter', () => {
-      const query = new SearchQueryDto(new SimpleFilterDto('name', FilterOperator.EQ, 'Alice'));
+      const query = new SearchCriteriaDto(new SimpleFilterDto('name', FilterOperator.EQ, 'Alice'));
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: {
@@ -34,28 +35,37 @@ describe('SearchQuerySerializer', () => {
     });
 
     it('should serialize and deserialize a query with only orders', () => {
-      const orders = [new SearchOrderDto('age', 'desc'), new SearchOrderDto('name', 'asc')];
-      const query = new SearchQueryDto(undefined, orders);
+      const orders = new SearchOrderDto([
+        {
+          field: 'age',
+          direction: 'desc',
+        },
+        {
+          field: 'name',
+          direction: 'asc',
+        },
+      ]);
+      const query = new SearchCriteriaDto(undefined, orders);
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: null,
-        orders: orders.map((o) => ({ field: o.field, direction: o.direction })),
+        orders: orders.orders.map((order) => ({ field: order.field, direction: order.direction })),
         paginator: null,
         groupBy: null,
       };
       expect(JSON.parse(serialized)).toEqual(expectedObj);
 
       const deserialized = SearchQuerySerializer.deserialize(serialized);
-      expect(deserialized.orders).toHaveLength(2);
-      expect(deserialized.orders![0].field).toBe('age');
-      expect(deserialized.orders![0].direction).toBe('desc');
-      expect(deserialized.orders![1].field).toBe('name');
-      expect(deserialized.orders![1].direction).toBe('asc');
+      expect(deserialized.orders?.orders).toHaveLength(2);
+      expect(deserialized.orders?.orders[0].field).toBe('age');
+      expect(deserialized.orders?.orders[0].direction).toBe('desc');
+      expect(deserialized.orders?.orders[1].field).toBe('name');
+      expect(deserialized.orders?.orders[1].direction).toBe('asc');
     });
 
     it('should serialize and deserialize a query with only paginator', () => {
       const paginator = new SearchPaginatorDto(3, 25);
-      const query = new SearchQueryDto(undefined, undefined, paginator);
+      const query = new SearchCriteriaDto(undefined, undefined, paginator);
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: null,
@@ -71,29 +81,29 @@ describe('SearchQuerySerializer', () => {
     });
 
     it('should serialize and deserialize a query with only groupBy', () => {
-      const groupBy = ['department', 'role'];
-      const query = new SearchQueryDto(undefined, undefined, undefined, groupBy);
+      const groupBy = new SearchGroupByDto(['department', 'role']);
+      const query = new SearchCriteriaDto(undefined, undefined, undefined, groupBy);
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: null,
         orders: null,
         paginator: null,
-        groupBy: groupBy,
+        groupBy: groupBy.fields,
       };
       expect(JSON.parse(serialized)).toEqual(expectedObj);
 
       const deserialized = SearchQuerySerializer.deserialize(serialized);
-      expect(deserialized.groupBy).toEqual(['department', 'role']);
+      expect(deserialized.groupBy?.fields).toEqual(['department', 'role']);
     });
   });
 
   describe('Combined Sections', () => {
     it('should serialize and deserialize a query with filters, orders, paginator, and groupBy', () => {
       const filter = new SimpleFilterDto('age', FilterOperator.GT, 30);
-      const orders = [new SearchOrderDto('age', 'desc')];
+      const orders = new SearchOrderDto([{ field: 'age', direction: 'desc' }]);
       const paginator = new SearchPaginatorDto(2, 20);
-      const groupBy = ['department'];
-      const query = new SearchQueryDto(filter, orders, paginator, groupBy);
+      const groupBy = new SearchGroupByDto(['department']);
+      const query = new SearchCriteriaDto(filter, orders, paginator, groupBy);
 
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
@@ -114,9 +124,9 @@ describe('SearchQuerySerializer', () => {
       expect(desFilter.field).toBe('age');
       expect(desFilter.operator).toBe(FilterOperator.GT);
       expect(desFilter.value).toBe(30);
-      expect(deserialized.orders).toHaveLength(1);
+      expect(deserialized.orders?.orders).toHaveLength(1);
       expect(deserialized.paginator?.page).toBe(2);
-      expect(deserialized.groupBy).toEqual(['department']);
+      expect(deserialized.groupBy?.fields).toEqual(['department']);
     });
   });
 
@@ -129,7 +139,7 @@ describe('SearchQuerySerializer', () => {
         new SimpleFilterDto('age', FilterOperator.GT, 20),
         new SimpleFilterDto('roles', FilterOperator.INARRAY, 'admin'),
       ]);
-      const query = new SearchQueryDto(compositeFilter);
+      const query = new SearchCriteriaDto(compositeFilter);
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: {
@@ -182,7 +192,7 @@ describe('SearchQuerySerializer', () => {
 
     it('should serialize and deserialize a filter with an array value', () => {
       // A simple filter where the value is an array
-      const query = new SearchQueryDto(new SimpleFilterDto('id', FilterOperator.IN, [1, 2, 3]));
+      const query = new SearchCriteriaDto(new SimpleFilterDto('id', FilterOperator.IN, [1, 2, 3]));
       const serialized = SearchQuerySerializer.serialize(query);
       const expectedObj = {
         filters: {
@@ -214,10 +224,10 @@ describe('SearchQuerySerializer', () => {
           new CompositeFilterDto('and', [new SimpleFilterDto('score', FilterOperator.EQ, 100), new SimpleFilterDto('bonus', FilterOperator.GT, 10)]),
         ]),
       ]);
-      const orders = [new SearchOrderDto('updatedAt', 'desc')];
+      const orders = new SearchOrderDto([{ field: 'updatedAt', direction: 'desc' }]);
       const paginator = new SearchPaginatorDto(1, 50);
-      const groupBy = ['category', 'region'];
-      const query = new SearchQueryDto(nestedFilter, orders, paginator, groupBy);
+      const groupBy = new SearchGroupByDto(['category', 'region']);
+      const query = new SearchCriteriaDto(nestedFilter, orders, paginator, groupBy);
 
       const serialized = SearchQuerySerializer.serialize(query);
       const deserialized = SearchQuerySerializer.deserialize(serialized);
@@ -352,17 +362,6 @@ describe('SearchQuerySerializer', () => {
       expect(() => SearchQuerySerializer.deserialize(invalidJSONString)).toThrow();
     });
 
-    // GroupBy Tests
-    it('should throw an error when groupBy is not an array', () => {
-      const invalidGroupByJSON = JSON.stringify({
-        filters: null,
-        orders: null,
-        paginator: null,
-        groupBy: 'department', // Should be an array, e.g. ["department"]
-      });
-      expect(() => SearchQuerySerializer.deserialize(invalidGroupByJSON)).toThrow();
-    });
-
     // Additional test: Numeric filter value provided as a string that cannot be coerced
     it('should throw an error when a numeric filter value is not a valid number', () => {
       const invalidNumericFilterJSON = JSON.stringify({
@@ -378,6 +377,82 @@ describe('SearchQuerySerializer', () => {
       });
       // If the implementation tries to coerce this and fails, an error should be thrown.
       expect(() => SearchQuerySerializer.deserialize(invalidNumericFilterJSON)).toThrow();
+    });
+  });
+
+  describe('Additional Cases', () => {
+    it('should accept a numeric filter value provided as a string convertible to an integer', () => {
+      // "100" should be accepted and converted to number 100
+      const query = new SearchCriteriaDto(new SimpleFilterDto('price', FilterOperator.GT, '100'));
+      const serialized = SearchQuerySerializer.serialize(query);
+      const deserialized = SearchQuerySerializer.deserialize(serialized);
+      const filter = deserialized.filters as SimpleFilterDto;
+      expect(filter.value).toBe(100);
+    });
+
+    it('should throw an error when a numeric filter value is a float (even if provided as a string)', () => {
+      // "100.5" is not an integer, so it should throw an error
+      const invalidNumericFloatJSON = JSON.stringify({
+        filters: {
+          type: 'simple',
+          field: 'price',
+          operator: 'gt',
+          value: '100.5',
+        },
+        orders: null,
+        paginator: null,
+        groupBy: null,
+      });
+      expect(() => SearchQuerySerializer.deserialize(invalidNumericFloatJSON)).toThrow();
+    });
+
+    it('should convert groupBy property to an array if given as a single string', () => {
+      // If groupBy is provided as a string, it should be converted to an array.
+      const groupByStringJSON = JSON.stringify({
+        filters: null,
+        orders: null,
+        paginator: null,
+        groupBy: 'department',
+      });
+      const deserialized = SearchQuerySerializer.deserialize(groupByStringJSON);
+      expect(deserialized.groupBy?.fields).toEqual(['department']);
+    });
+
+    it('should throw an error if orders property is not an array', () => {
+      // Orders must be an array; providing an object should trigger an error.
+      const invalidOrdersJSON = JSON.stringify({
+        filters: null,
+        orders: { field: 'name', direction: 'asc' },
+        paginator: null,
+        groupBy: null,
+      });
+      expect(() => SearchQuerySerializer.deserialize(invalidOrdersJSON)).toThrow();
+    });
+
+    it('should throw an error if composite filter\'s "filters" property is not an array', () => {
+      // Composite filter "filters" must be an array.
+      const invalidCompositeFilterJSON = JSON.stringify({
+        filters: {
+          type: 'composite',
+          logicalOperator: 'and',
+          filters: 'not_an_array',
+        },
+        orders: null,
+        paginator: null,
+        groupBy: null,
+      });
+      expect(() => SearchQuerySerializer.deserialize(invalidCompositeFilterJSON)).toThrow();
+    });
+
+    it('should throw an error if groupBy is provided as an object (not an array or string)', () => {
+      // If groupBy is an object, it should throw an error.
+      const invalidGroupByObjJSON = JSON.stringify({
+        filters: null,
+        orders: null,
+        paginator: null,
+        groupBy: { key: 'department' },
+      });
+      expect(() => SearchQuerySerializer.deserialize(invalidGroupByObjJSON)).toThrow();
     });
   });
 });
