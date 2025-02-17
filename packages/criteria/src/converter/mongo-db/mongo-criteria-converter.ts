@@ -1,21 +1,11 @@
-import { FilterOperator } from '../filter-operator';
-import { SearchCriteriaDto } from '../search-criteria.dto';
-import { SearchFilterDto } from '../search-filter.dto';
-import { SimpleFilterDto } from '../simple-filter.dto';
-import { CompositeFilterDto } from '../composite-filter.dto';
-import { SearchOrderDto } from '../search-order.dto';
-import { SearchPaginatorDto } from '../search-paginator.dto';
-
-type MongoFilterOperator = '$eq' | '$ne' | '$gt' | '$gte' | '$lt' | '$lte' | '$regex' | '$in' | '$nin';
-type MongoFilter = { [field: string]: { [op in MongoFilterOperator]?: any } } | { $or: MongoFilter[] } | { $and: MongoFilter[] };
-type MongoSort = { [field: string]: 1 | -1 };
-
-interface MongoQuery {
-  filter: MongoFilter;
-  sort: MongoSort;
-  skip: number;
-  limit: number;
-}
+import { FilterOperator } from '../../filter-operator';
+import { SearchCriteriaDto } from '../../search-criteria.dto';
+import { SearchFilterDto } from '../../search-filter.dto';
+import { SimpleFilterDto } from '../../simple-filter.dto';
+import { CompositeFilterDto } from '../../composite-filter.dto';
+import { SearchOrderDto } from '../../search-order.dto';
+import { SearchPaginatorDto } from '../../search-paginator.dto';
+import { MongoFilter, MongoFilterOperator, MongoQuery, MongoSort } from './mongo-query';
 
 export class MongoCriteriaConverter {
   // Map our FilterOperator to MongoDB operator strings

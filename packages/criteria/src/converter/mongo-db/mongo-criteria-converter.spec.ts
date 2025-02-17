@@ -1,12 +1,12 @@
-import { SimpleFilterDto } from '../simple-filter.dto';
-import { FilterOperator } from '../filter-operator';
-import { SearchCriteriaDto } from '../search-criteria.dto';
+import { SimpleFilterDto } from '../../simple-filter.dto';
+import { FilterOperator } from '../../filter-operator';
+import { SearchCriteriaDto } from '../../search-criteria.dto';
 import { MongoCriteriaConverter } from './mongo-criteria-converter';
-import { CompositeFilterDto } from '../composite-filter.dto';
-import { SearchOrderDto } from '../search-order.dto';
-import { SearchPaginatorDto } from '../search-paginator.dto';
-import { SearchGroupByDto } from '../search-group-by.dto';
-import { SearchOrderItemDto } from '../search-order-item.dto';
+import { CompositeFilterDto } from '../../composite-filter.dto';
+import { SearchOrderDto } from '../../search-order.dto';
+import { SearchPaginatorDto } from '../../search-paginator.dto';
+import { SearchGroupByDto } from '../../search-group-by.dto';
+import { SearchOrderItemDto } from '../../search-order-item.dto';
 
 describe('MongoCriteriaConverter', () => {
   describe('Filtros simples', () => {

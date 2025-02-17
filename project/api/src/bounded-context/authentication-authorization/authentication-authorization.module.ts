@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-
-import { MongoDBUserRepository } from './infrastructure/user-repository/mongodb/MongoDBUserRepository';
 import {
   Login,
   UserPasswordEncryptor,
@@ -9,13 +7,10 @@ import {
 } from '@bounded-context/authentication-authorization';
 import { JwtUserSigner } from './infrastructure/user-sign/jwt-user-signer';
 import { BcryptUserPasswordEncryptor } from './infrastructure/user-password-encryptor/bcrypt-user-password-encryptor';
+import { UserRepositoryModule } from './infrastructure/user-repository/user-repository.module';
 
 @Module({
   providers: [
-    {
-      provide: UserRepository,
-      useClass: MongoDBUserRepository,
-    },
     {
       provide: UserSigner,
       useFactory: () => new JwtUserSigner('secret'),
@@ -34,5 +29,6 @@ import { BcryptUserPasswordEncryptor } from './infrastructure/user-password-encr
       inject: [UserRepository, UserSigner, UserPasswordEncryptor],
     },
   ],
+  imports: [UserRepositoryModule],
 })
 export class AuthenticationAuthorizationModule {}

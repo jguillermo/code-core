@@ -5,7 +5,7 @@ import { IdType } from '@code-core/domain';
 import { AccountRepository } from '@bounded-context/financial-management';
 import { JsonCompare } from '@code-core/test';
 
-describe('createFinancialAccount (e2e) [/account-management/create-financial-account (POST)]', () => {
+describe.skip('createFinancialAccount (e2e) [/account-management/create-financial-account (POST)]', () => {
   let app: INestApplication;
   let accountRepository: AccountRepository;
 

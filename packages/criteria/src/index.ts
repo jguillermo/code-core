@@ -1,4 +1,5 @@
-export * from './converter/mongo-criteria-converter';
+export * from './converter/mongo-db/mongo-query';
+export * from './converter/mongo-db/mongo-criteria-converter';
 export * from './composite-filter.dto';
 export * from './filter-operator';
 export * from './logical-operator';
