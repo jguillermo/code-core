@@ -6,6 +6,7 @@ export * from './application/login/login.dto';
 
 export * from './domain/user/user';
 export * from './domain/user/user.repository';
+export * from './domain/user/user.types';
 export * from './domain/user/services/sign/user-signer';
 export * from './domain/user/services/sign/user-signer-exception';
 export * from './domain/user/services/sign/sign-payload';

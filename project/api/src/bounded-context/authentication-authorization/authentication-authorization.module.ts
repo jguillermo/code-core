@@ -13,7 +13,10 @@ import { UserRepositoryModule } from './infrastructure/user-repository/user-repo
   providers: [
     {
       provide: UserSigner,
-      useFactory: () => new JwtUserSigner('secret'),
+      useFactory: () =>
+        new JwtUserSigner(
+          'secretsecretsecretsecretsecretsecretsecretsecretsecret',
+        ),
     },
     {
       provide: UserPasswordEncryptor,

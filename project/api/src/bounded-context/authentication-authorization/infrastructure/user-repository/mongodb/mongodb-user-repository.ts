@@ -1,12 +1,12 @@
 import {
   User,
   UserRepository,
+  UserTypes,
 } from '@bounded-context/authentication-authorization';
 import { Model } from 'mongoose';
 import { MongoRepository } from '../../../../shared/mongo-db/mongo-repository';
 import { UserDocument } from './mongodb-user-schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserTypes } from '@bounded-context/authentication-authorization/src/domain/user/user.types';
 
 export class MongodbUserRepository extends UserRepository {
   private mongodb: MongoRepository<UserDocument, User>;
