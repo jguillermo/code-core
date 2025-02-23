@@ -1,14 +1,18 @@
 import { AbstractJsonType } from '@code-core/domain/dist/type/abstract-json-type';
+import { AddValidate } from '@code-core/domain';
 
-interface AuthenticationDetails {
-  password?: string;
-  userName?: string;
-
-  [key: string]: string | undefined;
+export interface AuthenticationDetails {
+  username_password?: { password: string; userName: string } | undefined;
+  [key: string]: object | undefined;
 }
 
-export class UserAuthenticationDetails extends AbstractJsonType<AuthenticationDetails> {
+@AddValidate([{ validator: 'IsOptional' }])
+export class UserAuthenticationDetails extends AbstractJsonType<AuthenticationDetails, null> {
+  constructor(value: AuthenticationDetails | null = null) {
+    super(value);
+  }
+
   get password(): string | null {
-    return this.value?.password ?? null;
+    return this.value?.username_password?.password ?? null;
   }
 }

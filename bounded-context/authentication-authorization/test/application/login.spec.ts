@@ -1,7 +1,7 @@
-import { Login, LoginDto, LoginResponse, User, UserPasswordEncryptor, UserRepository, UserSigner } from '../../../src';
-import { UserObjectMother } from '../../object-mother/user-object-mother';
+import { Login, LoginDto, LoginResponse, User, UserPasswordEncryptor, UserRepository, UserSigner } from '../../src';
+import { UserObjectMother } from '../object-mother/user-object-mother';
 import { Builder, DomainException } from '@code-core/domain';
-import { InvalidCredentialsException } from '../../../src/domain/user/services/authentication/invalid-credentials.exception';
+import { InvalidCredentialsException } from '../../src/domain/user/services/authentication/invalid-credentials.exception';
 
 describe('Auth Login', () => {
   let loginUseCase: Login;

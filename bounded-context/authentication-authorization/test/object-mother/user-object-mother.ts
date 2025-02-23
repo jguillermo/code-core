@@ -1,7 +1,6 @@
 import { PrimitiveTypes } from '@code-core/domain';
 
-import { UserTypes } from '../../src/domain/user/user.types';
-import { User } from '../../src/domain/user/user';
+import { User, UserTypes } from '../../src';
 import { UserRoles } from '../../src/domain/user/types/userPermissions';
 import { UserAuthenticationDetails } from '../../src/domain/user/types/userAuthenticationDetails';
 import { UserId } from '../../src/domain/user/types/userId';
@@ -13,6 +12,6 @@ export const UserObjectMother = (overrides?: Partial<PrimitiveTypes<UserTypes>>)
     new UserId(overrides?.id ?? UserId.random()),
     new UserName(overrides?.name ?? faker.person.fullName()),
     new UserRoles(overrides?.roles ?? [faker.word.adverb({ length: { min: 3, max: 19 } })]),
-    new UserAuthenticationDetails(overrides?.authenticationDetails ?? { password: faker.internet.password(), userName: faker.internet.username() }),
+    new UserAuthenticationDetails(overrides?.authenticationDetails ?? { username_password: { password: faker.internet.password(), userName: faker.internet.username() } }),
   );
 };

@@ -3,6 +3,8 @@ export const NAME = 'authentication-authorization';
 export * from './application/login/login';
 export * from './application/login/login.response';
 export * from './application/login/login.dto';
+export * from './application/user-register/user-register';
+export * from './application/user-register/user-register.dto';
 
 export * from './domain/user/user';
 export * from './domain/user/user.repository';
