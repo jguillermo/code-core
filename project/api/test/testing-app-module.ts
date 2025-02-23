@@ -83,6 +83,7 @@ export class TestingAppModule {
       return response;
     } catch (error) {
       console.error('Error during beforeEach setup:', error);
+      throw error;
     }
   }
 
