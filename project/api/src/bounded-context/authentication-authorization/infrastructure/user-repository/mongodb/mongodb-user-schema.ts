@@ -10,7 +10,7 @@ import { Document } from 'mongoose';
 })
 export class UserDocument extends Document {
   @Prop()
-  _id: string;
+  declare _id: string;
 
   @Prop()
   name: string;

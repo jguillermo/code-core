@@ -18,6 +18,9 @@ export class MongoRepository<T, E extends AggregateRoot> {
       ...document.toJSON(),
       id: document.id,
     };
+    if (!this.fromPrimitivesFn) {
+      throw new Error('fromPrimitivesFn is not defined');
+    }
     return this.fromPrimitivesFn(data);
   }
 
