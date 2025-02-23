@@ -7,6 +7,7 @@ import { Model, Promise } from 'mongoose';
 import { MongoRepository } from '../../../../shared/mongo-db/mongo-repository';
 import { UserDocument } from './mongodb-user-schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { UserId } from '@bounded-context/authentication-authorization/src/domain/user/types/userId';
 
 export class MongodbUserRepository extends UserRepository {
   private mongodb: MongoRepository<UserDocument, User>;
@@ -38,5 +39,9 @@ export class MongodbUserRepository extends UserRepository {
       authenticationDetails: items.authenticationDetails,
     });
     return User.create(data);
+  }
+
+  findById(id: UserId): Promise<User | null> {
+    return this.mongodb.findById(id);
   }
 }

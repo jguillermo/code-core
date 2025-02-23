@@ -6,6 +6,7 @@ export * from './application/login/login.dto';
 export * from './application/user-register/user-register';
 export * from './application/user-register/user-register.dto';
 
+export * from './domain/user/types/userId';
 export * from './domain/user/user';
 export * from './domain/user/user.repository';
 export * from './domain/user/user.types';

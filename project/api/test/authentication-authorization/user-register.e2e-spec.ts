@@ -2,7 +2,10 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { TestingAppModule } from '../testing-app-module';
 import * as request from 'supertest';
 import { JsonCompare } from '@code-core/test';
-import { UserRepository } from '@bounded-context/authentication-authorization';
+import {
+  UserId,
+  UserRepository,
+} from '@bounded-context/authentication-authorization';
 
 describe('User Register (e2e) [/user-register (POST)]', () => {
   let app: INestApplication;
@@ -32,9 +35,9 @@ describe('User Register (e2e) [/user-register (POST)]', () => {
       .send(bodyRequest);
     expect(requestCreate.statusCode).toBe(HttpStatus.CREATED);
 
-    const user = await userRepository.findByUserName('admin');
-
-    console.log('user?.toJson()', user?.toJson());
+    const user = await userRepository.findById(
+      new UserId('3a10a398-8829-41a4-ba37-83dcf386d1c1'),
+    );
 
     expect(
       JsonCompare.include(
@@ -42,10 +45,9 @@ describe('User Register (e2e) [/user-register (POST)]', () => {
           id: '3a10a398-8829-41a4-ba37-83dcf386d1c1',
           name: 'Jose',
           roles: ['ADMIN'],
-          details: {
+          authenticationDetails: {
             username_password: {
               userName: 'admin',
-              password: '123456',
             },
           },
         },

@@ -17,6 +17,7 @@
     "format:fix": "lerna run format:fix --stream",
     "code": "lerna run lint --stream && lerna run format --stream",
     "api": "npm --prefix project/api run start:dev",
+    "api-build": "lerna run build --scope api --include-dependencies",
     "prepare": "husky install"
   },
   "devDependencies": {
