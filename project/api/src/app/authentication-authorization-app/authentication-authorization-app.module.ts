@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LoginController } from './controller/login/login.controller';
+import { AuthenticationAuthorizationModule } from '../../bounded-context/authentication-authorization/authentication-authorization.module';
+import { RegisterUserController } from './controller/register-user.controller';
 
 @Module({
-  controllers: [LoginController],
+  controllers: [RegisterUserController],
+  imports: [AuthenticationAuthorizationModule],
 })
 export class AuthenticationAuthorizationAppModule {}

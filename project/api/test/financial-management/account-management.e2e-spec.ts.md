@@ -1,31 +1,31 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { TestingAppModule } from '../testing-app-module';
-import * as request from 'supertest';
+import \* as request from 'supertest';
 import { IdType } from '@code-core/domain';
 import { AccountRepository } from '@bounded-context/financial-management';
 import { JsonCompare } from '@code-core/test';
 
 describe.skip('createFinancialAccount (e2e) [/account-management/create-financial-account (POST)]', () => {
-  let app: INestApplication;
-  let accountRepository: AccountRepository;
+let app: INestApplication;
+let accountRepository: AccountRepository;
 
-  beforeAll(async () => {
-    ({ app, accountRepository } = await TestingAppModule.createE2e([
-      AccountRepository,
-    ]));
-  });
+beforeAll(async () => {
+({ app, accountRepository } = await TestingAppModule.createE2e([
+AccountRepository,
+]));
+});
 
-  it('valid values', async () => {
-    const bodyRequest = {
-      id: IdType.random(),
-      name: 'namenamenamename',
-      type: 'Real',
-      currency: 'PEN',
-      balance: 10,
-      financialEntity: 'financialEntity',
-      number: '234234234234',
-      tags: ['tags1'],
-    };
+it('valid values', async () => {
+const bodyRequest = {
+id: IdType.random(),
+name: 'namenamenamename',
+type: 'Real',
+currency: 'PEN',
+balance: 10,
+financialEntity: 'financialEntity',
+number: '234234234234',
+tags: ['tags1'],
+};
 
     const requestCreate = await request(app.getHttpServer())
       .post(`/account-management/create-financial-account`)
@@ -50,19 +50,20 @@ describe.skip('createFinancialAccount (e2e) [/account-management/create-financia
         account?.toJson(),
       ),
     ).toEqual([]);
-  });
 
-  it('invalid data', async () => {
-    const bodyRequest = {
-      id: IdType.random(),
-      name: 'namenamenamename',
-      type: 'REAL',
-      currency: 'PEN',
-      balance: 10,
-      financialEntity: 'financialEntity',
-      number: '234234234234',
-      tags: ['tags1'],
-    };
+});
+
+it('invalid data', async () => {
+const bodyRequest = {
+id: IdType.random(),
+name: 'namenamenamename',
+type: 'REAL',
+currency: 'PEN',
+balance: 10,
+financialEntity: 'financialEntity',
+number: '234234234234',
+tags: ['tags1'],
+};
 
     const requestCreate = await request(app.getHttpServer())
       .post(`/account-management/create-financial-account`)
@@ -76,9 +77,10 @@ describe.skip('createFinancialAccount (e2e) [/account-management/create-financia
       statusCode: 400,
     });
     // expect(requestCreate.statusCode).toBe(HttpStatus.CREATED);
-  });
 
-  afterAll(async () => {
-    await app.close();
-  });
+});
+
+afterAll(async () => {
+await app.close();
+});
 });

@@ -3,7 +3,7 @@ import {
   UserRepository,
   UserTypes,
 } from '@bounded-context/authentication-authorization';
-import { Model } from 'mongoose';
+import { Model, Promise } from 'mongoose';
 import { MongoRepository } from '../../../../shared/mongo-db/mongo-repository';
 import { UserDocument } from './mongodb-user-schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -24,6 +24,10 @@ export class MongodbUserRepository extends UserRepository {
 
   findByUserName(username: string): Promise<User | null> {
     return this.mongodb.findOne({ name: username });
+  }
+
+  persist(user: User): Promise<void> {
+    return this.mongodb.persist(user.toJson());
   }
 
   static fromPrimitives(items: any): User {

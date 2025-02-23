@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {
   Login,
   UserPasswordEncryptor,
+  UserRegister,
   UserRepository,
   UserSigner,
 } from '@bounded-context/authentication-authorization';
@@ -31,7 +32,16 @@ import { UserRepositoryModule } from './infrastructure/user-repository/user-repo
       ) => new Login(userRepository, userSigner, userPasswordEncryptor),
       inject: [UserRepository, UserSigner, UserPasswordEncryptor],
     },
+    {
+      provide: UserRegister,
+      useFactory: (
+        userRepository: UserRepository,
+        userPasswordEncryptor: UserPasswordEncryptor,
+      ) => new UserRegister(userRepository, userPasswordEncryptor),
+      inject: [UserRepository, UserPasswordEncryptor],
+    },
   ],
+  exports: [Login, UserRegister],
   imports: [UserRepositoryModule],
 })
 export class AuthenticationAuthorizationModule {}

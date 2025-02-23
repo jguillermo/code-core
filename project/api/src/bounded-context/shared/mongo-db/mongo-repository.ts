@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import { BulkWriteResult } from 'mongodb';
 
 import { MongoCriteriaConverter, SearchCriteriaDto } from '@code-core/criteria';
 import { AggregateRoot, IdType } from '@code-core/domain';
@@ -90,49 +89,18 @@ export class MongoRepository<T, E extends AggregateRoot> {
     return document ? this.fromPrimitives(document) : null;
   }
 
-  async persist(aggregate: any): Promise<void> {
+  async persist(aggregate: object): Promise<void> {
     const document = {
-      ...aggregate.toPrimitives(),
-      _id: aggregate.id.value,
+      ...aggregate,
+      _id: aggregate['id'],
       id: undefined,
     };
 
     await this.model.updateOne(
-      { _id: aggregate.id.value },
+      { _id: aggregate['id'] },
       { $set: document },
       { upsert: true },
     );
-  }
-
-  async persistAndConfirm(aggregate: any, customId: string): Promise<boolean> {
-    const updateCondition: any = { [customId]: aggregate.id.value };
-    const updatedDocument = await this.model.updateOne(
-      updateCondition,
-      { $set: aggregate.toPrimitives() },
-      { upsert: true },
-    );
-    return updatedDocument.modifiedCount > 0;
-  }
-
-  async bulkPersistAndConfirm(
-    aggregates: any[],
-    customId: string,
-  ): Promise<BulkWriteResult> {
-    const documents = aggregates.map((aggregate) => {
-      return { ...aggregate.toPrimitives(), [customId]: aggregate.id.value };
-    });
-
-    const writes = documents.map((document) => {
-      return {
-        updateOne: {
-          filter: { [customId]: document[customId] },
-          update: { $set: document },
-          upsert: true,
-        },
-      } as any;
-    });
-
-    return await this.model.bulkWrite(writes);
   }
 
   async bulkPersist(aggregates: any[]): Promise<void> {
@@ -155,12 +123,6 @@ export class MongoRepository<T, E extends AggregateRoot> {
     });
 
     await this.model.bulkWrite(writes);
-  }
-
-  async create(aggregate: any): Promise<E> {
-    const document = { ...aggregate.toPrimitives() };
-    const updatedRecord = await this.model.create(document);
-    return this.fromPrimitives(updatedRecord);
   }
 
   async deleteLogicalById<I extends IdType>(

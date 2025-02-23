@@ -14,6 +14,7 @@ describe('Auth Login', () => {
     user = UserObjectMother();
 
     mockRepository = {
+      persist: jest.fn(),
       findByUserName: jest.fn().mockImplementation((username) => Promise.resolve(username === 'testUser' ? user : null)),
     } as jest.Mocked<UserRepository>;
 
