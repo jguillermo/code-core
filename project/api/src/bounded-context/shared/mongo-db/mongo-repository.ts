@@ -72,10 +72,7 @@ export class MongoRepository<T, E extends AggregateRoot> {
   //   return await this.model.find(query.filter as any, {}).count().exec();
   // }
 
-  async deleteById<I extends IdType>(
-    id: I,
-    byCutsomId?: boolean,
-  ): Promise<void> {
+  async deleteById<I extends IdType>(id: I, byCutsomId?: boolean): Promise<void> {
     const $filter = byCutsomId ? { id: id.value } : { _id: id.value };
     await this.model.deleteOne($filter);
   }
@@ -99,11 +96,7 @@ export class MongoRepository<T, E extends AggregateRoot> {
       id: undefined,
     };
 
-    await this.model.updateOne(
-      { _id: aggregate['id'] },
-      { $set: document },
-      { upsert: true },
-    );
+    await this.model.updateOne({ _id: aggregate['id'] }, { $set: document }, { upsert: true });
   }
 
   async bulkPersist(aggregates: any[]): Promise<void> {
@@ -128,18 +121,11 @@ export class MongoRepository<T, E extends AggregateRoot> {
     await this.model.bulkWrite(writes);
   }
 
-  async deleteLogicalById<I extends IdType>(
-    id: I,
-    byCutsomId?: boolean,
-  ): Promise<boolean> {
+  async deleteLogicalById<I extends IdType>(id: I, byCutsomId?: boolean): Promise<boolean> {
     const $filter = { isActive: true };
     const idType = byCutsomId ? 'id' : '_id';
     $filter[idType] = id.value;
-    const updatedDocument = await this.model.updateOne(
-      $filter,
-      { $set: { isActive: false } },
-      { new: true },
-    );
+    const updatedDocument = await this.model.updateOne($filter, { $set: { isActive: false } }, { new: true });
     return updatedDocument.modifiedCount > 0;
   }
 }

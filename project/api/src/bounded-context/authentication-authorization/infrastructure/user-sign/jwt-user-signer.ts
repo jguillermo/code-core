@@ -1,7 +1,4 @@
-import {
-  SignPayload,
-  UserSigner,
-} from '@bounded-context/authentication-authorization';
+import { SignPayload, UserSigner } from '@bounded-context/authentication-authorization';
 import { JWTDataSigner } from '@code-core/cypto-tools';
 
 export class JwtUserSigner extends UserSigner {

@@ -6,9 +6,7 @@ export class ProviderFactory {
    * @param targetClass - The class to be provided as a provider
    * @returns The `ProviderFactory` itself to allow method chaining
    */
-  static forClass<T>(
-    targetClass: new (...args: any[]) => T,
-  ): typeof ProviderFactory {
+  static forClass<T>(targetClass: new (...args: any[]) => T): typeof ProviderFactory {
     this.targetClass = targetClass;
     return this;
   }

@@ -7,11 +7,7 @@ function applySwaggerMetadata(target: any) {
 
   for (const property of properties) {
     if (typeof property === 'string') {
-      const metadata = Reflect.getMetadata(
-        'design:type',
-        target.prototype,
-        property,
-      );
+      const metadata = Reflect.getMetadata('design:type', target.prototype, property);
       if (metadata) {
         Reflect.decorate([ApiProperty()], target.prototype, property);
       }
@@ -26,5 +22,6 @@ export function UseDto(...dtos: any[]) {
       applySwaggerMetadata(dto); // Convertir las propiedades en `@ApiProperty()`
       ApiExtraModels(dto); // Registrar en Swagger
     });
+    return target;
   };
 }

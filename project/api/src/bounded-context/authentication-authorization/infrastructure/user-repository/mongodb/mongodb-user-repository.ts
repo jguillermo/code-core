@@ -1,8 +1,4 @@
-import {
-  User,
-  UserRepository,
-  UserTypes,
-} from '@bounded-context/authentication-authorization';
+import { User, UserRepository, UserTypes } from '@bounded-context/authentication-authorization';
 import { Model, Promise } from 'mongoose';
 import { MongoRepository } from '../../../../shared/mongo-db/mongo-repository';
 import { UserDocument } from './mongodb-user-schema';
@@ -17,10 +13,7 @@ export class MongodbUserRepository extends UserRepository {
     private model: Model<UserDocument>,
   ) {
     super();
-    this.mongodb = new MongoRepository<UserDocument, User>(
-      this.model,
-      MongodbUserRepository.fromPrimitives,
-    );
+    this.mongodb = new MongoRepository<UserDocument, User>(this.model, MongodbUserRepository.fromPrimitives);
   }
 
   findByUserName(username: string): Promise<User | null> {

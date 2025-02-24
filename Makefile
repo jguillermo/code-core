@@ -14,6 +14,10 @@ main-script:
 	npm run build
 	make test
 
+install:
+	npm install
+	npm install bcrypt jsonwebtoken libsodium-wrappers-sumo
+
 fix:
 	npm run format:fix
 	npm run lint:fix

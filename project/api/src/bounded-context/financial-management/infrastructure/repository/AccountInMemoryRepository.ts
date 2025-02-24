@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Account,
-  AccountRepository,
-} from '@bounded-context/financial-management';
+import { Account, AccountRepository } from '@bounded-context/financial-management';
 import { PrimitiveTypes } from '@code-core/domain';
 import { AccountTypes } from '@bounded-context/financial-management/src/domain/account/account.types';
 import { EphemeraDb } from '@code-core/ephemeradb';

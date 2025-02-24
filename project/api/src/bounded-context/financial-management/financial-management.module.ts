@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AccountInMemoryRepository } from './infrastructure/repository/AccountInMemoryRepository';
-import {
-  AccountRepository,
-  CreateFinancialAccount,
-} from '@bounded-context/financial-management';
+import { AccountRepository, CreateFinancialAccount } from '@bounded-context/financial-management';
 
 @Module({
   imports: [],
@@ -15,8 +12,7 @@ import {
 
     {
       provide: CreateFinancialAccount,
-      useFactory: (accountRepository: AccountRepository) =>
-        new CreateFinancialAccount(accountRepository),
+      useFactory: (accountRepository: AccountRepository) => new CreateFinancialAccount(accountRepository),
       inject: [AccountRepository],
     },
   ],

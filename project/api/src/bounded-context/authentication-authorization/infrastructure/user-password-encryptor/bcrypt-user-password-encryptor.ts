@@ -1,18 +1,12 @@
 import { UserPasswordEncryptor } from '@bounded-context/authentication-authorization';
-import {
-  BcryptPasswordEncryptor,
-  PasswordEncryptor,
-  PasswordEncryptorFactory,
-} from '@code-core/cypto-tools';
+import { BcryptPasswordEncryptor, PasswordEncryptor, PasswordEncryptorFactory } from '@code-core/cypto-tools';
 
 export class BcryptUserPasswordEncryptor extends UserPasswordEncryptor {
   private service: PasswordEncryptor;
 
   constructor() {
     super();
-    this.service = PasswordEncryptorFactory.create(
-      BcryptPasswordEncryptor.name,
-    );
+    this.service = PasswordEncryptorFactory.create(BcryptPasswordEncryptor.name);
   }
 
   async encrypt(password: string): Promise<string> {

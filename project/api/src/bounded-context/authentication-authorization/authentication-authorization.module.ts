@@ -1,11 +1,5 @@
 import { Module } from '@nestjs/common';
-import {
-  Login,
-  UserPasswordEncryptor,
-  UserRegister,
-  UserRepository,
-  UserSigner,
-} from '@bounded-context/authentication-authorization';
+import { Login, UserPasswordEncryptor, UserRegister, UserRepository, UserSigner } from '@bounded-context/authentication-authorization';
 import { JwtUserSigner } from './infrastructure/user-sign/jwt-user-signer';
 import { BcryptUserPasswordEncryptor } from './infrastructure/user-password-encryptor/bcrypt-user-password-encryptor';
 import { UserRepositoryModule } from './infrastructure/user-repository/user-repository.module';
@@ -14,10 +8,7 @@ import { UserRepositoryModule } from './infrastructure/user-repository/user-repo
   providers: [
     {
       provide: UserSigner,
-      useFactory: () =>
-        new JwtUserSigner(
-          'secretsecretsecretsecretsecretsecretsecretsecretsecret',
-        ),
+      useFactory: () => new JwtUserSigner('secretsecretsecretsecretsecretsecretsecretsecretsecret'),
     },
     {
       provide: UserPasswordEncryptor,
@@ -25,19 +16,13 @@ import { UserRepositoryModule } from './infrastructure/user-repository/user-repo
     },
     {
       provide: Login,
-      useFactory: (
-        userRepository: UserRepository,
-        userSigner: UserSigner,
-        userPasswordEncryptor: UserPasswordEncryptor,
-      ) => new Login(userRepository, userSigner, userPasswordEncryptor),
+      useFactory: (userRepository: UserRepository, userSigner: UserSigner, userPasswordEncryptor: UserPasswordEncryptor) =>
+        new Login(userRepository, userSigner, userPasswordEncryptor),
       inject: [UserRepository, UserSigner, UserPasswordEncryptor],
     },
     {
       provide: UserRegister,
-      useFactory: (
-        userRepository: UserRepository,
-        userPasswordEncryptor: UserPasswordEncryptor,
-      ) => new UserRegister(userRepository, userPasswordEncryptor),
+      useFactory: (userRepository: UserRepository, userPasswordEncryptor: UserPasswordEncryptor) => new UserRegister(userRepository, userPasswordEncryptor),
       inject: [UserRepository, UserPasswordEncryptor],
     },
   ],

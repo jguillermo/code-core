@@ -58,10 +58,7 @@ export class TestingAppModule {
     return str.charAt(0).toLowerCase() + str.slice(1);
   }
 
-  static async create(
-    providers: any[] = [],
-    overrides: ProviderOverride[] = [],
-  ): Promise<TestingAppInterface> {
+  static async create(providers: any[] = [], overrides: ProviderOverride[] = []): Promise<TestingAppInterface> {
     try {
       const module = new TestingAppModule();
       await module.init(overrides);
@@ -69,15 +66,10 @@ export class TestingAppModule {
         app: module.app,
       };
       providers.forEach((provide) => {
-        if (
-          typeof provide === 'object' &&
-          !Array.isArray(provide) &&
-          provide.useClass
-        ) {
+        if (typeof provide === 'object' && !Array.isArray(provide) && provide.useClass) {
           response[provide.name] = module.moduleFixture.get(provide.useClass);
         } else {
-          response[TestingAppModule.lowerCaseFirstLetter(provide.name)] =
-            module.moduleFixture.get(provide);
+          response[TestingAppModule.lowerCaseFirstLetter(provide.name)] = module.moduleFixture.get(provide);
         }
       });
       return response;
@@ -87,19 +79,13 @@ export class TestingAppModule {
     }
   }
 
-  static async createE2e(
-    providers: any[] | Provider[] = [],
-    overrides: ProviderOverride[] = [],
-  ): Promise<TestingAppInterface> {
+  static async createE2e(providers: any[] | Provider[] = [], overrides: ProviderOverride[] = []): Promise<TestingAppInterface> {
     const defaultOverrides: ProviderOverride[] = [
       // {
       //   provide: DeviceRepository,
       //   useClass: DeviceInMemoryRepository,
       // },
     ];
-    return TestingAppModule.create(providers, [
-      ...defaultOverrides,
-      ...overrides,
-    ]);
+    return TestingAppModule.create(providers, [...defaultOverrides, ...overrides]);
   }
 }
