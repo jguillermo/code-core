@@ -34,7 +34,7 @@ describe('Validator', () => {
     expect(errors.length).toEqual(0);
   });
 
-  it('should add parent validator ', async () => {
+  it('should add parent validator and documentation', async () => {
     class ParentPArentClass {
       private _value: any;
 
@@ -68,6 +68,20 @@ describe('Validator', () => {
       isNumber: 'ChildClass must be a number conforming to the specified constraints',
       isInt: 'ChildClass must be an integer number',
     });
+
+    expect(Reflect.getMetadata('type:doc', ParentClass)).toEqual({
+      required: true,
+      schema: {
+        type: 'number',
+      },
+    });
+
+    expect(Reflect.getMetadata('type:doc', ChildClass)).toEqual({
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+    });
   });
 
   describe('should validate herency class', () => {
@@ -95,6 +109,17 @@ describe('Validator', () => {
     }
 
     class ChildClass extends ParentClass {}
+
+    it('should validate ChildClass documentation', () => {
+      expect(Reflect.getMetadata('type:doc', ChildClass)).toEqual({
+        required: true,
+        schema: {
+          type: 'number',
+          minimum: 10,
+          maximum: 20,
+        },
+      });
+    });
 
     typeValidationSpec(validateType, ChildClass, {
       value: [

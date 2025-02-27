@@ -10,7 +10,7 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
   let validatorsDoc: ValidatorsDoc;
 
   beforeEach(() => {
-    validatorsDoc = new ValidatorsDoc();
+    validatorsDoc = ValidatorsDoc.instance;
   });
 
   /**

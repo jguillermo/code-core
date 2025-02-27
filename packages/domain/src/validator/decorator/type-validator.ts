@@ -3,6 +3,7 @@ import { ValidationStorage } from './validation-storage';
 import { ValidatorMapI, validatorsMap } from './validators-map';
 import { validateSync, ValidationError } from 'class-validator';
 import { ValidatorOptions } from 'class-validator/types/validation/ValidatorOptions';
+import { ValidatorsDoc } from './validators-doc';
 
 function registerDecorator(cls: Function, validatorConfigs: ValidatorMapI[], propertyKey: string) {
   validatorConfigs.forEach((config) => {
@@ -39,6 +40,9 @@ export function AddValidate(validatorConfigs: ValidatorMapI[], propertyKey: stri
   return function (cls: Function) {
     applyParentValidations(cls, propertyKey);
     registerDecorator(cls, validatorConfigs, propertyKey);
+    const validatorList = ValidationStorage.getInstance().getValidations(cls, propertyKey);
+    const documentation = ValidatorsDoc.instance.generatePropertySchema(validatorList);
+    Reflect.defineMetadata('type:doc', documentation, cls);
   };
 }
 

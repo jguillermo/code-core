@@ -3,6 +3,15 @@ import { ValidatorMapI } from './validators-map';
 type MappingFunction = (schema: any, value?: any) => void;
 
 export class ValidatorsDoc {
+  static #instance: ValidatorsDoc;
+  private constructor() {}
+  public static get instance(): ValidatorsDoc {
+    if (!ValidatorsDoc.#instance) {
+      ValidatorsDoc.#instance = new ValidatorsDoc();
+    }
+    return ValidatorsDoc.#instance;
+  }
+
   private static readonly customMappings: Record<string, MappingFunction> = {
     CanBeBooleanValidator: (schema) => {
       schema.type = 'boolean';
