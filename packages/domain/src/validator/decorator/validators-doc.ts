@@ -258,14 +258,14 @@ export class ValidatorsDoc {
    * @param validators Array of validations (ValidatorMapI) for the property.
    * @returns An object with the schema definition and an "optional" flag.
    */
-  public generatePropertySchema(validators: ValidatorMapI[]): { schema: any; optional: boolean } {
+  public generatePropertySchema(validators: ValidatorMapI[]): { schema: any; required: boolean } {
     let schema: any = {};
-    let optional = false;
+    let requiredValue = true;
 
     for (let i = 0, len = validators.length; i < len; i++) {
-      const { schema: partSchema, optional: isOpt } = this.mapValidator(validators[i]);
-      if (isOpt) {
-        optional = true;
+      const { schema: partSchema, required: isReq } = this.mapValidator(validators[i]);
+      if (!isReq) {
+        requiredValue = false;
       }
       // Shallow merge; properties from partSchema override previous ones.
       schema = { ...schema, ...partSchema };
@@ -274,7 +274,7 @@ export class ValidatorsDoc {
     if (!schema.type) {
       schema.type = 'string';
     }
-    return { schema, optional };
+    return { schema, required: requiredValue };
   }
 
   /**
@@ -282,9 +282,9 @@ export class ValidatorsDoc {
    * @param vData A single ValidatorMapI object.
    * @returns An object with a partial schema and a flag indicating if it's optional.
    */
-  private mapValidator(vData: ValidatorMapI): { schema: any; optional: boolean } {
+  private mapValidator(vData: ValidatorMapI): { schema: any; required: boolean } {
     const schema: any = {};
-    let optional = false;
+    let required = true;
     let validatorName: string;
 
     if (typeof vData.validator === 'string') {
@@ -292,11 +292,11 @@ export class ValidatorsDoc {
     } else if (typeof vData.validator === 'function') {
       validatorName = vData.validator.name;
     } else {
-      return { schema, optional };
+      return { schema, required };
     }
 
     if (validatorName === 'IsOptional') {
-      optional = true;
+      required = false;
     } else {
       const mapper = ValidatorsDoc.allMappings[validatorName];
       if (mapper) {
@@ -306,6 +306,6 @@ export class ValidatorsDoc {
       }
     }
 
-    return { schema, optional };
+    return { schema, required };
   }
 }

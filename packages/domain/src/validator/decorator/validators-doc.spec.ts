@@ -14,9 +14,9 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
   describe('Numeric Validations', () => {
     test('Min: should assign minimum', () => {
       const input: ValidatorMapI[] = [{ validator: 'Min', value: 5 }];
-      const { schema, optional } = validatorsDoc.generatePropertySchema(input);
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ minimum: 5, type: 'string' });
-      expect(optional).toBe(false);
+      expect(required).toBe(true);
     });
 
     test('Max: should assign maximum', () => {
@@ -190,18 +190,106 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
    * Group: Optional and Required Validations
    */
   describe('Optional and Required Validations', () => {
-    test('IsOptional: should mark the property as optional', () => {
+    test('IsOptional: should mark the property as not required', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsOptional' }];
-      const { optional } = validatorsDoc.generatePropertySchema(input);
-      expect(optional).toBe(true);
+      const { required } = validatorsDoc.generatePropertySchema(input);
+      expect(required).toBe(false);
     });
 
-    test('Combination: IsNotEmpty with optional validations: should not mark as required if IsOptional is included', () => {
+    test('Combination: IsNotEmpty with IsOptional should mark as not required', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'IsOptional' }];
-      const { schema, optional } = validatorsDoc.generatePropertySchema(input);
-      // The validation schema is generated but marked as optional
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      // Schema is generated with IsNotEmpty details but the presence of IsOptional makes it not required.
       expect(schema).toMatchObject({ type: 'string', minLength: 1 });
-      expect(optional).toBe(true);
+      expect(required).toBe(false);
+    });
+
+    test('Combination: Multiple required validators (IsNotEmpty, MinLength, IsEmail) should mark as required', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'MinLength', value: 5 }, { validator: 'IsEmail' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      // No IsOptional is included, so property should be required.
+      expect(schema).toMatchObject({ type: 'string', minLength: 5, format: 'email' });
+      expect(required).toBe(true);
+    });
+
+    test('Combination: Conflicting validators with one IsOptional should mark as not required', () => {
+      const input: ValidatorMapI[] = [
+        { validator: 'MinLength', value: 8 },
+        { validator: 'MaxLength', value: 20 },
+        { validator: 'IsNotEmpty' },
+        { validator: 'IsOptional' }, // This one makes the property not required.
+      ];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string', minLength: 1, maxLength: 20 });
+      expect(required).toBe(false);
+    });
+
+    test('Combination: Only required validators (e.g. IsNotEmpty and IsIn) should mark as required', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'IsIn', value: ['red', 'green', 'blue'] }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string', minLength: 1, enum: ['red', 'green', 'blue'] });
+      expect(required).toBe(true);
+    });
+
+    test('Combination: Multiple validations without IsOptional should mark as required', () => {
+      const input: ValidatorMapI[] = [{ validator: 'Min', value: 3 }, { validator: 'Max', value: 10 }, { validator: 'IsNotEmpty' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      // Since no IsOptional is present, the property is required.
+      expect(schema).toMatchObject({ minimum: 3, maximum: 10, type: 'string', minLength: 1 });
+      expect(required).toBe(true);
+    });
+
+    test('Combination: Required array validations (IsArray, ArrayNotEmpty) should mark as required', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsArray' }, { validator: 'ArrayNotEmpty' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'array', minItems: 1, items: { type: 'string' } });
+      expect(required).toBe(true);
+    });
+
+    test('Combination: Array validations with IsOptional should mark as not required', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsArray' }, { validator: 'ArrayMinSize', value: 2 }, { validator: 'IsOptional' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'array', minItems: 2, items: { type: 'string' } });
+      expect(required).toBe(false);
+    });
+
+    test('Complex Combination: Multiple validators for string with no IsOptional should mark as required', () => {
+      const input: ValidatorMapI[] = [
+        { validator: 'IsNotEmpty' },
+        { validator: 'MinLength', value: 4 },
+        { validator: 'MaxLength', value: 12 },
+        { validator: 'Matches', value: /^[a-zA-Z]+$/ },
+        { validator: 'IsEmail' }, // This sets format to email, though it might conflict with Matches.
+      ];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      // In our mapping, later validations may override earlier ones for type/format.
+      // But since there is no IsOptional, required should be true.
+      expect(required).toBe(true);
+      expect(schema.type).toBe('string');
+      // At minimum, IsNotEmpty sets minLength to 1, but MinLength (value 4) should override that.
+      expect(schema.minLength).toBe(4);
+      // Format from IsEmail should prevail.
+      expect(schema.format).toBe('email');
+      // Pattern should come from Matches.
+      expect(schema.pattern).toBe(/^[a-zA-Z]+$/.toString());
+    });
+
+    test('Complex Combination: Multiple validators for string with IsOptional present should mark as not required', () => {
+      const input: ValidatorMapI[] = [
+        { validator: 'IsNotEmpty' },
+        { validator: 'MinLength', value: 4 },
+        { validator: 'MaxLength', value: 12 },
+        { validator: 'Matches', value: /^[a-zA-Z]+$/ },
+        { validator: 'IsEmail' },
+        { validator: 'IsOptional' },
+      ];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(required).toBe(false);
+      // The schema should still include the validations.
+      expect(schema.type).toBe('string');
+      expect(schema.minLength).toBe(4);
+      expect(schema.format).toBe('email');
+      expect(schema.pattern).toBe(/^[a-zA-Z]+$/.toString());
     });
   });
 
@@ -296,9 +384,9 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('Combination: Optional with length validations', () => {
       // Combine optional validations with minLength and maxLength
       const input: ValidatorMapI[] = [{ validator: 'IsOptional' }, { validator: 'MinLength', value: 2 }, { validator: 'MaxLength', value: 20 }];
-      const { schema, optional } = validatorsDoc.generatePropertySchema(input);
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ minLength: 2, maxLength: 20, type: 'string' });
-      expect(optional).toBe(true);
+      expect(required).toBe(false);
     });
   });
 
