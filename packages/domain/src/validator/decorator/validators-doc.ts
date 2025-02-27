@@ -4,10 +4,10 @@ type MappingFunction = (schema: any, value?: any) => void;
 
 export class ValidatorsDoc {
   private static readonly customMappings: Record<string, MappingFunction> = {
-    CanBeBooleanValidator: (schema, value) => {
+    CanBeBooleanValidator: (schema) => {
       schema.type = 'boolean';
     },
-    CanBeDate: (schema, value) => {
+    CanBeDate: (schema) => {
       schema.type = 'string';
       schema.format = 'date-time';
     },
@@ -17,7 +17,7 @@ export class ValidatorsDoc {
     CanBeNumberValidator: (schema) => {
       schema.type = 'number';
     },
-    CanBeStringValidator: (schema, value) => {
+    CanBeStringValidator: (schema) => {
       schema.type = 'string';
     },
   };
