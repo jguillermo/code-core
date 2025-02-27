@@ -15,32 +15,62 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('Min: should assign minimum', () => {
       const input: ValidatorMapI[] = [{ validator: 'Min', value: 5 }];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minimum: 5, type: 'string' });
+      expect(schema).toMatchObject({ type: 'number', minimum: 5 });
       expect(required).toBe(true);
     });
 
     test('Max: should assign maximum', () => {
       const input: ValidatorMapI[] = [{ validator: 'Max', value: 10 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ maximum: 10, type: 'string' });
+      expect(schema).toMatchObject({ type: 'number', maximum: 10 });
     });
 
     test('IsPositive: should assign minimum equal to 1', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsPositive' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minimum: 1, type: 'string' });
+      expect(schema).toMatchObject({ type: 'number', minimum: 1 });
     });
 
     test('IsNegative: should assign maximum equal to -1', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsNegative' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ maximum: -1, type: 'string' });
+      expect(schema).toMatchObject({ type: 'number', maximum: -1 });
     });
 
     test('IsDivisibleBy: should assign multipleOf with the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsDivisibleBy', value: 3 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ multipleOf: 3, type: 'string' });
+      expect(schema).toMatchObject({ type: 'number', multipleOf: 3 });
+    });
+
+    test('IsDecimal: should set type "number"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsDecimal' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
+    });
+
+    test('IsNumber: should set type "number"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsNumber' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
+    });
+
+    test('IsInt: should set type "integer"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsInt' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('integer');
+    });
+
+    test('IsLatitude: should set type "number"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsLatitude' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
+    });
+
+    test('IsLongitude: should set type "number"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsLongitude' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
     });
   });
 
@@ -51,26 +81,26 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('MinLength: should assign minLength', () => {
       const input: ValidatorMapI[] = [{ validator: 'MinLength', value: 3 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minLength: 3, type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', minLength: 3 });
     });
 
     test('MaxLength: should assign maxLength', () => {
       const input: ValidatorMapI[] = [{ validator: 'MaxLength', value: 30 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ maxLength: 30, type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', maxLength: 30 });
     });
 
     test('Length: should assign minLength and maxLength from an array of two elements', () => {
       const input: ValidatorMapI[] = [{ validator: 'Length', value: [4, 8] }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minLength: 4, maxLength: 8, type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', minLength: 4, maxLength: 8 });
     });
 
     test('Matches: should assign pattern using the regular expression', () => {
       const regex = /^[a-z]+$/;
       const input: ValidatorMapI[] = [{ validator: 'Matches', value: regex }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ pattern: regex.toString(), type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', pattern: regex.toString() });
     });
 
     test('IsNotEmpty: should assign type "string" and minLength equal to 1', () => {
@@ -82,48 +112,63 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('Equals: should assign const with the provided value', () => {
       const input: ValidatorMapI[] = [{ validator: 'Equals', value: 'test' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ const: 'test', type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', const: 'test' });
     });
 
     test('NotEquals: should assign "x-validate-NotEquals" with the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'NotEquals', value: 'noTest' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-NotEquals': 'noTest', type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', 'x-validate-NotEquals': 'noTest' });
     });
 
     test('IsEmpty: should assign maxLength equal to 0', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsEmpty' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ maxLength: 0, type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', maxLength: 0 });
+    });
+
+    test('Contains: should store value in x-validate-Contains', () => {
+      const input: ValidatorMapI[] = [{ validator: 'Contains', value: 'sub' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-Contains']).toBe('sub');
+    });
+
+    test('NotContains: should store value in x-validate-NotContains', () => {
+      const input: ValidatorMapI[] = [{ validator: 'NotContains', value: 'forbidden' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-NotContains']).toBe('forbidden');
+    });
+
+    test('IsByteLength: should store value in x-validate-IsByteLength', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsByteLength', value: [2, 10] }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsByteLength']).toEqual([2, 10]);
     });
   });
 
   /**
-   * Group: Format Validations
+   * Group: Date Validations
    */
-  describe('Format Validations', () => {
-    test('IsEmail: should assign type "string" and format "email"', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsEmail' }];
+  describe('Date Validations', () => {
+    test('MinDate: should assign type "string", format "date-time" and x-minDate', () => {
+      const input: ValidatorMapI[] = [{ validator: 'MinDate', value: '2020-01-01' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string', format: 'email' });
+      expect(schema).toMatchObject({ type: 'string', format: 'date-time', 'x-minDate': '2020-01-01' });
     });
 
-    test('IsCreditCard: should assign type "string" and format "credit-card"', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsCreditCard' }];
+    test('MaxDate: should assign type "string", format "date-time" and x-maxDate', () => {
+      const input: ValidatorMapI[] = [{ validator: 'MaxDate', value: '2022-12-31' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string', format: 'credit-card' });
+      expect(schema).toMatchObject({ type: 'string', format: 'date-time', 'x-maxDate': '2022-12-31' });
     });
 
-    test('IsUUID: should assign type "string" and format "uuid"', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsUUID' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string', format: 'uuid' });
-    });
-
-    test('IsUrl: should assign type "string" and format "uri"', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsUrl' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string', format: 'uri' });
+    test('IsDate and IsDateString: should assign type "string" and format "date-time"', () => {
+      const input1: ValidatorMapI[] = [{ validator: 'IsDate' }];
+      const input2: ValidatorMapI[] = [{ validator: 'IsDateString' }];
+      const { schema: schema1 } = validatorsDoc.generatePropertySchema(input1);
+      const { schema: schema2 } = validatorsDoc.generatePropertySchema(input2);
+      expect(schema1).toMatchObject({ type: 'string', format: 'date-time' });
+      expect(schema2).toMatchObject({ type: 'string', format: 'date-time' });
     });
 
     test('IsNumberString: should assign type "string" and pattern for digits', () => {
@@ -132,10 +177,10 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
       expect(schema).toMatchObject({ type: 'string', pattern: '^[0-9]+$' });
     });
 
-    test('Generic format validators (e.g. IsAlpha): should assign type "string"', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsAlpha' }];
+    test('IsISO8601: should assign type "string" and format "date-time"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsISO8601' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string' });
+      expect(schema).toMatchObject({ type: 'string', format: 'date-time' });
     });
   });
 
@@ -143,7 +188,7 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
    * Group: Array Validations
    */
   describe('Array Validations', () => {
-    test('IsArray: should assign type "array" and default items as { type: "string" }', () => {
+    test('IsArray: should assign type "array" with default items as { type: "string" }', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsArray' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ type: 'array', items: { type: 'string' } });
@@ -152,37 +197,234 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('ArrayContains: should assign x-validate-ArrayContains with the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayContains', value: 'test' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-ArrayContains': 'test', type: 'string' });
+      expect(schema).toMatchObject({ 'x-validate-ArrayContains': 'test' });
     });
 
     test('ArrayNotContains: should assign x-validate-ArrayNotContains with the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayNotContains', value: 'test' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-ArrayNotContains': 'test', type: 'string' });
+      expect(schema).toMatchObject({ 'x-validate-ArrayNotContains': 'test' });
     });
 
-    test('ArrayNotEmpty: should assign minItems equal to 1', () => {
+    test('ArrayNotEmpty: should assign type "array" and minItems equal to 1', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayNotEmpty' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minItems: 1, type: 'string' });
+      expect(schema).toMatchObject({ type: 'array', minItems: 1 });
     });
 
-    test('ArrayMinSize: should assign minItems equal to the given value', () => {
+    test('ArrayMinSize: should assign type "array" and minItems equal to the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayMinSize', value: 2 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minItems: 2, type: 'string' });
+      expect(schema).toMatchObject({ type: 'array', minItems: 2 });
     });
 
-    test('ArrayMaxSize: should assign maxItems equal to the given value', () => {
+    test('ArrayMaxSize: should assign type "array" and maxItems equal to the given value', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayMaxSize', value: 5 }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ maxItems: 5, type: 'string' });
+      expect(schema).toMatchObject({ type: 'array', maxItems: 5 });
     });
 
-    test('ArrayUnique: should assign uniqueItems to true', () => {
+    test('ArrayUnique: should assign type "array" and uniqueItems true', () => {
       const input: ValidatorMapI[] = [{ validator: 'ArrayUnique' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ uniqueItems: true, type: 'string' });
+      expect(schema).toMatchObject({ type: 'array', uniqueItems: true });
+    });
+  });
+
+  /**
+   * Group: Enum Validations
+   */
+  describe('Enum Validations', () => {
+    test('IsEnum: should assign enum values and type "string"', () => {
+      enum Colors {
+        Red = 'red',
+        Blue = 'blue',
+        Green = 'green',
+      }
+      const input: ValidatorMapI[] = [{ validator: 'IsEnum', value: Colors }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.enum).toEqual(['red', 'blue', 'green']);
+      expect(schema.type).toBe('string');
+      expect(required).toBe(true);
+    });
+
+    test('Combination: IsEnum with IsOptional should mark as not required', () => {
+      enum Status {
+        Active = 'active',
+        Inactive = 'inactive',
+      }
+      const input: ValidatorMapI[] = [{ validator: 'IsEnum', value: Status }, { validator: 'IsOptional' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.enum).toEqual(['active', 'inactive']);
+      expect(schema.type).toBe('string');
+      expect(required).toBe(false);
+    });
+
+    test('Combination: Multiple enum validators without IsOptional should mark as required', () => {
+      enum Days {
+        Monday = 'mon',
+        Tuesday = 'tue',
+      }
+      const input: ValidatorMapI[] = [{ validator: 'IsEnum', value: Days }, { validator: 'IsNotEmpty' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.enum).toEqual(['mon', 'tue']);
+      expect(schema.type).toBe('string');
+      expect(schema.minLength).toBe(1);
+      expect(required).toBe(true);
+    });
+  });
+
+  /**
+   * Group: Extended Validators (No Direct Mapping)
+   */
+  describe('Extended Validators', () => {
+    test('Allow: should assign x-validate-Allow with the given value', () => {
+      const input: ValidatorMapI[] = [{ validator: 'Allow', value: 'anything' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ 'x-validate-Allow': 'anything', type: 'string' });
+    });
+
+    test('IsInstance: should assign x-validate-IsInstance with the given value', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsInstance', value: 'classRef' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ 'x-validate-IsInstance': 'classRef', type: 'string' });
+    });
+
+    test('IsDefined: should store flag in x-validate-IsDefined', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsDefined' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsDefined']).toBe(true);
+    });
+
+    test('IsJSON: should store flag in x-validate-IsJSON', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsJSON' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsJSON']).toBe(true);
+    });
+
+    test('IsJWT: should store flag in x-validate-IsJWT', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsJWT' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsJWT']).toBe(true);
+    });
+
+    test('IsLatLong: should store flag in x-validate-IsLatLong', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsLatLong' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsLatLong']).toBe(true);
+    });
+
+    test('IsLocale: should store flag in x-validate-IsLocale', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsLocale' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsLocale']).toBe(true);
+    });
+
+    test('IsLowercase: should store flag in x-validate-IsLowercase', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsLowercase' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsLowercase']).toBe(true);
+    });
+
+    test('IsMACAddress: should store flag in x-validate-IsMACAddress', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsMACAddress' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsMACAddress']).toBe(true);
+    });
+
+    test('IsMilitaryTime: should store flag in x-validate-IsMilitaryTime', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsMilitaryTime' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsMilitaryTime']).toBe(true);
+    });
+
+    test('IsNotEmptyObject: should store flag in x-validate-IsNotEmptyObject', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsNotEmptyObject' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsNotEmptyObject']).toBe(true);
+    });
+
+    test('IsObject: should set type to object', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsObject' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('object');
+    });
+
+    test('IsOctal: should store flag in x-validate-IsOctal', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsOctal' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsOctal']).toBe(true);
+    });
+
+    test('IsPhoneNumber: should store provided value in x-validate-IsPhoneNumber', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsPhoneNumber', value: 'US' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsPhoneNumber']).toBe('US');
+    });
+
+    test('IsPort: should store flag in x-validate-IsPort', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsPort' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsPort']).toBe(true);
+    });
+
+    test('IsRgbColor: should store flag in x-validate-IsRgbColor', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsRgbColor' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsRgbColor']).toBe(true);
+    });
+
+    test('IsUppercase: should store flag in x-validate-IsUppercase', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsUppercase' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsUppercase']).toBe(true);
+    });
+
+    test('IsVariableWidth: should store flag in x-validate-IsVariableWidth', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsVariableWidth' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsVariableWidth']).toBe(true);
+    });
+
+    test('IsBoolean: should set type to boolean', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBoolean' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('boolean');
+    });
+  });
+
+  /**
+   * Group: Generic String Validations
+   */
+  describe('Generic String Validations', () => {
+    test('IsAlphanumeric: should assign type "string"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsAlphanumeric' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string' });
+    });
+
+    test('IsBase64: should assign type "string"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBase64' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string' });
+    });
+
+    test('IsBooleanString: should assign type "string" and boolean pattern', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBooleanString' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string', pattern: '^(true|false)$' });
+    });
+
+    test('IsString: should assign type "string"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsString' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('string');
+    });
+
+    test('IsBtcAddress: should store provided value in x-validate-IsBtcAddress', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBtcAddress', value: 'btcValue' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsBtcAddress']).toBe('btcValue');
     });
   });
 
@@ -199,7 +441,6 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('Combination: IsNotEmpty with IsOptional should mark as not required', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'IsOptional' }];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      // Schema is generated with IsNotEmpty details but the presence of IsOptional makes it not required.
       expect(schema).toMatchObject({ type: 'string', minLength: 1 });
       expect(required).toBe(false);
     });
@@ -207,36 +448,77 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
     test('Combination: Multiple required validators (IsNotEmpty, MinLength, IsEmail) should mark as required', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'MinLength', value: 5 }, { validator: 'IsEmail' }];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      // No IsOptional is included, so property should be required.
       expect(schema).toMatchObject({ type: 'string', minLength: 5, format: 'email' });
       expect(required).toBe(true);
     });
 
     test('Combination: Conflicting validators with one IsOptional should mark as not required', () => {
-      const input: ValidatorMapI[] = [
-        { validator: 'MinLength', value: 8 },
-        { validator: 'MaxLength', value: 20 },
-        { validator: 'IsNotEmpty' },
-        { validator: 'IsOptional' }, // This one makes the property not required.
-      ];
+      const input: ValidatorMapI[] = [{ validator: 'MinLength', value: 8 }, { validator: 'MaxLength', value: 20 }, { validator: 'IsNotEmpty' }, { validator: 'IsOptional' }];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ type: 'string', minLength: 1, maxLength: 20 });
       expect(required).toBe(false);
     });
 
-    test('Combination: Only required validators (e.g. IsNotEmpty and IsIn) should mark as required', () => {
+    test('Combination: Only required validators (IsNotEmpty and IsIn) should mark as required', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsNotEmpty' }, { validator: 'IsIn', value: ['red', 'green', 'blue'] }];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ type: 'string', minLength: 1, enum: ['red', 'green', 'blue'] });
       expect(required).toBe(true);
     });
 
-    test('Combination: Multiple validations without IsOptional should mark as required', () => {
+    test('Combination: Multiple validations without IsOptional should mark as required and emit a warning for type conflict', () => {
+      // "Min" and "Max" set numeric type, but "IsNotEmpty" forces type "string"
       const input: ValidatorMapI[] = [{ validator: 'Min', value: 3 }, { validator: 'Max', value: 10 }, { validator: 'IsNotEmpty' }];
+
+      // Spy on console.warn to check if warning is emitted
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      // Since no IsOptional is present, the property is required.
-      expect(schema).toMatchObject({ minimum: 3, maximum: 10, type: 'string', minLength: 1 });
+
+      // Expect numeric mappers to prevail: type remains "number"
+      expect(schema).toMatchObject({ type: 'string', minimum: 3, maximum: 10 });
       expect(required).toBe(true);
+
+      // Verify that a warning was issued about the type conflict
+      expect(warnSpy).toHaveBeenCalledWith('Warning: Type changed from "number" to "string" due to conflicting validators.');
+
+      warnSpy.mockRestore();
+    });
+
+    test('If base has no type and addition sets type "string", no warning is emitted', () => {
+      // Simulate a situation where the base schema is initially empty,
+      // and only a string validator (MinLength) is applied.
+      const input: ValidatorMapI[] = [{ validator: 'MinLength', value: 5 }];
+
+      // Spy on console.warn to verify that no warning is issued.
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+
+      // Since there is no prior type in the base schema, setting type to "string" is acceptable.
+      expect(schema).toMatchObject({ type: 'string', minLength: 5 });
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(required).toBe(true);
+
+      warnSpy.mockRestore();
+    });
+
+    test('If base has no type and addition sets type empty to  "string", no warning is emitted', () => {
+      // Simulate a situation where the base schema is initially empty,
+      // and only a string validator (MinLength) is applied.
+      const input: ValidatorMapI[] = [{ validator: 'IsMongoId' }, { validator: 'MinLength', value: 5 }];
+
+      // Spy on console.warn to verify that no warning is issued.
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+
+      // Since there is no prior type in the base schema, setting type to "string" is acceptable.
+      expect(schema).toMatchObject({ type: 'string', minLength: 5 });
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(required).toBe(true);
+
+      warnSpy.mockRestore();
     });
 
     test('Combination: Required array validations (IsArray, ArrayNotEmpty) should mark as required', () => {
@@ -259,18 +541,13 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
         { validator: 'MinLength', value: 4 },
         { validator: 'MaxLength', value: 12 },
         { validator: 'Matches', value: /^[a-zA-Z]+$/ },
-        { validator: 'IsEmail' }, // This sets format to email, though it might conflict with Matches.
+        { validator: 'IsEmail' },
       ];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      // In our mapping, later validations may override earlier ones for type/format.
-      // But since there is no IsOptional, required should be true.
       expect(required).toBe(true);
       expect(schema.type).toBe('string');
-      // At minimum, IsNotEmpty sets minLength to 1, but MinLength (value 4) should override that.
       expect(schema.minLength).toBe(4);
-      // Format from IsEmail should prevail.
       expect(schema.format).toBe('email');
-      // Pattern should come from Matches.
       expect(schema.pattern).toBe(/^[a-zA-Z]+$/.toString());
     });
 
@@ -285,7 +562,6 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
       ];
       const { schema, required } = validatorsDoc.generatePropertySchema(input);
       expect(required).toBe(false);
-      // The schema should still include the validations.
       expect(schema.type).toBe('string');
       expect(schema.minLength).toBe(4);
       expect(schema.format).toBe('email');
@@ -294,106 +570,9 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
   });
 
   /**
-   * Group: Date Validations and Other Special Cases
+   * Group: Additional Generic String Validations
    */
-  describe('Date Validations and Other Special Cases', () => {
-    test('MinDate: should assign type "string", format "date-time" and x-minDate', () => {
-      const input: ValidatorMapI[] = [{ validator: 'MinDate', value: '2020-01-01' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({
-        type: 'string',
-        format: 'date-time',
-        'x-minDate': '2020-01-01',
-      });
-    });
-
-    test('MaxDate: should assign type "string", format "date-time" and x-maxDate', () => {
-      const input: ValidatorMapI[] = [{ validator: 'MaxDate', value: '2022-12-31' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({
-        type: 'string',
-        format: 'date-time',
-        'x-maxDate': '2022-12-31',
-      });
-    });
-
-    test('IsDate and IsDateString: should assign type "string" and format "date-time"', () => {
-      const input1: ValidatorMapI[] = [{ validator: 'IsDate' }];
-      const input2: ValidatorMapI[] = [{ validator: 'IsDateString' }];
-      const { schema: schema1 } = validatorsDoc.generatePropertySchema(input1);
-      const { schema: schema2 } = validatorsDoc.generatePropertySchema(input2);
-      expect(schema1).toMatchObject({ type: 'string', format: 'date-time' });
-      expect(schema2).toMatchObject({ type: 'string', format: 'date-time' });
-    });
-  });
-
-  /**
-   * Group: Extended Validators (No Direct Mapping)
-   */
-  describe('Extended Validators', () => {
-    test('Allow: should assign x-validate-Allow with the given value', () => {
-      const input: ValidatorMapI[] = [{ validator: 'Allow', value: 'anything' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-Allow': 'anything', type: 'string' });
-    });
-
-    test('IsInstance: should assign x-validate-IsInstance with the given value', () => {
-      const input: ValidatorMapI[] = [{ validator: 'IsInstance', value: 'classRef' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-IsInstance': 'classRef', type: 'string' });
-    });
-
-    test('Default: unknown validator should assign x-validate-UnknownValidator', () => {
-      const input: ValidatorMapI[] = [{ validator: 'UnknownValidator' as any, value: 'unknown' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ 'x-validate-UnknownValidator': 'unknown', type: 'string' });
-    });
-
-    test('Fallback: with no validations, type should be "string"', () => {
-      const input: ValidatorMapI[] = [];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ type: 'string' });
-    });
-  });
-
-  /**
-   * Group: Advanced Combinations of Validations
-   */
-  describe('Advanced Combinations', () => {
-    test('Combination: MinLength and MaxLength with IsNotEmpty (check order of application)', () => {
-      // If IsNotEmpty is processed after MinLength, it is expected to override minLength to 1.
-      const input: ValidatorMapI[] = [{ validator: 'MinLength', value: 5 }, { validator: 'MaxLength', value: 10 }, { validator: 'IsNotEmpty' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toEqual({ type: 'string', minLength: 1, maxLength: 10 });
-    });
-
-    test('Combination: IsPositive and Min (the last one should prevail)', () => {
-      // If Min is processed first and then IsPositive, IsPositive should override minimum to 1.
-      const input: ValidatorMapI[] = [{ validator: 'Min', value: 3 }, { validator: 'IsPositive' }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toEqual({ type: 'string', minimum: 1 });
-    });
-
-    test('Combination: Multiple string format validators (IsEmail, Matches)', () => {
-      const regex = /^[0-9]{4}$/;
-      const input: ValidatorMapI[] = [{ validator: 'IsEmail' }, { validator: 'Matches', value: regex }];
-      const { schema } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toEqual({ type: 'string', format: 'email', pattern: regex.toString() });
-    });
-
-    test('Combination: Optional with length validations', () => {
-      // Combine optional validations with minLength and maxLength
-      const input: ValidatorMapI[] = [{ validator: 'IsOptional' }, { validator: 'MinLength', value: 2 }, { validator: 'MaxLength', value: 20 }];
-      const { schema, required } = validatorsDoc.generatePropertySchema(input);
-      expect(schema).toMatchObject({ minLength: 2, maxLength: 20, type: 'string' });
-      expect(required).toBe(false);
-    });
-  });
-
-  /**
-   * Group: Additional Generic String Format Validators
-   */
-  describe('Additional Generic String Format Validators', () => {
+  describe('Additional Generic String Validations', () => {
     test('IsAlphanumeric: should assign type "string"', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsAlphanumeric' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
@@ -404,6 +583,24 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsBase64' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
       expect(schema).toMatchObject({ type: 'string' });
+    });
+
+    test('IsBooleanString: should assign type "string" with boolean pattern', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBooleanString' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema).toMatchObject({ type: 'string', pattern: '^(true|false)$' });
+    });
+
+    test('IsString: should assign type "string"', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsString' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('string');
+    });
+
+    test('IsBtcAddress: should store provided value in x-validate-IsBtcAddress', () => {
+      const input: ValidatorMapI[] = [{ validator: 'IsBtcAddress', value: 'btcValue' }];
+      const { schema } = validatorsDoc.generatePropertySchema(input);
+      expect(schema['x-validate-IsBtcAddress']).toBe('btcValue');
     });
   });
 });

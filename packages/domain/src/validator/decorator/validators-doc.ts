@@ -3,64 +3,105 @@ import { ValidatorMapI } from './validators-map';
 type MappingFunction = (schema: any, value?: any) => void;
 
 export class ValidatorsDoc {
-  // Precompiled mapping dictionaries as static readonly properties for faster access.
+  // Validadores numéricos: se asigna explícitamente type "number" o "integer".
   private static readonly numericMappings: Record<string, MappingFunction> = {
     Min: (schema, value) => {
+      schema.type = 'number';
       schema.minimum = value;
     },
     Max: (schema, value) => {
+      schema.type = 'number';
       schema.maximum = value;
     },
     IsPositive: (schema) => {
+      schema.type = 'number';
       schema.minimum = 1;
     },
     IsNegative: (schema) => {
+      schema.type = 'number';
       schema.maximum = -1;
     },
     IsDivisibleBy: (schema, value) => {
+      schema.type = 'number';
       schema.multipleOf = value;
+    },
+    IsDecimal: (schema) => {
+      schema.type = 'number';
+    },
+    IsNumber: (schema) => {
+      schema.type = 'number';
+    },
+    IsInt: (schema) => {
+      schema.type = 'integer';
+    },
+    IsLatitude: (schema) => {
+      schema.type = 'number';
+    },
+    IsLongitude: (schema) => {
+      schema.type = 'number';
     },
   };
 
+  // Validadores de cadenas (string): se asigna explícitamente type "string".
   private static readonly stringMappings: Record<string, MappingFunction> = {
     MinLength: (schema, value) => {
+      schema.type = 'string';
       schema.minLength = value;
     },
     MaxLength: (schema, value) => {
+      schema.type = 'string';
       schema.maxLength = value;
     },
     Length: (schema, value) => {
+      schema.type = 'string';
       if (Array.isArray(value) && value.length === 2) {
         schema.minLength = value[0];
         schema.maxLength = value[1];
       }
     },
     Matches: (schema, value) => {
+      schema.type = 'string';
       schema.pattern = value.toString();
     },
     Equals: (schema, value) => {
+      schema.type = 'string';
       schema.const = value;
     },
     NotEquals: (schema, value) => {
+      schema.type = 'string';
       schema['x-validate-NotEquals'] = value;
     },
     IsEmpty: (schema) => {
+      schema.type = 'string';
       schema.maxLength = 0;
     },
     IsNotEmpty: (schema) => {
-      if (!schema.type || schema.type === 'string') {
-        schema.type = 'string';
-        schema.minLength = 1;
-      }
+      schema.type = 'string';
+      schema.minLength = 1;
     },
     IsIn: (schema, value) => {
+      schema.type = 'string';
       schema.enum = value;
     },
     IsNotIn: (schema, value) => {
+      schema.type = 'string';
       schema['x-validate-IsNotIn'] = value;
+    },
+    Contains: (schema, value) => {
+      schema.type = 'string';
+      schema['x-validate-Contains'] = value;
+    },
+    NotContains: (schema, value) => {
+      schema.type = 'string';
+      schema['x-validate-NotContains'] = value;
+    },
+    IsByteLength: (schema, value) => {
+      schema.type = 'string';
+      schema['x-validate-IsByteLength'] = value;
     },
   };
 
+  // Validadores de fecha: se asigna explícitamente type "string" y el formato correspondiente.
   private static readonly dateMappings: Record<string, MappingFunction> = {
     MinDate: (schema, value) => {
       schema.type = 'string';
@@ -84,8 +125,13 @@ export class ValidatorsDoc {
       schema.type = 'string';
       schema.pattern = '^[0-9]+$';
     },
+    IsISO8601: (schema) => {
+      schema.type = 'string';
+      schema.format = 'date-time';
+    },
   };
 
+  // Validadores para arreglos: se asigna explícitamente type "array".
   private static readonly arrayMappings: Record<string, MappingFunction> = {
     IsArray: (schema) => {
       schema.type = 'array';
@@ -100,19 +146,24 @@ export class ValidatorsDoc {
       schema['x-validate-ArrayNotContains'] = value;
     },
     ArrayNotEmpty: (schema) => {
+      schema.type = 'array';
       schema.minItems = 1;
     },
     ArrayMinSize: (schema, value) => {
+      schema.type = 'array';
       schema.minItems = value;
     },
     ArrayMaxSize: (schema, value) => {
+      schema.type = 'array';
       schema.maxItems = value;
     },
     ArrayUnique: (schema) => {
+      schema.type = 'array';
       schema.uniqueItems = true;
     },
   };
 
+  // Validadores extendidos (sin mapeo directo a JSON Schema) – se asigna metadata extendida o el tipo cuando corresponde.
   private static readonly extendedMappings: Record<string, MappingFunction> = {
     Allow: (schema, value) => {
       schema['x-validate-Allow'] = value;
@@ -120,8 +171,60 @@ export class ValidatorsDoc {
     IsInstance: (schema, value) => {
       schema['x-validate-IsInstance'] = value;
     },
+    IsDefined: (schema) => {
+      schema['x-validate-IsDefined'] = true;
+    },
+    IsJSON: (schema) => {
+      schema['x-validate-IsJSON'] = true;
+    },
+    IsJWT: (schema) => {
+      schema['x-validate-IsJWT'] = true;
+    },
+    IsLatLong: (schema) => {
+      schema['x-validate-IsLatLong'] = true;
+    },
+    IsLocale: (schema) => {
+      schema['x-validate-IsLocale'] = true;
+    },
+    IsLowercase: (schema) => {
+      schema['x-validate-IsLowercase'] = true;
+    },
+    IsMACAddress: (schema) => {
+      schema['x-validate-IsMACAddress'] = true;
+    },
+    IsMilitaryTime: (schema) => {
+      schema['x-validate-IsMilitaryTime'] = true;
+    },
+    IsNotEmptyObject: (schema) => {
+      schema['x-validate-IsNotEmptyObject'] = true;
+    },
+    IsObject: (schema) => {
+      schema.type = 'object';
+    },
+    IsOctal: (schema) => {
+      schema['x-validate-IsOctal'] = true;
+    },
+    IsPhoneNumber: (schema, value) => {
+      schema['x-validate-IsPhoneNumber'] = value;
+    },
+    IsPort: (schema) => {
+      schema['x-validate-IsPort'] = true;
+    },
+    IsRgbColor: (schema) => {
+      schema['x-validate-IsRgbColor'] = true;
+    },
+    IsUppercase: (schema) => {
+      schema['x-validate-IsUppercase'] = true;
+    },
+    IsVariableWidth: (schema) => {
+      schema['x-validate-IsVariableWidth'] = true;
+    },
+    IsBoolean: (schema) => {
+      schema.type = 'boolean';
+    },
   };
 
+  // Validadores genéricos de cadena: se asigna explícitamente type "string" y, cuando corresponde, un formato.
   private static readonly genericStringMappings: Record<string, MappingFunction> = {
     IsAlpha: (schema) => {
       schema.type = 'string';
@@ -237,13 +340,27 @@ export class ValidatorsDoc {
     IsStrongPassword: (schema) => {
       schema.type = 'string';
     },
+    IsEnum: (schema, value) => {
+      schema.enum = Object.values(value);
+      schema.type = 'string';
+    },
     IsEmail: (schema) => {
       schema.type = 'string';
       schema.format = 'email';
     },
+    IsBooleanString: (schema) => {
+      schema.type = 'string';
+      schema.pattern = '^(true|false)$';
+    },
+    IsString: (schema) => {
+      schema.type = 'string';
+    },
+    IsBtcAddress: (schema, value) => {
+      schema['x-validate-IsBtcAddress'] = value;
+    },
   };
 
-  // Combine all mapping dictionaries into one for fast lookup.
+  // Combina todos los mapeos en uno solo para búsqueda rápida.
   private static readonly allMappings: Record<string, MappingFunction> = {
     ...ValidatorsDoc.numericMappings,
     ...ValidatorsDoc.stringMappings,
@@ -254,9 +371,9 @@ export class ValidatorsDoc {
   };
 
   /**
-   * Generates the OpenAPI schema fragment for a property based on an array of validations.
-   * @param validators Array of validations (ValidatorMapI) for the property.
-   * @returns An object with the schema definition and an "optional" flag.
+   * Genera el fragmento del esquema OpenAPI para una propiedad basado en un arreglo de validaciones.
+   * @param validators Arreglo de validaciones (ValidatorMapI) para la propiedad.
+   * @returns Un objeto con la definición del esquema y un flag "required".
    */
   public generatePropertySchema(validators: ValidatorMapI[]): { schema: any; required: boolean } {
     let schema: any = {};
@@ -267,8 +384,8 @@ export class ValidatorsDoc {
       if (!isReq) {
         requiredValue = false;
       }
-      // Shallow merge; properties from partSchema override previous ones.
-      schema = { ...schema, ...partSchema };
+      // Fusiona de forma superficial: las propiedades de partSchema sobrescriben las previas.
+      schema = this.mergeSchema(schema, partSchema);
     }
 
     if (!schema.type) {
@@ -278,9 +395,30 @@ export class ValidatorsDoc {
   }
 
   /**
-   * Maps a single validation (vData) to its corresponding schema fragment.
-   * @param vData A single ValidatorMapI object.
-   * @returns An object with a partial schema and a flag indicating if it's optional.
+   * Fusiona dos fragmentos de esquema de manera superficial.
+   *
+   * Si el fragmento adicional (addition) define un tipo y éste difiere del tipo ya presente en el esquema base,
+   * se emite un warning indicando que se ha cambiado el tipo debido a validadores conflictivos, y se asigna el tipo del fragmento adicional.
+   *
+   * @param base - El esquema base previamente generado.
+   * @param addition - El fragmento de esquema adicional que se desea fusionar.
+   * @returns El esquema resultante de la fusión, donde prevalece el tipo definido en el fragmento adicional.
+   */
+  private mergeSchema(base: any, addition: any): any {
+    const merged = { ...base, ...addition };
+    if (addition.type) {
+      if (base.type && base.type !== addition.type) {
+        console.warn(`Warning: Type changed from "${base.type}" to "${addition.type}" due to conflicting validators.`);
+      }
+      merged.type = addition.type; // El último mapeo prevalece.
+    }
+    return merged;
+  }
+
+  /**
+   * Mapea una validación individual (vData) a su fragmento de esquema correspondiente.
+   * @param vData Un objeto ValidatorMapI.
+   * @returns Un objeto con un fragmento del esquema y un flag que indica si la propiedad es requerida.
    */
   private mapValidator(vData: ValidatorMapI): { schema: any; required: boolean } {
     const schema: any = {};
