@@ -3,6 +3,25 @@ import { ValidatorMapI } from './validators-map';
 type MappingFunction = (schema: any, value?: any) => void;
 
 export class ValidatorsDoc {
+  private static readonly customMappings: Record<string, MappingFunction> = {
+    CanBeBooleanValidator: (schema, value) => {
+      schema.type = 'boolean';
+    },
+    CanBeDate: (schema, value) => {
+      schema.type = 'string';
+      schema.format = 'date-time';
+    },
+    CanBeJson: (schema) => {
+      schema.type = 'object';
+    },
+    CanBeNumberValidator: (schema) => {
+      schema.type = 'number';
+    },
+    CanBeStringValidator: (schema, value) => {
+      schema.type = 'string';
+    },
+  };
+
   // Validadores numéricos: se asigna explícitamente type "number" o "integer".
   private static readonly numericMappings: Record<string, MappingFunction> = {
     Min: (schema, value) => {
@@ -368,6 +387,7 @@ export class ValidatorsDoc {
     ...ValidatorsDoc.arrayMappings,
     ...ValidatorsDoc.extendedMappings,
     ...ValidatorsDoc.genericStringMappings,
+    ...ValidatorsDoc.customMappings,
   };
 
   /**

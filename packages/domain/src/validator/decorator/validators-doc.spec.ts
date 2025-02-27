@@ -1,5 +1,10 @@
 import { ValidatorsDoc } from './validators-doc';
 import { ValidatorMapI } from './validators-map';
+import { CanBeBooleanValidator } from './custom/can-be-boolean';
+import { CanBeDate } from './custom/can-be-date';
+import { CanBeJson } from './custom/can-be-json';
+import { CanBeNumberValidator } from './custom/can-be-number';
+import { CanBeStringValidator } from './custom/can-be-string';
 
 describe('ValidatorsDoc.generatePropertySchema', () => {
   let validatorsDoc: ValidatorsDoc;
@@ -601,6 +606,74 @@ describe('ValidatorsDoc.generatePropertySchema', () => {
       const input: ValidatorMapI[] = [{ validator: 'IsBtcAddress', value: 'btcValue' }];
       const { schema } = validatorsDoc.generatePropertySchema(input);
       expect(schema['x-validate-IsBtcAddress']).toBe('btcValue');
+    });
+  });
+
+  describe('Custom Mappings', () => {
+    test('CanBeBooleanValidator: should set type to boolean', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeBooleanValidator }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('boolean');
+      expect(required).toBe(true);
+    });
+
+    test('CanBeDate: should set type to string and format to date-time', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeDate }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('string');
+      expect(schema.format).toBe('date-time');
+      expect(required).toBe(true);
+    });
+
+    test('CanBeJson: should set type to object', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeJson }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('object');
+      expect(required).toBe(true);
+    });
+
+    test('CanBeNumberValidator: should set type to number', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeNumberValidator }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
+      expect(required).toBe(true);
+    });
+
+    test('CanBeStringValidator: should set type to string', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeStringValidator }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('string');
+      expect(required).toBe(true);
+    });
+
+    // Test combinations with IsOptional
+
+    test('CanBeNumberValidator combined with IsOptional should mark as not required', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeNumberValidator }, { validator: 'IsOptional' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('number');
+      expect(required).toBe(false);
+    });
+
+    // Test combinations with additional validations
+
+    test('CanBeDate combined with MinDate should set format "date-time" and x-minDate', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeDate }, { validator: 'MinDate', value: '2021-01-01' }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      // Expect that the type and format are "string" and "date-time"
+      // and that the x-minDate property is added from MinDate.
+      expect(schema.type).toBe('string');
+      expect(schema.format).toBe('date-time');
+      expect(schema['x-minDate']).toBe('2021-01-01');
+      expect(required).toBe(true);
+    });
+
+    test('CanBeStringValidator combined with MinLength should set type "string" and minLength', () => {
+      const input: ValidatorMapI[] = [{ validator: CanBeStringValidator }, { validator: 'MinLength', value: 5 }];
+      const { schema, required } = validatorsDoc.generatePropertySchema(input);
+      expect(schema.type).toBe('string');
+      expect(schema.minLength).toBe(5);
+      expect(required).toBe(true);
     });
   });
 });
